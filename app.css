@@ -360,6 +360,9 @@ dialog.ice::backdrop { background: #000; }
 .alert-area { font-size: 14px; }
 .alert-meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .alert-text { font-size: 13.5px; }
+.alert-zones { font-size: 13.5px; margin: 0; }
+details.alert-zones summary { cursor: pointer; color: var(--ink); }
+details.alert-zones p { margin: 6px 0 0; color: var(--muted); }
 .alert-tsunami { display: flex; align-items: center; gap: 6px; color: var(--danger); font-weight: 700; font-size: 14px; }
 .alert-link { font-size: 13px; font-weight: 700; color: var(--info); }
 

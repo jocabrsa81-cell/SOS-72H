@@ -3,7 +3,7 @@ import { t, L, fmtNum } from './i18n.js';
 import { h, icon, sheet, telHref, fill, add } from './ui.js';
 import { NUMBERS, KIT } from './content.js';
 import { isIOS, isStandalone } from './platform.js';
-import { lastResult, topLevel, when } from './alerts.js';
+import { lastResult, topLevel, when, countAlerts } from './alerts.js';
 
 const HINT_KEY = 'sos72h.iosHintClosed';
 const hintClosed = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return true; } };
@@ -100,7 +100,7 @@ export function render(root) {
 
     // Cartão de alertas (resumo da última verificação)
     const ar = lastResult();
-    const nAlerts = ar ? (ar.items || []).length : 0;
+    const nAlerts = ar ? countAlerts(ar.items || []) : 0;
     const alertCard = h('a.alert-card.lvl-' + (nAlerts ? topLevel(ar.items) : 'none'), { href: '#/alerts' },
       icon('siren', 22),
       h('div', h('b', !ar ? t('alertsTitle') : nAlerts ? t('alertsSummary', { n: nAlerts }) : t('alertsSummaryNone')),

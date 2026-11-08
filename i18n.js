@@ -238,6 +238,8 @@ const S = {
   alertsNoneDisasters: ['Sem catástrofes relevantes ativas.', 'Aucune catastrophe notable en cours.', 'Keine relevanten Katastrophen aktiv.', 'No relevant active disasters.', 'Sin catástrofes relevantes activas.'],
   alertsSummaryNone: ['Sem alertas ativos', 'Aucune alerte active', 'Keine aktiven Warnungen', 'No active alerts', 'Sin alertas activas'],
   alertsSummary: ['{n} alerta(s) ativo(s)', '{n} alerte(s) active(s)', '{n} aktive Warnung(en)', '{n} active alert(s)', '{n} alerta(s) activa(s)'],
+  alertsZones: ['{n} zonas', '{n} zones', '{n} Gebiete', '{n} areas', '{n} zonas'],
+  alertsMoreZones: ['e mais {n}', 'et {n} autres', 'und {n} weitere', 'and {n} more', 'y {n} más'],
   alertsUntil: ['até {t}', 'jusqu’à {t}', 'bis {t}', 'until {t}', 'hasta {t}'],
   alertsKm: ['a {n} km', 'à {n} km', '{n} km entfernt', '{n} km away', 'a {n} km'],
   alertsDepth: ['profundidade {n} km', 'profondeur {n} km', 'Tiefe {n} km', 'depth {n} km', 'profundidad {n} km'],

@@ -28,14 +28,14 @@ const decode = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot
 const stripHtml = s => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
 // ——— MeteoAlarm (avisos meteorológicos europeus) ———
-// Nos países vizinhos só interessam as zonas perto da fronteira; ES só laranja/vermelho.
+// Nos países vizinhos só interessam as zonas perto da fronteira; ES só vermelho.
 const MA = [
   { c: 'LU', feed: 'luxembourg' },
   { c: 'FR', feed: 'france', area: /moselle|meurthe/i },
   { c: 'DE', feed: 'germany', area: /saar|trier|merzig|bitburg|eifel|perl|mosel/i },
   { c: 'BE', feed: 'belgium', area: /luxemb|arlon/i },
   { c: 'PT', feed: 'portugal' },
-  { c: 'ES', feed: 'spain', minLevel: 'orange' },
+  { c: 'ES', feed: 'spain', minLevel: 'red' },
 ];
 const SEV = { minor: 'yellow', moderate: 'yellow', severe: 'orange', extreme: 'red' };
 const RANK = { yellow: 1, orange: 2, red: 3 };

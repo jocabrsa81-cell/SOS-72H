@@ -75,12 +75,18 @@ async function directIPMA() {
 
 // Filtra pelo que interessa a quem usa a app.
 function relevant(items, here, regs = regions()) {
+  const hasIPMA = items.some(i => i.source === 'ipma');
   const refs = regs.flatMap(r => REFS[r] || []).concat(here ? [here] : []);
   const countries = new Set(regs.flatMap(r => COUNTRIES[r] || []));
   const near = it => (it.lat == null || it.lon == null) ? Infinity : Math.min(...refs.map(r => distanceKm(r, it)));
   const now = Date.now();
   return items.map(it => ({ ...it, km: it.lat != null ? Math.round(near(it)) : null })).filter(it => {
-    if (it.kind === 'weather') return countries.has(it.country) && RANK[it.level] >= 1 && (!it.end || Date.parse(it.end) > now);
+    if (it.kind === 'weather') {
+      if (!countries.has(it.country) || RANK[it.level] < 1 || (it.end && Date.parse(it.end) <= now)) return false;
+      if (it.country === 'ES' && it.level !== 'red') return false;           // Espanha: só vermelho
+      if (it.country === 'PT' && it.source === 'meteoalarm' && hasIPMA) return false; // Portugal: IPMA é a fonte oficial
+      return true;
+    }
     if (it.kind === 'quake') {
       if (now - Date.parse(it.start) > 72 * 3600e3) return false;
       return (it.km < 300 && it.mag >= 2.5) || (it.km < 1500 && it.mag >= 4.5) || (it.tsunami && it.km < 3000);
@@ -148,6 +154,26 @@ export function checkAlerts(here) {
   })().finally(() => { running = null; });
   return running;
 }
+
+// Junta avisos iguais (mesma fonte, país, tipo e nível) numa só linha com a lista de zonas.
+export function groupWeather(items) {
+  const groups = new Map();
+  for (const it of items) {
+    if (it.kind !== 'weather') continue;
+    const k = [it.source, it.country, it.title, it.level].join('|');
+    const g = groups.get(k);
+    if (!g) groups.set(k, { ...it, zones: it.area ? [it.area] : [], ids: [it.id] });
+    else {
+      if (it.area && !g.zones.includes(it.area)) g.zones.push(it.area);
+      g.ids.push(it.id);
+      if (it.start && (!g.start || Date.parse(it.start) < Date.parse(g.start))) g.start = it.start;
+      if (it.end && (!g.end || Date.parse(it.end) > Date.parse(g.end))) g.end = it.end;
+    }
+  }
+  return [...groups.values()];
+}
+// Número de alertas para mostrar (avisos de tempo agrupados).
+export const countAlerts = items => groupWeather(items).length + items.filter(i => i.kind !== 'weather').length;
 
 export const topLevel = items => items.reduce((m, i) => (RANK[i.level] > RANK[m] ? i.level : m), 'info');
 

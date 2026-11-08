@@ -119,7 +119,8 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:' && !window.Cap
 // Alertas com a app aberta: avisa de alertas fortes novos e atualiza o início.
 startPolling(r => {
   window.dispatchEvent(new CustomEvent('sos72h:alerts', { detail: r }));
-  const fresh = (r && r.fresh) || [];
+  const freshRaw = (r && r.fresh) || [];
+  const fresh = [...new Map(freshRaw.map(i => [[i.source, i.country, i.title, i.level].join('|'), i])).values()];
   if (!fresh.length) return;
   const first = fresh[0];
   const text = `${first.title}${first.area ? ' — ' + first.area : ''}`;

@@ -6,7 +6,7 @@ import { h, icon, toast, confirmBox, field, fill, add } from './ui.js';
 
 export function title() { return null; }
 
-const VERSION = '1.7.0';
+const VERSION = '1.7.1';
 
 export function render(root) {
   const s = store.get().settings;

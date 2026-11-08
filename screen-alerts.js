@@ -1,9 +1,15 @@
 import { store } from './store.js';
 import { t } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
-import { checkAlerts, lastResult, lastPosition, SOURCES, when } from './alerts.js';
+import { checkAlerts, lastResult, lastPosition, SOURCES, when, groupWeather } from './alerts.js';
 
 export function title() { return null; }
+
+// Zonas: mostra as primeiras 4; o resto abre com um toque.
+function zoneList(zones) {
+  if (zones.length <= 5) return h('p.alert-zones', zones.join(', '));
+  return h('details.alert-zones', h('summary', zones.slice(0, 4).join(', ') + ' ' + t('alertsMoreZones', { n: zones.length - 4 })), h('p', zones.join(', ')));
+}
 
 function item(it) {
   const meta = [];
@@ -12,7 +18,8 @@ function item(it) {
     if (it.depth != null) meta.push(t('alertsDepth', { n: Math.round(it.depth) }));
     meta.push(when(it.start));
   } else {
-    if (it.area) meta.push(it.area + (it.country && it.source === 'meteoalarm' ? ` (${it.country})` : ''));
+    if (it.zones && it.zones.length > 1) meta.push(t('alertsZones', { n: it.zones.length }) + (it.country ? ` (${it.country})` : ''));
+    else if (it.area) meta.push(it.area + (it.country && it.source === 'meteoalarm' ? ` (${it.country})` : ''));
     if (it.start) meta.push(when(it.start) + (it.end ? ' – ' + when(it.end) : ''));
     else if (it.end) meta.push(t('alertsUntil', { t: when(it.end) }));
   }
@@ -21,6 +28,7 @@ function item(it) {
     it.kind === 'quake' ? h('p.alert-area', it.area) : null,
     h('p.alert-meta', meta.join(' · ')),
     it.tsunami ? h('p.alert-tsunami', icon('water', 16), t('alertsTsunami')) : null,
+    it.zones && it.zones.length > 1 ? zoneList(it.zones) : null,
     it.text ? h('p.alert-text', it.text) : null,
     it.url ? h('a.alert-link', { href: it.url, target: '_blank', rel: 'noopener' }, t('alertsSource')) : null);
 }
@@ -47,7 +55,7 @@ export function render(root) {
         r.server ? h('p.muted', t('alertsServer', { t: when(r.server) })) : null,
         r.failedAt ? h('p.notice.warn', icon('alert', 18), r.offline ? t('alertsOffline') : t('alertsFailed', { t: when(r.failedAt) })) : null,
         h('div.src-chips', h('span.muted', t('alertsSources') + ':'), status)),
-      sec(t('alertsWeather'), items.filter(i => i.kind === 'weather'), t('alertsNoneWeather')),
+      sec(t('alertsWeather'), groupWeather(items), t('alertsNoneWeather')),
       sec(t('alertsQuakes'), items.filter(i => i.kind === 'quake'), t('alertsNoneQuakes')),
       sec(t('alertsDisasters'), items.filter(i => i.kind === 'disaster'), t('alertsNoneDisasters')),
       h('p.foot', t('alertsNotTranslated')));
