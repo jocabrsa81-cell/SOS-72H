@@ -1,5 +1,6 @@
 import { store } from './store.js';
-import { omPoint, omSearch, parseCoords, geoHref, kml, saveFile } from './maps.js';
+import { omPoint, omSearch, parseCoords, kml, saveFile } from './maps.js';
+import { pickOnMap } from './picker.js';
 import { t, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, telHref, fill, add } from './ui.js';
 
@@ -51,12 +52,16 @@ export function render(root, params) {
       const c = parseCoords(v);
       location.href = c ? omPoint({ ...c, name: label }) : omSearch(v.split('\n')[0]);
     } }, icon('compass', 16), t('omOpen'));
-    const otherBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
-      const v = ta.value.trim(); if (!v) return;
-      const c = parseCoords(v);
-      location.href = c ? geoHref(c, label) : `geo:0,0?q=${encodeURIComponent(v.split('\n')[0])}`;
-    } }, t('omOther'));
-    return h('div.field', h('label', label), ta, h('div.inline-actions', locBtn, omBtn, otherBtn));
+    // Escolher no mapa: substitui (ou acrescenta) a linha de coordenadas, mantendo o texto.
+    const pickBtn = h('button.btn.small.ghost', { type: 'button', onclick: async () => {
+      const c = await pickOnMap(parseCoords(ta.value));
+      if (!c) return;
+      const text = ta.value.split('\n').filter(l => !parseCoords(l)).join('\n').trim();
+      ta.value = (text ? text + '\n' : '') + `${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}`;
+      store.update(x => { x.meeting[key] = ta.value; });
+      toast(t('saved'));
+    } }, icon('pin', 16), t('pickOnMap'));
+    return h('div.field', h('label', label), ta, h('div.inline-actions', locBtn, pickBtn, omBtn));
   };
 
   // Pontos de encontro com coordenadas, para o mapa e para o ficheiro KML.
@@ -81,6 +86,7 @@ export function render(root, params) {
     h('section.block',
       h('h2.block-title', icon('pin', 20), t('meetingTitle')),
       h('p.muted', t('meetingIntro')),
+      h('small.help', t('pickFromOm')),
       meet('home', t('meetHome'), t('meetHomePh')),
       meet('area', t('meetArea'), t('meetAreaPh')),
       meet('region', t('meetRegion'), t('meetRegionPh')),

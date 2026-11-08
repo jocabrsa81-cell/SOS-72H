@@ -1,9 +1,9 @@
 // Service worker: guarda a app inteira na instalação para funcionar sem Internet.
 // Ao publicar uma nova versão, muda VERSION — a app avisa e atualiza com um toque.
-const VERSION = 'sos72h-1.4.2';
+const VERSION = 'sos72h-1.5.0';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './app.css',
-  './app.js', './store.js', './i18n.js', './ui.js', './content.js', './maps.js',
+  './app.js', './store.js', './i18n.js', './ui.js', './content.js', './maps.js', './picker.js',
   './screen-home.js', './screen-kit.js', './screen-family.js', './screen-guides.js',
   './screen-tools.js', './screen-vault.js', './screen-settings.js',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png',
