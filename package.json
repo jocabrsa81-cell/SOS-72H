@@ -1,0 +1,19 @@
+{
+  "name": "sos72h",
+  "version": "1.2.0",
+  "private": true,
+  "description": "SOS 72H — preparação para emergências, funciona sem Internet",
+  "scripts": {
+    "serve": "npx http-server www -p 8080 -c-1",
+    "android:sync": "npx cap sync android",
+    "android:open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.2.0"
+  }
+}

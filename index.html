@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#E6E9EA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151D23" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Preparação para as primeiras 72 horas de uma emergência. Funciona sem Internet.">
+  <title>SOS 72H</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./app.css">
+  <script>
+    // Aplica o tema antes de desenhar, para não piscar.
+    try { var d = JSON.parse(localStorage.getItem('sos72h.data') || '{}'); var th = d.settings && d.settings.theme; if (th && th !== 'auto') document.documentElement.dataset.theme = th; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="appbar" id="appbar">
+    <a class="brand" href="#/home" aria-label="SOS 72H">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9"/><path d="M8 29h7M17 29h7M26 29h6" class="brand-days"/><text x="20" y="22" text-anchor="middle">72</text></svg>
+      <span class="brand-name">SOS 72H</span>
+    </a>
+    <button class="appbar-back" id="back" type="button" hidden></button>
+    <h1 class="appbar-title" id="title"></h1>
+    <a class="icon-btn" id="settings-link" href="#/settings"></a>
+  </header>
+
+  <div class="netstate" id="netstate" hidden></div>
+  <main id="view" class="view" tabindex="-1"></main>
+
+  <nav class="tabbar" id="tabbar" aria-label="Menu"></nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript><p style="padding:24px">Ativa o JavaScript para usar a SOS 72H.</p></noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

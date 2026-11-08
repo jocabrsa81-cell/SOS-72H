@@ -1,0 +1,295 @@
+// Um só dicionário para toda a app. Cada chave tem [pt, fr, de, en, es].
+// Se faltar uma tradução, cai para português — nunca aparece a chave em bruto.
+import { store } from './store.js';
+
+export const LANGS = ['pt', 'fr', 'de', 'en', 'es'];
+export const LANG_NAMES = { pt: 'Português', fr: 'Français', de: 'Deutsch', en: 'English', es: 'Español' };
+const IDX = { pt: 0, fr: 1, de: 2, en: 3, es: 4 };
+
+const S = {
+  // Navegação
+  navHome: ['Início', 'Accueil', 'Start', 'Home', 'Inicio'],
+  navKit: ['Kit', 'Kit', 'Vorrat', 'Kit', 'Kit'],
+  navFamily: ['Família', 'Famille', 'Familie', 'Family', 'Familia'],
+  navGuides: ['Guias', 'Guides', 'Ratgeber', 'Guides', 'Guías'],
+  navTools: ['Ferramentas', 'Outils', 'Werkzeuge', 'Tools', 'Herramientas'],
+  back: ['Voltar', 'Retour', 'Zurück', 'Back', 'Volver'],
+  settings: ['Definições', 'Réglages', 'Einstellungen', 'Settings', 'Ajustes'],
+  documents: ['Documentos', 'Documents', 'Dokumente', 'Documents', 'Documentos'],
+
+  // Comum
+  save: ['Guardar', 'Enregistrer', 'Speichern', 'Save', 'Guardar'],
+  saved: ['Guardado', 'Enregistré', 'Gespeichert', 'Saved', 'Guardado'],
+  cancel: ['Cancelar', 'Annuler', 'Abbrechen', 'Cancel', 'Cancelar'],
+  delete: ['Eliminar', 'Supprimer', 'Löschen', 'Delete', 'Eliminar'],
+  deleted: ['Eliminado', 'Supprimé', 'Gelöscht', 'Deleted', 'Eliminado'],
+  edit: ['Editar', 'Modifier', 'Bearbeiten', 'Edit', 'Editar'],
+  add: ['Adicionar', 'Ajouter', 'Hinzufügen', 'Add', 'Añadir'],
+  close: ['Fechar', 'Fermer', 'Schließen', 'Close', 'Cerrar'],
+  call: ['Ligar', 'Appeler', 'Anrufen', 'Call', 'Llamar'],
+  optional: ['opcional', 'facultatif', 'optional', 'optional', 'opcional'],
+  confirmDelete: ['Eliminar "{name}"?', 'Supprimer « {name} » ?', '„{name}“ löschen?', 'Delete "{name}"?', '¿Eliminar «{name}»?'],
+  copied: ['Copiado', 'Copié', 'Kopiert', 'Copied', 'Copiado'],
+  copy: ['Copiar', 'Copier', 'Kopieren', 'Copy', 'Copiar'],
+  share: ['Partilhar', 'Partager', 'Teilen', 'Share', 'Compartir'],
+  online: ['Com Internet', 'En ligne', 'Online', 'Online', 'Con Internet'],
+  offline: ['Sem Internet — tudo continua a funcionar', 'Hors ligne — tout continue de fonctionner', 'Offline — alles funktioniert weiter', 'Offline — everything still works', 'Sin Internet — todo sigue funcionando'],
+
+  // Início
+  call112: ['Ligar 112', 'Appeler le 112', '112 anrufen', 'Call 112', 'Llamar al 112'],
+  call112Sub: ['Emergência médica, incêndio, acidente', 'Urgence médicale, incendie, accident', 'Notfall, Feuer, Unfall', 'Medical, fire, accident', 'Emergencia médica, incendio, accidente'],
+  otherNumbers: ['Outros números', 'Autres numéros', 'Weitere Nummern', 'Other numbers', 'Otros números'],
+  autonomyTitle: ['A tua autonomia', 'Votre autonomie', 'Deine Autarkie', 'How long you can last', 'Tu autonomía'],
+  autonomyGoal: ['Objetivo: 72 horas sem ajuda externa', 'Objectif : 72 heures sans aide extérieure', 'Ziel: 72 Stunden ohne Hilfe von außen', 'Goal: 72 hours without outside help', 'Objetivo: 72 horas sin ayuda externa'],
+  water: ['Água', 'Eau', 'Wasser', 'Water', 'Agua'],
+  food: ['Comida', 'Nourriture', 'Essen', 'Food', 'Comida'],
+  hoursShort: ['h', 'h', 'Std.', 'h', 'h'],
+  day: ['dia', 'jour', 'Tag', 'day', 'día'],
+  dayN: ['Dia {n}', 'Jour {n}', 'Tag {n}', 'Day {n}', 'Día {n}'],
+  people: ['Pessoas', 'Personnes', 'Personen', 'People', 'Personas'],
+  pets: ['Animais', 'Animaux', 'Haustiere', 'Pets', 'Animales'],
+  limitedBy: ['Limitado pela {what}', 'Limité par : {what}', 'Begrenzt durch: {what}', 'Limited by {what}', 'Limitado por: {what}'],
+  goalReached: ['Objetivo das 72 h cumprido', 'Objectif de 72 h atteint', '72-Stunden-Ziel erreicht', '72-hour goal reached', 'Objetivo de 72 h cumplido'],
+  missingWater: ['Faltam {n} L de água', 'Il manque {n} L d’eau', 'Es fehlen {n} L Wasser', '{n} L of water missing', 'Faltan {n} L de agua'],
+  missingFood: ['Faltam {n} kcal de comida', 'Il manque {n} kcal de nourriture', 'Es fehlen {n} kcal Essen', '{n} kcal of food missing', 'Faltan {n} kcal de comida'],
+  foodNoKcal: ['{n} artigo(s) de comida sem kcal — não entram na conta', '{n} aliment(s) sans kcal — non comptés', '{n} Lebensmittel ohne kcal — nicht mitgezählt', '{n} food item(s) without kcal — not counted', '{n} alimento(s) sin kcal — no se cuentan'],
+  waterNoVolume: ['{n} artigo(s) de água sem volume — não entram na conta', '{n} article(s) d’eau sans volume — non comptés', '{n} Wasserartikel ohne Volumen — nicht mitgezählt', '{n} water item(s) without volume — not counted', '{n} artículo(s) de agua sin volumen — no se cuentan'],
+  expiredExcluded: ['{n} artigo(s) fora de validade excluídos', '{n} article(s) périmé(s) exclus', '{n} abgelaufene Artikel ausgeschlossen', '{n} expired item(s) excluded', '{n} artículo(s) caducado(s) excluido(s)'],
+  emptyAutonomy: ['Regista a água e a comida que tens em casa para veres quantas horas aguentas.', 'Enregistrez l’eau et la nourriture que vous avez pour voir combien d’heures vous tenez.', 'Erfasse Wasser und Essen, die du zu Hause hast, um zu sehen, wie lange du durchhältst.', 'Record the water and food you have at home to see how many hours you can last.', 'Registra el agua y la comida que tienes en casa para ver cuántas horas aguantas.'],
+  openInventory: ['Abrir inventário', 'Ouvrir l’inventaire', 'Inventar öffnen', 'Open inventory', 'Abrir inventario'],
+  attention: ['Precisa de atenção', 'À surveiller', 'Braucht Aufmerksamkeit', 'Needs attention', 'Requiere atención'],
+  kitProgress: ['Kit de 72 horas', 'Kit de 72 heures', '72-Stunden-Vorrat', '72-hour kit', 'Kit de 72 horas'],
+  kitProgressSub: ['{done} de {total} itens preparados', '{done} sur {total} prêts', '{done} von {total} bereit', '{done} of {total} ready', '{done} de {total} preparados'],
+  sirenTest: ['Teste de sirenes no Luxemburgo: 1.ª segunda-feira do mês', 'Test des sirènes au Luxembourg : 1er lundi du mois', 'Sirenentest in Luxemburg: 1. Montag im Monat', 'Siren test in Luxembourg: 1st Monday of the month', 'Prueba de sirenas en Luxemburgo: 1.er lunes del mes'],
+  sirenTestToday: ['Hoje é dia de teste de sirenes no Luxemburgo. Não é alerta.', 'Aujourd’hui : test des sirènes au Luxembourg. Pas une alerte.', 'Heute ist Sirenentest in Luxemburg. Kein Alarm.', 'Siren test in Luxembourg today. Not an alert.', 'Hoy hay prueba de sirenas en Luxemburgo. No es una alerta.'],
+
+  // Números
+  numbersTitle: ['Números de emergência', 'Numéros d’urgence', 'Notrufnummern', 'Emergency numbers', 'Números de emergencia'],
+  numbersNote: ['O 112 funciona em toda a UE, mesmo sem cartão SIM ou sem saldo.', 'Le 112 fonctionne dans toute l’UE, même sans carte SIM ni crédit.', 'Die 112 funktioniert in der ganzen EU, auch ohne SIM-Karte oder Guthaben.', '112 works across the EU, even without a SIM card or credit.', 'El 112 funciona en toda la UE, incluso sin tarjeta SIM o sin saldo.'],
+  numbersMore: ['Mudar regiões nas definições', 'Changer les régions dans les réglages', 'Regionen in den Einstellungen ändern', 'Change regions in settings', 'Cambiar regiones en los ajustes'],
+
+  // Kit / Inventário
+  kitTitle: ['Kit de 72 horas', 'Kit de 72 heures', '72-Stunden-Vorrat', '72-hour kit', 'Kit de 72 horas'],
+  tabChecklist: ['Lista', 'Liste', 'Checkliste', 'Checklist', 'Lista'],
+  tabInventory: ['Inventário', 'Inventaire', 'Inventar', 'Inventory', 'Inventario'],
+  checklistIntro: ['As quantidades ajustam-se ao número de pessoas definido no início.', 'Les quantités s’adaptent au nombre de personnes défini à l’accueil.', 'Die Mengen passen sich der Personenzahl auf der Startseite an.', 'Quantities follow the number of people set on the home screen.', 'Las cantidades se ajustan al número de personas indicado en el inicio.'],
+  resetChecklist: ['Desmarcar tudo', 'Tout décocher', 'Alles abwählen', 'Uncheck all', 'Desmarcar todo'],
+  confirmResetChecklist: ['Desmarcar todos os itens da lista?', 'Décocher tous les éléments ?', 'Alle Einträge abwählen?', 'Uncheck every item?', '¿Desmarcar todos los elementos?'],
+  invEmpty: ['O inventário está vazio. Começa pela água: quantas garrafas tens em casa?', 'L’inventaire est vide. Commencez par l’eau : combien de bouteilles avez-vous ?', 'Das Inventar ist leer. Fang mit Wasser an: Wie viele Flaschen hast du?', 'The inventory is empty. Start with water: how many bottles do you have?', 'El inventario está vacío. Empieza por el agua: ¿cuántas botellas tienes en casa?'],
+  addItem: ['Adicionar artigo', 'Ajouter un article', 'Artikel hinzufügen', 'Add item', 'Añadir artículo'],
+  editItem: ['Editar artigo', 'Modifier l’article', 'Artikel bearbeiten', 'Edit item', 'Editar artículo'],
+  itemName: ['Artigo', 'Article', 'Artikel', 'Item', 'Artículo'],
+  itemNamePh: ['Ex.: água mineral', 'Ex. : eau minérale', 'z. B. Mineralwasser', 'e.g. mineral water', 'Ej.: agua mineral'],
+  category: ['Categoria', 'Catégorie', 'Kategorie', 'Category', 'Categoría'],
+  quantity: ['Quantidade', 'Quantité', 'Menge', 'Quantity', 'Cantidad'],
+  countUnit: ['Unidade', 'Unité', 'Einheit', 'Unit', 'Unidad'],
+  contentPer: ['Conteúdo de cada', 'Contenu de chaque', 'Inhalt pro Stück', 'Contents of each', 'Contenido de cada uno'],
+  kcalPer: ['kcal de cada', 'kcal par unité', 'kcal pro Stück', 'kcal each', 'kcal de cada uno'],
+  kcalHelp: ['Está no rótulo: kcal por 100 g × peso ÷ 100. Sem este valor, a comida não conta para a autonomia.', 'Sur l’étiquette : kcal pour 100 g × poids ÷ 100. Sans cette valeur, l’aliment n’est pas compté.', 'Steht auf dem Etikett: kcal pro 100 g × Gewicht ÷ 100. Ohne Wert zählt das Lebensmittel nicht.', 'On the label: kcal per 100 g × weight ÷ 100. Without it, the food is not counted.', 'En la etiqueta: kcal por 100 g × peso ÷ 100. Sin este valor, la comida no cuenta para la autonomía.'],
+  kcalCalc: ['Calcular: {kcal} kcal/100 g × {w}', 'Calculer : {kcal} kcal/100 g × {w}', 'Berechnen: {kcal} kcal/100 g × {w}', 'Calculate: {kcal} kcal/100 g × {w}', 'Calcular: {kcal} kcal/100 g × {w}'],
+  per100: ['kcal por 100 g/ml (rótulo)', 'kcal pour 100 g/ml (étiquette)', 'kcal pro 100 g/ml (Etikett)', 'kcal per 100 g/ml (label)', 'kcal por 100 g/ml (etiqueta)'],
+  expiry: ['Validade', 'Date de péremption', 'Haltbar bis', 'Expiry date', 'Fecha de caducidad'],
+  location: ['Onde está guardado', 'Où c’est rangé', 'Lagerort', 'Where it is stored', 'Dónde está guardado'],
+  locationPh: ['Ex.: garagem, prateleira de cima', 'Ex. : garage, étagère du haut', 'z. B. Garage, oberes Regal', 'e.g. garage, top shelf', 'Ej.: garaje, estante de arriba'],
+  total: ['Total', 'Total', 'Gesamt', 'Total', 'Total'],
+  expired: ['Fora de validade', 'Périmé', 'Abgelaufen', 'Expired', 'Caducado'],
+  expiresIn: ['Expira em {n} dias', 'Expire dans {n} jours', 'Läuft in {n} Tagen ab', 'Expires in {n} days', 'Caduca en {n} días'],
+  expiresToday: ['Expira hoje', 'Expire aujourd’hui', 'Läuft heute ab', 'Expires today', 'Caduca hoy'],
+  validUntil: ['Válido até {d}', 'Valable jusqu’au {d}', 'Haltbar bis {d}', 'Good until {d}', 'Válido hasta {d}'],
+  filterAll: ['Tudo', 'Tout', 'Alle', 'All', 'Todo'],
+  invSummary: ['{n} artigos · {l} L de água · {k} kcal', '{n} articles · {l} L d’eau · {k} kcal', '{n} Artikel · {l} L Wasser · {k} kcal', '{n} items · {l} L water · {k} kcal', '{n} artículos · {l} L de agua · {k} kcal'],
+  invSummary1: ['1 artigo · {l} L de água · {k} kcal', '1 article · {l} L d’eau · {k} kcal', '1 Artikel · {l} L Wasser · {k} kcal', '1 item · {l} L water · {k} kcal', '1 artículo · {l} L de agua · {k} kcal'],
+  itemAdded: ['Artigo adicionado', 'Article ajouté', 'Artikel hinzugefügt', 'Item added', 'Artículo añadido'],
+  useOne: ['Gastar 1', 'Utiliser 1', '1 verbrauchen', 'Use 1', 'Gastar 1'],
+
+  // Família
+  familyTitle: ['Plano familiar', 'Plan familial', 'Familienplan', 'Family plan', 'Plan familiar'],
+  contactsTitle: ['Contactos de emergência', 'Contacts d’urgence', 'Notfallkontakte', 'Emergency contacts', 'Contactos de emergencia'],
+  contactsIntro: ['Inclui uma pessoa fora da região: em catástrofes locais, chamadas para longe passam muitas vezes melhor do que as locais.', 'Incluez une personne hors de la région : lors d’une catastrophe locale, les appels lointains passent souvent mieux.', 'Nimm eine Person außerhalb der Region auf: Bei lokalen Katastrophen kommen Ferngespräche oft besser durch.', 'Include someone outside the region: in a local disaster, long-distance calls often get through better than local ones.', 'Incluye a alguien fuera de la región: en catástrofes locales, las llamadas lejanas suelen pasar mejor que las locales.'],
+  addContact: ['Adicionar contacto', 'Ajouter un contact', 'Kontakt hinzufügen', 'Add contact', 'Añadir contacto'],
+  name: ['Nome', 'Nom', 'Name', 'Name', 'Nombre'],
+  relation: ['Relação', 'Lien', 'Beziehung', 'Relationship', 'Relación'],
+  relationPh: ['Ex.: irmã, vizinho, colega', 'Ex. : sœur, voisin, collègue', 'z. B. Schwester, Nachbar', 'e.g. sister, neighbour', 'Ej.: hermana, vecino, compañero'],
+  phone: ['Telefone', 'Téléphone', 'Telefon', 'Phone', 'Teléfono'],
+  outOfRegion: ['Fora da região', 'Hors région', 'Außerhalb der Region', 'Outside the region', 'Fuera de la región'],
+  noContacts: ['Ainda sem contactos. Adiciona pelo menos dois: um perto e um longe.', 'Aucun contact. Ajoutez-en au moins deux : un proche, un éloigné.', 'Noch keine Kontakte. Füge mindestens zwei hinzu: einen nahen und einen fernen.', 'No contacts yet. Add at least two: one nearby, one far away.', 'Aún no hay contactos. Añade al menos dos: uno cerca y otro lejos.'],
+  meetingTitle: ['Pontos de encontro', 'Points de rendez-vous', 'Treffpunkte', 'Meeting points', 'Puntos de encuentro'],
+  meetingIntro: ['Se a casa não for segura e a rede falhar, cada pessoa sabe para onde ir.', 'Si la maison n’est pas sûre et que le réseau tombe, chacun sait où aller.', 'Wenn das Haus nicht sicher ist und das Netz ausfällt, weiß jeder, wohin.', 'If home isn’t safe and the network fails, everyone knows where to go.', 'Si la casa no es segura y la red falla, cada persona sabe adónde ir.'],
+  meetHome: ['Perto de casa', 'Près de la maison', 'Nahe dem Haus', 'Near home', 'Cerca de casa'],
+  meetHomePh: ['Ex.: portão do vizinho do n.º 12', 'Ex. : portail du voisin au n° 12', 'z. B. Tor des Nachbarn Nr. 12', 'e.g. neighbour’s gate at no. 12', 'Ej.: puerta del vecino del n.º 12'],
+  meetArea: ['Fora do bairro', 'Hors du quartier', 'Außerhalb des Viertels', 'Outside the neighbourhood', 'Fuera del barrio'],
+  meetAreaPh: ['Ex.: igreja de Dudelange, entrada principal', 'Ex. : église de Dudelange, entrée principale', 'z. B. Kirche Düdelingen, Haupteingang', 'e.g. Dudelange church, main entrance', 'Ej.: iglesia de Dudelange, entrada principal'],
+  meetRegion: ['Fora da região', 'Hors de la région', 'Außerhalb der Region', 'Outside the region', 'Fuera de la región'],
+  meetRegionPh: ['Ex.: casa dos pais, morada completa', 'Ex. : chez les parents, adresse complète', 'z. B. bei den Eltern, volle Adresse', 'e.g. parents’ house, full address', 'Ej.: casa de los padres, dirección completa'],
+  openMap: ['Abrir no mapa', 'Ouvrir la carte', 'Auf Karte öffnen', 'Open in map', 'Abrir en el mapa'],
+  useMyLocation: ['Usar a minha posição', 'Utiliser ma position', 'Meinen Standort nutzen', 'Use my location', 'Usar mi ubicación'],
+  membersTitle: ['Fichas de emergência', 'Fiches d’urgence', 'Notfallkarten', 'Emergency cards', 'Fichas de emergencia'],
+  membersIntro: ['Uma ficha por pessoa da casa. Mostra-a aos socorristas em ecrã inteiro.', 'Une fiche par personne du foyer. Montrez-la aux secours en plein écran.', 'Eine Karte pro Person im Haushalt. Zeige sie Rettungskräften im Vollbild.', 'One card per household member. Show it full screen to responders.', 'Una ficha por persona de la casa. Muéstrala a los equipos de rescate a pantalla completa.'],
+  addMember: ['Adicionar pessoa', 'Ajouter une personne', 'Person hinzufügen', 'Add person', 'Añadir persona'],
+  birth: ['Data de nascimento', 'Date de naissance', 'Geburtsdatum', 'Date of birth', 'Fecha de nacimiento'],
+  blood: ['Grupo sanguíneo', 'Groupe sanguin', 'Blutgruppe', 'Blood type', 'Grupo sanguíneo'],
+  allergies: ['Alergias', 'Allergies', 'Allergien', 'Allergies', 'Alergias'],
+  meds: ['Medicação habitual', 'Traitement habituel', 'Dauermedikation', 'Regular medication', 'Medicación habitual'],
+  conditions: ['Condições médicas', 'Antécédents médicaux', 'Vorerkrankungen', 'Medical conditions', 'Enfermedades'],
+  doctor: ['Médico de família', 'Médecin traitant', 'Hausarzt', 'GP / doctor', 'Médico de cabecera'],
+  notes: ['Notas', 'Notes', 'Notizen', 'Notes', 'Notas'],
+  showCard: ['Mostrar ficha', 'Afficher la fiche', 'Karte zeigen', 'Show card', 'Mostrar ficha'],
+  iceHeading: ['Em caso de emergência', 'En cas d’urgence', 'Im Notfall', 'In case of emergency', 'En caso de emergencia'],
+  iceContacts: ['Contactar', 'Contacter', 'Kontaktieren', 'Contact', 'Contactar'],
+  noMembers: ['Sem fichas. Adiciona cada pessoa da casa — sobretudo quem tem alergias ou medicação.', 'Aucune fiche. Ajoutez chaque personne, surtout celles avec allergies ou traitement.', 'Keine Karten. Füge jede Person hinzu — vor allem mit Allergien oder Medikamenten.', 'No cards yet. Add everyone at home — especially anyone with allergies or medication.', 'Sin fichas. Añade a cada persona de la casa, sobre todo a quien tenga alergias o tome medicación.'],
+  shareplan: ['Partilhar plano por SMS', 'Partager le plan par SMS', 'Plan per SMS teilen', 'Share plan by SMS', 'Compartir plan por SMS'],
+  planText: ['Plano de emergência da família', 'Plan d’urgence familial', 'Familien-Notfallplan', 'Family emergency plan', 'Plan de emergencia familiar'],
+
+  // Guias
+  guidesTitle: ['Guias de emergência', 'Guides d’urgence', 'Notfall-Ratgeber', 'Emergency guides', 'Guías de emergencia'],
+  firstAid: ['Primeiros socorros', 'Premiers secours', 'Erste Hilfe', 'First aid', 'Primeros auxilios'],
+  procedures: ['Situações e procedimentos', 'Situations et consignes', 'Lagen und Verhalten', 'Situations and what to do', 'Situaciones y qué hacer'],
+  guidesSearch: ['Procurar: queimadura, gás, sirene…', 'Chercher : brûlure, gaz, sirène…', 'Suchen: Verbrennung, Gas, Sirene…', 'Search: burn, gas, siren…', 'Buscar: quemadura, gas, sirena…'],
+  noResults: ['Nada encontrado para "{q}".', 'Rien trouvé pour « {q} ».', 'Nichts gefunden für „{q}“.', 'Nothing found for "{q}".', 'No se ha encontrado nada para «{q}».'],
+  guideDisclaimer: ['Estes guias não substituem formação nem os serviços de emergência. Em caso de dúvida, liga 112.', 'Ces guides ne remplacent ni une formation ni les secours. En cas de doute, appelez le 112.', 'Diese Ratgeber ersetzen weder Ausbildung noch Rettungsdienst. Im Zweifel 112 anrufen.', 'These guides don’t replace training or emergency services. If in doubt, call 112.', 'Estas guías no sustituyen la formación ni los servicios de emergencia. En caso de duda, llama al 112.'],
+  doNot: ['Não fazer', 'À éviter', 'Nicht tun', 'Don’t', 'No hacer'],
+  cprMetronome: ['Ritmo de compressões (110/min)', 'Rythme des compressions (110/min)', 'Drucktakt (110/min)', 'Compression rhythm (110/min)', 'Ritmo de compresiones (110/min)'],
+  start: ['Iniciar', 'Démarrer', 'Starten', 'Start', 'Iniciar'],
+  stop: ['Parar', 'Arrêter', 'Stoppen', 'Stop', 'Parar'],
+
+  // Ferramentas
+  toolsTitle: ['Ferramentas', 'Outils', 'Werkzeuge', 'Tools', 'Herramientas'],
+  torch: ['Lanterna', 'Lampe torche', 'Taschenlampe', 'Torch', 'Linterna'],
+  torchSub: ['Usa o flash da câmara', 'Utilise le flash de l’appareil photo', 'Nutzt den Kamerablitz', 'Uses the camera flash', 'Usa el flash de la cámara'],
+  torchOn: ['Ligar lanterna', 'Allumer', 'Einschalten', 'Turn on', 'Encender linterna'],
+  torchOff: ['Desligar lanterna', 'Éteindre', 'Ausschalten', 'Turn off', 'Apagar linterna'],
+  torchUnsupported: ['Este dispositivo ou browser não deixa controlar o flash. Usa o ecrã branco.', 'Cet appareil ou navigateur ne permet pas de contrôler le flash. Utilisez l’écran blanc.', 'Gerät oder Browser erlauben keine Blitzsteuerung. Nutze den weißen Bildschirm.', 'This device or browser won’t allow flash control. Use the white screen instead.', 'Este dispositivo o navegador no permite controlar el flash. Usa la pantalla blanca.'],
+  torchDenied: ['Sem acesso à câmara. Autoriza nas definições do telemóvel para usar o flash.', 'Accès caméra refusé. Autorisez-le dans les réglages pour utiliser le flash.', 'Kein Kamerazugriff. In den Einstellungen erlauben, um den Blitz zu nutzen.', 'No camera access. Allow it in your phone settings to use the flash.', 'Sin acceso a la cámara. Permítelo en los ajustes del móvil para usar el flash.'],
+  screenLight: ['Ecrã branco', 'Écran blanc', 'Weißer Bildschirm', 'White screen', 'Pantalla blanca'],
+  screenLightSub: ['Luz suave, toca para sair', 'Lumière douce, touchez pour quitter', 'Sanftes Licht, tippen zum Beenden', 'Soft light, tap to exit', 'Luz suave, toca para salir'],
+  sosSignal: ['Sinal SOS', 'Signal SOS', 'SOS-Signal', 'SOS signal', 'Señal SOS'],
+  sosSignalSub: ['··· ––– ··· em luz e som', '··· ––– ··· en lumière et son', '··· ––– ··· mit Licht und Ton', '··· ––– ··· with light and sound', '··· ––– ··· con luz y sonido'],
+  whistle: ['Apito', 'Sifflet', 'Pfeife', 'Whistle', 'Silbato'],
+  whistleSub: ['Som agudo para te encontrarem', 'Son aigu pour être trouvé', 'Hoher Ton, damit man dich findet', 'High tone so people can find you', 'Sonido agudo para que te encuentren'],
+  withTorch: ['Usar também o flash', 'Utiliser aussi le flash', 'Auch Blitz nutzen', 'Also use the flash', 'Usar también el flash'],
+  tapToExit: ['Toca para sair', 'Touchez pour quitter', 'Tippen zum Beenden', 'Tap to exit', 'Toca para salir'],
+  gpsTitle: ['A minha posição', 'Ma position', 'Mein Standort', 'My location', 'Mi ubicación'],
+  gpsSub: ['Funciona sem Internet — o GPS fala com satélites', 'Fonctionne hors ligne — le GPS parle aux satellites', 'Funktioniert offline — GPS nutzt Satelliten', 'Works offline — GPS talks to satellites', 'Funciona sin Internet — el GPS habla con los satélites'],
+  getLocation: ['Obter posição', 'Obtenir la position', 'Standort ermitteln', 'Get location', 'Obtener ubicación'],
+  locating: ['A procurar satélites…', 'Recherche des satellites…', 'Suche Satelliten…', 'Finding satellites…', 'Buscando satélites…'],
+  accuracy: ['Precisão: ± {n} m', 'Précision : ± {n} m', 'Genauigkeit: ± {n} m', 'Accuracy: ± {n} m', 'Precisión: ± {n} m'],
+  altitude: ['Altitude: {n} m', 'Altitude : {n} m', 'Höhe: {n} m', 'Altitude: {n} m', 'Altitud: {n} m'],
+  gpsDenied: ['Sem permissão de localização. Ativa-a nas definições do telemóvel.', 'Localisation refusée. Activez-la dans les réglages.', 'Standort verweigert. In den Einstellungen aktivieren.', 'Location permission denied. Turn it on in phone settings.', 'Sin permiso de ubicación. Actívalo en los ajustes del móvil.'],
+  gpsFail: ['Não foi possível obter a posição. Vai para um sítio com céu aberto e tenta de novo.', 'Position introuvable. Allez à découvert et réessayez.', 'Standort nicht gefunden. Geh ins Freie und versuche es erneut.', 'Couldn’t get a position. Move somewhere with open sky and try again.', 'No se pudo obtener la ubicación. Ve a un lugar con cielo abierto e inténtalo de nuevo.'],
+  sendBySms: ['Enviar por SMS', 'Envoyer par SMS', 'Per SMS senden', 'Send by SMS', 'Enviar por SMS'],
+  smsLocation: ['Estou aqui: {c} (precisão ±{a} m) {url}', 'Je suis ici : {c} (précision ±{a} m) {url}', 'Ich bin hier: {c} (±{a} m) {url}', 'I am here: {c} (±{a} m) {url}', 'Estoy aquí: {c} (precisión ±{a} m) {url}'],
+  compass: ['Bússola', 'Boussole', 'Kompass', 'Compass', 'Brújula'],
+  compassStart: ['Ativar bússola', 'Activer la boussole', 'Kompass aktivieren', 'Turn on compass', 'Activar brújula'],
+  compassUnsupported: ['Sensor de orientação indisponível neste dispositivo ou browser.', 'Capteur d’orientation indisponible.', 'Orientierungssensor nicht verfügbar.', 'Orientation sensor not available on this device or browser.', 'Sensor de orientación no disponible en este dispositivo o navegador.'],
+  compassCalibrate: ['Se oscilar muito, faz um 8 no ar com o telemóvel.', 'Si l’aiguille oscille, dessinez un 8 avec le téléphone.', 'Wenn es stark schwankt, mit dem Handy eine 8 in die Luft zeichnen.', 'If it jumps around, wave the phone in a figure 8.', 'Si oscila mucho, dibuja un 8 en el aire con el móvil.'],
+  battery: ['Bateria', 'Batterie', 'Akku', 'Battery', 'Batería'],
+  charging: ['a carregar', 'en charge', 'lädt', 'charging', 'cargando'],
+  batteryTips: ['Poupar bateria: modo de poupança máxima, brilho no mínimo, dados móveis desligados quando não precisas, e liga só a horas combinadas.', 'Économiser : mode économie maximale, luminosité minimale, données mobiles coupées, et appels à heures fixes.', 'Akku sparen: Maximaler Energiesparmodus, Helligkeit minimal, mobile Daten aus, nur zu festen Zeiten telefonieren.', 'Save battery: maximum power saving, minimum brightness, mobile data off when not needed, and call only at agreed times.', 'Ahorrar batería: modo de ahorro máximo, brillo al mínimo, datos móviles apagados cuando no los necesites, y llama solo a horas acordadas.'],
+
+  // Cofre
+  vaultTitle: ['Cofre de documentos', 'Coffre à documents', 'Dokumententresor', 'Document vault', 'Caja fuerte de documentos'],
+  vaultIntro: ['Fotos dos teus documentos, cifradas neste telemóvel com o teu PIN. Ninguém as consegue ler sem ele — nem nós.', 'Photos de vos documents, chiffrées sur ce téléphone avec votre code. Illisibles sans lui.', 'Fotos deiner Dokumente, auf diesem Handy mit deiner PIN verschlüsselt. Ohne PIN unlesbar.', 'Photos of your documents, encrypted on this phone with your PIN. Unreadable without it — even by us.', 'Fotos de tus documentos, cifradas en este móvil con tu PIN. Nadie puede leerlas sin él, ni siquiera nosotros.'],
+  vaultCreate: ['Criar cofre', 'Créer le coffre', 'Tresor anlegen', 'Create vault', 'Crear caja fuerte'],
+  vaultPin: ['PIN ou palavra-passe', 'Code ou mot de passe', 'PIN oder Passwort', 'PIN or passphrase', 'PIN o contraseña'],
+  vaultPinHelp: ['Mínimo 6 caracteres. Quanto mais longo, mais difícil de adivinhar se alguém copiar o telemóvel.', 'Au moins 6 caractères. Plus il est long, plus il résiste si quelqu’un copie le téléphone.', 'Mindestens 6 Zeichen. Je länger, desto sicherer, falls jemand das Handy kopiert.', 'At least 6 characters. The longer it is, the harder to guess if someone copies the phone.', 'Mínimo 6 caracteres. Cuanto más largo, más difícil de adivinar si alguien copia el móvil.'],
+  vaultPinRepeat: ['Repetir PIN', 'Répéter le code', 'PIN wiederholen', 'Repeat PIN', 'Repetir PIN'],
+  vaultWarn: ['Se esqueceres o PIN, os documentos perdem-se. Não há recuperação.', 'Si vous oubliez le code, les documents sont perdus. Aucune récupération.', 'Wenn du die PIN vergisst, sind die Dokumente verloren. Keine Wiederherstellung.', 'If you forget the PIN, the documents are lost. There is no recovery.', 'Si olvidas el PIN, los documentos se pierden. No hay recuperación.'],
+  vaultUnlock: ['Desbloquear', 'Déverrouiller', 'Entsperren', 'Unlock', 'Desbloquear'],
+  vaultLock: ['Bloquear', 'Verrouiller', 'Sperren', 'Lock', 'Bloquear'],
+  vaultWrongPin: ['PIN errado.', 'Code incorrect.', 'Falsche PIN.', 'Wrong PIN.', 'PIN incorrecto.'],
+  vaultPinShort: ['Precisa de pelo menos 6 caracteres.', 'Au moins 6 caractères.', 'Mindestens 6 Zeichen.', 'At least 6 characters.', 'Necesita al menos 6 caracteres.'],
+  vaultTooBig: ['Ficheiro demasiado grande (máximo 15 MB).', 'Fichier trop volumineux (15 Mo max).', 'Datei zu groß (max. 15 MB).', 'File too large (15 MB max).', 'Archivo demasiado grande (máximo 15 MB).'],
+  vaultOpen: ['Abrir', 'Ouvrir', 'Öffnen', 'Open', 'Abrir'],
+  vaultWait: ['Aguarda {n} s antes de tentar de novo.', 'Patientez {n} s avant de réessayer.', 'Warte {n} s, bevor du es erneut versuchst.', 'Wait {n} s before trying again.', 'Espera {n} s antes de volver a intentarlo.'],
+  vaultPinMismatch: ['Os PIN não coincidem.', 'Les codes ne correspondent pas.', 'Die PINs stimmen nicht überein.', 'The PINs don’t match.', 'Los PIN no coinciden.'],
+  vaultAdd: ['Adicionar documento', 'Ajouter un document', 'Dokument hinzufügen', 'Add document', 'Añadir documento'],
+  vaultEmpty: ['Cofre vazio. Fotografa o cartão de cidadão, o cartão CNS, apólices de seguro e receitas.', 'Coffre vide. Photographiez carte d’identité, carte CNS, assurances et ordonnances.', 'Tresor leer. Fotografiere Ausweis, CNS-Karte, Versicherungen und Rezepte.', 'Vault is empty. Photograph your ID card, CNS card, insurance policies and prescriptions.', 'Caja fuerte vacía. Fotografía el DNI o la tarjeta de identidad, la tarjeta CNS, las pólizas de seguro y las recetas.'],
+  vaultDocName: ['Nome do documento', 'Nom du document', 'Dokumentname', 'Document name', 'Nombre del documento'],
+  vaultDocNamePh: ['Ex.: Cartão de cidadão — frente', 'Ex. : Carte d’identité — recto', 'z. B. Personalausweis — Vorderseite', 'e.g. ID card — front', 'Ej.: DNI — anverso'],
+  vaultChoose: ['Tirar foto ou escolher ficheiro', 'Prendre une photo ou choisir', 'Foto aufnehmen oder wählen', 'Take a photo or choose file', 'Hacer una foto o elegir archivo'],
+  vaultEncrypting: ['A cifrar…', 'Chiffrement…', 'Verschlüssele…', 'Encrypting…', 'Cifrando…'],
+  vaultAutoLock: ['Bloqueia sozinho após 5 minutos sem uso.', 'Se verrouille après 5 minutes d’inactivité.', 'Sperrt nach 5 Minuten Inaktivität.', 'Locks itself after 5 minutes of inactivity.', 'Se bloquea sola tras 5 minutos sin uso.'],
+  vaultUnsupported: ['Este browser não suporta cifra segura. Abre a app instalada ou num browser recente com HTTPS.', 'Ce navigateur ne prend pas en charge le chiffrement. Utilisez l’app installée ou HTTPS.', 'Dieser Browser unterstützt keine Verschlüsselung. Nutze die App oder HTTPS.', 'This browser doesn’t support secure encryption. Use the installed app or a recent browser over HTTPS.', 'Este navegador no admite cifrado seguro. Abre la app instalada o un navegador reciente con HTTPS.'],
+  vaultChecklist: ['O que ter em cópia', 'À avoir en copie', 'Was du als Kopie brauchst', 'What to keep copies of', 'Qué tener en copia'],
+  vaultDestroy: ['Apagar cofre', 'Supprimer le coffre', 'Tresor löschen', 'Delete vault', 'Eliminar caja fuerte'],
+  vaultDestroyConfirm: ['Apagar o cofre e todos os documentos? Não dá para desfazer.', 'Supprimer le coffre et tous les documents ? Irréversible.', 'Tresor und alle Dokumente löschen? Nicht umkehrbar.', 'Delete the vault and every document? This can’t be undone.', '¿Eliminar la caja fuerte y todos los documentos? No se puede deshacer.'],
+  vaultChangePin: ['Mudar PIN', 'Changer le code', 'PIN ändern', 'Change PIN', 'Cambiar PIN'],
+  vaultNewPin: ['Novo PIN', 'Nouveau code', 'Neue PIN', 'New PIN', 'PIN nuevo'],
+  vaultPinChanged: ['PIN alterado', 'Code modifié', 'PIN geändert', 'PIN changed', 'PIN cambiado'],
+  vaultCurrentPin: ['PIN atual', 'Code actuel', 'Aktuelle PIN', 'Current PIN', 'PIN actual'],
+
+  // Definições
+  regions: ['Regiões', 'Régions', 'Regionen', 'Regions', 'Regiones'],
+  regionsHelp: ['Escolhe onde vives ou passas tempo. Muda os números de emergência e os guias que aparecem.', 'Choisissez où vous vivez ou séjournez. Cela change les numéros et les guides affichés.', 'Wähle, wo du lebst oder dich aufhältst. Ändert Notrufnummern und Ratgeber.', 'Choose where you live or spend time. Changes the emergency numbers and guides shown.', 'Elige dónde vives o pasas tiempo. Cambia los números de emergencia y las guías que aparecen.'],
+  regionsMin: ['Escolhe pelo menos uma região.', 'Choisissez au moins une région.', 'Mindestens eine Region wählen.', 'Choose at least one region.', 'Elige al menos una región.'],
+  language: ['Idioma', 'Langue', 'Sprache', 'Language', 'Idioma'],
+  theme: ['Aparência', 'Apparence', 'Darstellung', 'Appearance', 'Apariencia'],
+  themeAuto: ['Automático', 'Automatique', 'Automatisch', 'Automatic', 'Automático'],
+  themeLight: ['Claro', 'Clair', 'Hell', 'Light', 'Claro'],
+  themeDark: ['Escuro', 'Sombre', 'Dunkel', 'Dark', 'Oscuro'],
+  needsTitle: ['Necessidades diárias', 'Besoins quotidiens', 'Tagesbedarf', 'Daily needs', 'Necesidades diarias'],
+  waterPerPerson: ['Água por pessoa (L/dia)', 'Eau par personne (L/jour)', 'Wasser pro Person (L/Tag)', 'Water per person (L/day)', 'Agua por persona (L/día)'],
+  waterPerPersonHelp: ['3 L é a referência habitual: beber e cozinhar. Com calor, crianças pequenas ou doença, conta mais.', '3 L est la référence : boire et cuisiner. Prévoyez plus en cas de chaleur, d’enfants ou de maladie.', '3 L ist der übliche Richtwert: Trinken und Kochen. Bei Hitze, Kleinkindern oder Krankheit mehr.', '3 L is the usual reference: drinking and cooking. Plan more for heat, small children or illness.', '3 L es la referencia habitual: beber y cocinar. Con calor, niños pequeños o enfermedad, cuenta más.'],
+  waterPerPet: ['Água por animal (L/dia)', 'Eau par animal (L/jour)', 'Wasser pro Tier (L/Tag)', 'Water per pet (L/day)', 'Agua por animal (L/día)'],
+  kcalPerPerson: ['Energia por pessoa (kcal/dia)', 'Énergie par personne (kcal/jour)', 'Energie pro Person (kcal/Tag)', 'Energy per person (kcal/day)', 'Energía por persona (kcal/día)'],
+  goalHours: ['Objetivo de autonomia (horas)', 'Objectif d’autonomie (heures)', 'Autarkieziel (Stunden)', 'Self-sufficiency goal (hours)', 'Objetivo de autonomía (horas)'],
+  backupTitle: ['Cópia de segurança', 'Sauvegarde', 'Sicherung', 'Backup', 'Copia de seguridad'],
+  backupIntro: ['Tudo fica só neste telemóvel. Exporta uma cópia de vez em quando e guarda-a noutro sítio. O cofre não entra na cópia.', 'Tout reste sur ce téléphone. Exportez une copie de temps en temps. Le coffre n’est pas inclus.', 'Alles bleibt auf diesem Handy. Exportiere ab und zu eine Kopie. Der Tresor ist nicht enthalten.', 'Everything stays on this phone. Export a copy now and then and keep it elsewhere. The vault is not included.', 'Todo se queda solo en este móvil. Exporta una copia de vez en cuando y guárdala en otro sitio. La caja fuerte no se incluye.'],
+  exportData: ['Exportar cópia', 'Exporter', 'Exportieren', 'Export backup', 'Exportar copia'],
+  importData: ['Importar cópia', 'Importer', 'Importieren', 'Import backup', 'Importar copia'],
+  importConfirm: ['Substituir todos os dados atuais pela cópia importada?', 'Remplacer toutes les données par la sauvegarde ?', 'Alle aktuellen Daten durch die Sicherung ersetzen?', 'Replace all current data with the imported backup?', '¿Sustituir todos los datos actuales por la copia importada?'],
+  importOk: ['Cópia importada', 'Sauvegarde importée', 'Sicherung importiert', 'Backup imported', 'Copia importada'],
+  importFail: ['Ficheiro inválido. Escolhe um ficheiro exportado pela SOS 72H.', 'Fichier invalide. Choisissez une sauvegarde SOS 72H.', 'Ungültige Datei. Wähle eine SOS-72H-Sicherung.', 'Invalid file. Choose a file exported by SOS 72H.', 'Archivo no válido. Elige un archivo exportado por SOS 72H.'],
+  resetAll: ['Apagar todos os dados', 'Effacer toutes les données', 'Alle Daten löschen', 'Delete all data', 'Borrar todos los datos'],
+  resetAllConfirm: ['Apagar inventário, plano familiar e definições? O cofre mantém-se.', 'Effacer inventaire, plan familial et réglages ? Le coffre est conservé.', 'Inventar, Familienplan und Einstellungen löschen? Der Tresor bleibt.', 'Delete inventory, family plan and settings? The vault is kept.', '¿Borrar inventario, plan familiar y ajustes? La caja fuerte se mantiene.'],
+  aboutTitle: ['Sobre', 'À propos', 'Über', 'About', 'Acerca de'],
+  aboutText: ['Funciona sem Internet. Sem contas, sem publicidade, sem envio de dados.', 'Fonctionne hors ligne. Sans compte, sans pub, sans envoi de données.', 'Funktioniert offline. Kein Konto, keine Werbung, keine Datenübertragung.', 'Works offline. No accounts, no ads, no data sent anywhere.', 'Funciona sin Internet. Sin cuentas, sin publicidad, sin envío de datos.'],
+  install: ['Instalar no telemóvel', 'Installer sur le téléphone', 'Auf dem Handy installieren', 'Install on phone', 'Instalar en el móvil'],
+  updateReady: ['Nova versão disponível.', 'Nouvelle version disponible.', 'Neue Version verfügbar.', 'New version available.', 'Nueva versión disponible.'],
+  reload: ['Atualizar', 'Mettre à jour', 'Aktualisieren', 'Update', 'Actualizar'],
+};
+
+const UNITS = {
+  bottle: ['garrafas', 'bouteilles', 'Flaschen', 'bottles', 'botellas'],
+  jerrycan: ['garrafões', 'bidons', 'Kanister', 'jerrycans', 'garrafas'],
+  can: ['latas', 'boîtes de conserve', 'Dosen', 'cans', 'latas'],
+  jar: ['frascos', 'bocaux', 'Gläser', 'jars', 'tarros'],
+  pack: ['embalagens', 'emballages', 'Packungen', 'packs', 'envases'],
+  box: ['caixas', 'boîtes', 'Kartons', 'boxes', 'cajas'],
+  bag: ['sacos', 'sachets', 'Beutel', 'bags', 'bolsas'],
+  un: ['unidades', 'unités', 'Stück', 'units', 'unidades'],
+};
+const CATS = {
+  water: ['Água', 'Eau', 'Wasser', 'Water', 'Agua'],
+  food: ['Comida', 'Nourriture', 'Lebensmittel', 'Food', 'Comida'],
+  medical: ['Saúde', 'Santé', 'Gesundheit', 'Health', 'Salud'],
+  equipment: ['Equipamento', 'Équipement', 'Ausrüstung', 'Equipment', 'Equipo'],
+  hygiene: ['Higiene', 'Hygiène', 'Hygiene', 'Hygiene', 'Higiene'],
+  energy: ['Energia e luz', 'Énergie et lumière', 'Energie und Licht', 'Power and light', 'Energía y luz'],
+  documents: ['Documentos e dinheiro', 'Documents et argent', 'Dokumente und Geld', 'Documents and money', 'Documentos y dinero'],
+  other: ['Outros', 'Autres', 'Sonstiges', 'Other', 'Otros'],
+};
+
+export function lang() { return store.get().settings.lang || 'pt'; }
+
+export function t(key, vars) {
+  const row = S[key];
+  let s = row ? (row[IDX[lang()]] ?? row[0]) : key;
+  if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+  return s;
+}
+// Para conteúdos com [pt, fr, de, en, es] guardados fora deste ficheiro
+export function L(arr) { return Array.isArray(arr) ? (arr[IDX[lang()]] ?? arr[0]) : arr; }
+export function unitName(u) { return UNITS[u] ? L(UNITS[u]) : u; }
+export function catName(c) { return L(CATS[c] || CATS.other); }
+export const UNIT_KEYS = Object.keys(UNITS);
+export const CAT_KEYS = Object.keys(CATS);
+
+const LOCALES = { pt: 'pt-PT', fr: 'fr-LU', de: 'de-LU', en: 'en-GB', es: 'es-ES' };
+export function fmtNum(n, max = 1) {
+  return new Intl.NumberFormat(LOCALES[lang()], { maximumFractionDigits: max }).format(n);
+}
+export function fmtDate(iso) {
+  if (!iso) return '';
+  return new Intl.DateTimeFormat(LOCALES[lang()], { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso + 'T00:00:00'));
+}
