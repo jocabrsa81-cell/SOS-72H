@@ -11,7 +11,8 @@ const REFS = {
   lu: [{ lat: 49.61, lon: 6.13 }],                       // Luxemburgo
   pt: [{ lat: 39.5, lon: -8.0 }, { lat: 40.4, lon: -3.7 }], // Portugal, Espanha
 };
-const COUNTRIES = { lu: ['LU', 'FR', 'DE', 'BE'], pt: ['PT', 'ES'] };
+export const COUNTRIES = { lu: ['LU', 'FR', 'DE', 'BE'], pt: ['PT', 'ES'] };
+export const WEATHER_MIN_DEFAULT = { LU: 'yellow', FR: 'yellow', DE: 'yellow', BE: 'yellow', PT: 'yellow', ES: 'orange' };
 const RANK = { info: 0, yellow: 1, orange: 2, red: 3 };
 const IPMA_AREAS = {
   AVR: 'Aveiro', BJA: 'Beja', BRG: 'Braga', BGC: 'Bragança', CBO: 'Castelo Branco', CBR: 'Coimbra', EVR: 'Évora',
@@ -30,7 +31,12 @@ export const SOURCES = {
 const lsGet = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-export const lastResult = () => lsGet(CACHE, null);
+// Última verificação, com a lista refiltrada pelas definições atuais (regiões, níveis mínimos).
+export const lastResult = () => {
+  const r = lsGet(CACHE, null);
+  if (r && r.raw) r.items = relevant(r.raw, lastPosition());
+  return r;
+};
 
 export function distanceKm(a, b) {
   const R = 6371, toR = x => x * Math.PI / 180;
@@ -74,7 +80,7 @@ async function directIPMA() {
 }
 
 // Filtra pelo que interessa a quem usa a app.
-function relevant(items, here, regs = regions()) {
+function relevant(items, here, regs = regions(), ignoreMin = false) {
   const hasIPMA = items.some(i => i.source === 'ipma');
   const refs = regs.flatMap(r => REFS[r] || []).concat(here ? [here] : []);
   const countries = new Set(regs.flatMap(r => COUNTRIES[r] || []));
@@ -83,7 +89,8 @@ function relevant(items, here, regs = regions()) {
   return items.map(it => ({ ...it, km: it.lat != null ? Math.round(near(it)) : null })).filter(it => {
     if (it.kind === 'weather') {
       if (!countries.has(it.country) || RANK[it.level] < 1 || (it.end && Date.parse(it.end) <= now)) return false;
-      if (it.country === 'ES' && it.level !== 'red') return false;           // Espanha: só vermelho
+      const min = (store.get().settings.weatherMin || {})[it.country] || WEATHER_MIN_DEFAULT[it.country] || 'yellow';
+      if (!ignoreMin && RANK[it.level] < RANK[min]) return false;                          // nível mínimo escolhido nas Definições
       if (it.country === 'PT' && it.source === 'meteoalarm' && hasIPMA) return false; // Portugal: IPMA é a fonte oficial
       return true;
     }
@@ -143,7 +150,7 @@ export function checkAlerts(here) {
       }
     }
     // Guarda só o que pode interessar (todas as regiões), para não encher o armazenamento.
-    res.raw = relevant(all, here, ['lu', 'pt']).map(({ km, ...i }) => i);
+    res.raw = relevant(all, here, ['lu', 'pt'], true).map(({ km, ...i }) => i);
     res.items = relevant(all, here);
     // Alertas fortes que ainda não tinham sido vistos
     const seen = new Set(lsGet(SEEN, []));

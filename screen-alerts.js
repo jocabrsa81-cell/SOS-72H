@@ -92,6 +92,7 @@ export function render(root) {
     h('section.block',
       sw('alertsAuto', t('alertsAuto')),
       sw('alertsNotify', t('alertsNotify'), askNotify),
+      h('a.alert-link', { href: '#/settings' }, t('alertsLevelsLink')),
       h('p.muted', t('alertsBackground'))));
 
   draw(lastResult());

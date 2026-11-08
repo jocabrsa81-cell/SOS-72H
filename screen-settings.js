@@ -2,11 +2,33 @@ import { store } from './store.js';
 import { t, L, LANGS, LANG_NAMES } from './i18n.js';
 import { REGIONS } from './content.js';
 import { isIOS, isStandalone } from './platform.js';
+import { COUNTRIES, WEATHER_MIN_DEFAULT } from './alerts.js';
 import { h, icon, toast, confirmBox, field, fill, add } from './ui.js';
 
 export function title() { return null; }
 
-const VERSION = '1.7.1';
+const VERSION = '1.7.2';
+
+// Nível mínimo dos avisos de tempo, por país das regiões escolhidas.
+function weatherMin() {
+  const box = h('div.levels');
+  const draw = () => {
+    const st = store.get().settings;
+    const regs = st.regions && st.regions.length ? st.regions : ['lu', 'pt'];
+    const cur = { ...WEATHER_MIN_DEFAULT, ...(st.weatherMin || {}) };
+    fill(box, regs.flatMap(r => COUNTRIES[r] || []).map(c => {
+      const sel = h('select', { 'aria-label': t('ctry' + c) }, ['yellow', 'orange', 'red'].map(l =>
+        h('option', { value: l, selected: cur[c] === l }, t('lvl' + l[0].toUpperCase() + l.slice(1)))));
+      sel.addEventListener('change', () => { store.update(x => { x.settings.weatherMin = { ...cur, ...(x.settings.weatherMin || {}), [c]: sel.value }; }); toast(t('saved')); });
+      return h('label.level-row', h('span.flag', c), h('span.level-name', t('ctry' + c)), sel);
+    }));
+  };
+  draw();
+  // Se as regiões mudarem, a lista de países muda também.
+  let last = JSON.stringify(store.get().settings.regions);
+  store.subscribe(s => { const now = JSON.stringify(s.settings.regions); if (now !== last) { last = now; draw(); } });
+  return h('section.block', { id: 'weather-levels' }, h('h2.block-title', t('weatherMinTitle')), h('p.muted', t('weatherMinHelp')), box);
+}
 
 export function render(root) {
   const s = store.get().settings;
@@ -74,6 +96,7 @@ export function render(root) {
   add(root, 
     h('section.block', h('h2.block-title', t('language')), langs),
     h('section.block', h('h2.block-title', t('regions')), h('p.muted', t('regionsHelp')), regionChips),
+    weatherMin(),
     h('section.block', h('h2.block-title', t('theme')), themes),
     h('section.block',
       h('h2.block-title', t('needsTitle')),

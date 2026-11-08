@@ -15,7 +15,8 @@ const DEFAULTS = () => ({
     goalHours: 72,
     regions: ['lu', 'pt'],
     alertsAuto: true,      // verificar alertas com a app aberta
-    alertsNotify: false,   // notificação do sistema para alertas fortes   // lu = Luxemburgo e arredores, pt = Portugal e Espanha
+    alertsNotify: false,   // notificação do sistema para alertas fortes
+    weatherMin: { LU: 'yellow', FR: 'yellow', DE: 'yellow', BE: 'yellow', PT: 'yellow', ES: 'orange' }, // nível mínimo dos avisos de tempo por país   // lu = Luxemburgo e arredores, pt = Portugal e Espanha
   },
   kit: {},            // { itemId: true }
   inventory: [],      // { id, name, category, qty, unit, content, contentUnit, kcal, expiry, location }
