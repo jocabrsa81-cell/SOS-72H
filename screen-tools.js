@@ -1,6 +1,7 @@
 import { t, L, lang, fmtNum } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
-import { omPoint, omSearch, omOpenApp, omStore, geoHref } from './maps.js';
+import { omPoint, omSearch, omOpenApp, omStore, launch, geoHref } from './maps.js';
+import { isIOS, smsHref, audioContext } from './platform.js';
 import { NEARBY } from './content.js';
 
 let lastFix = null; // última posição GPS, para centrar as pesquisas
@@ -102,7 +103,8 @@ function tone(ctx, freq, type = 'sine') {
 const SOS = [1, 1, 1, 1, 1, 3, 3, 1, 3, 1, 3, 3, 1, 1, 1, 1, 1, 7]; // on/off alternados
 function sosSignal(useTorch) {
   let ctx = null, beep = null, i = 0, timer;
-  try { ctx = new AudioContext(); beep = tone(ctx, 1000); } catch (e) {}
+  try { ctx = audioContext(); beep = tone(ctx, 1000); } catch (e) {}
+  if (isIOS) toast(t('iosSilent'));
   const panel = h('div.sos-panel', h('span.sos-glyph', '··· ––– ···'));
   const step = () => {
     const on = i % 2 === 0;
@@ -123,7 +125,8 @@ function sosSignal(useTorch) {
 // Apito: 3 sons longos, pausa, repete — o sinal internacional de pedido de ajuda.
 function whistle() {
   let ctx, w, timer, i = 0;
-  try { ctx = new AudioContext(); w = tone(ctx, 3150, 'square'); } catch (e) { return toast('Audio ?'); }
+  try { ctx = audioContext(); w = tone(ctx, 3150, 'square'); } catch (e) { return toast('Audio ?'); }
+  if (isIOS) toast(t('iosSilent'));
   const pattern = [700, 300, 700, 300, 700, 2000];
   const panel = h('div.whistle-panel', icon('whistle', 96));
   const step = () => {
@@ -151,7 +154,7 @@ function dms(v, pos, neg) {
 
 // Pesquisa no Organic Maps centrada na posição atual (se for rápida a obter) ou sem centro.
 function nearby(n) {
-  const go = pos => { location.href = omSearch(L(n.q), pos); };
+  const go = pos => launch(omSearch(L(n.q), pos));
   if (lastFix) return go(lastFix);
   if (!navigator.geolocation) return go(null);
   let done = false;
@@ -181,6 +184,7 @@ export function render(root) {
     torchBtn.disabled = false;
   });
   const torchDiag = h('small.diag');
+  if (isIOS) torchBtn.disabled = true;
   cleanups.push(() => torch.off());
 
   const useTorch = h('input', { type: 'checkbox' });
@@ -204,8 +208,8 @@ export function render(root) {
         h('p.muted', t('accuracy', { n: Math.round(accuracy) }) + (altitude != null ? ' · ' + t('altitude', { n: Math.round(altitude) }) : '')),
         h('div.inline-actions',
           h('button.btn.small.ghost', { type: 'button', onclick: () => navigator.clipboard?.writeText(dec).then(() => toast(t('copied'))) }, icon('copy', 16), t('copy')),
-          h('a.btn.small.ghost', { href: 'sms:?body=' + encodeURIComponent(sms) }, icon('share', 16), t('sendBySms')),
-          h('a.btn.small.ghost', { href: omPoint({ lat: la, lon: lo, name: t('omHere') }) }, icon('compass', 16), t('omOpen')),
+          h('a.btn.small.ghost', { href: smsHref(sms) }, icon('share', 16), t('sendBySms')),
+          h('button.btn.small.ghost', { type: 'button', onclick: () => launch(omPoint({ lat: la, lon: lo, name: t('omHere') })) }, icon('compass', 16), t('omOpen')),
           h('a.btn.small.ghost', { href: geoHref({ lat: la, lon: lo }, t('omHere')) }, t('omOther'))));
     }, e => {
       gpsBtn.disabled = false; gpsBtn.lastChild.textContent = t('getLocation');
@@ -250,7 +254,7 @@ export function render(root) {
   const report = () => {
     if (deg.textContent !== '—') return;
     compassBtn.hidden = false;
-    compassMsg.textContent = t('compassUnsupported') + ' ' + t('compassSensorsHelp');
+    compassMsg.textContent = t('compassUnsupported') + ' ' + (isIOS ? t('compassIOSHelp') : t('compassSensorsHelp'));
     compassDiag.textContent = diag.concat('eventos: ' + events).join(' · ');
   };
   // Arranca sozinha. Se em 3 s não houver leitura, mostra o botão (pede permissão) e o diagnóstico.
@@ -267,10 +271,12 @@ export function render(root) {
       if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) diag.push('permissão: ' + await DeviceOrientationEvent.requestPermission());
     } catch (e) { diag.push('permissão: ' + e.name); }
     compassBtn.hidden = true; compassMsg.textContent = t('compassCalibrate');
+    if (!compassOn) return startCompass();
     startSensor();
     setTimeout(report, 3000);
   } }, icon('compass', 18), t('compassStart'));
-  setTimeout(startCompass, 0);
+  // No iPhone a bússola só arranca depois de um toque a autorizar; no Android arranca sozinha.
+  if (isIOS) compassBtn.hidden = false; else setTimeout(startCompass, 0);
   cleanups.push(() => {
     window.removeEventListener('deviceorientationabsolute', onOrient);
     window.removeEventListener('deviceorientation', onOrient);
@@ -287,11 +293,11 @@ export function render(root) {
 
   add(root, 
     h('section.tool-grid',
-      h('div.tool-card.torch-card', torchBtn, h('small.muted', t('torchSub')), torchDiag),
+      h('div.tool-card.torch-card', torchBtn, h('small.muted', isIOS ? t('torchIOS') : t('torchSub')), torchDiag),
       h('button.tool-card', { type: 'button', onclick: () => overlay('white', h('div')) }, icon('screen', 28), h('b', t('screenLight')), h('small.muted', t('screenLightSub'))),
       h('button.tool-card', { type: 'button', onclick: () => sosSignal(useTorch.checked) }, icon('sos', 28), h('b', t('sosSignal')), h('small.muted', t('sosSignalSub'))),
       h('button.tool-card', { type: 'button', onclick: whistle }, icon('whistle', 28), h('b', t('whistle')), h('small.muted', t('whistleSub')))),
-    h('label.check.plain.sos-torch', useTorch, h('span.check-box', icon('check', 16)), h('span.check-text', t('withTorch'))),
+    isIOS ? null : h('label.check.plain.sos-torch', useTorch, h('span.check-box', icon('check', 16)), h('span.check-text', t('withTorch'))),
     h('section.block',
       h('h2.block-title', icon('pin', 20), t('gpsTitle')),
       h('p.muted', t('gpsSub')),
@@ -301,7 +307,8 @@ export function render(root) {
       h('p.muted', t('omIntro')),
       h('div.inline-actions',
         h('a.btn.primary', { href: omOpenApp() }, icon('compass', 18), t('omOpenApp')),
-        h('a.btn.ghost', { href: omStore(), target: '_blank', rel: 'noopener' }, icon('download', 18), t('omInstall'))),
+        // No iPhone, "Abrir" já leva à App Store (que mostra Abrir ou Obter) — um botão chega.
+        isIOS ? null : h('a.btn.ghost', { href: omStore(), target: '_blank', rel: 'noopener' }, icon('download', 18), t('omInstall'))),
       h('small.help', t('omInstallHint')),
       h('h3.sub-title', t('omNearby')),
       h('div.nearby', NEARBY.map(n => h('button.btn.small.ghost', { type: 'button', onclick: () => nearby(n) }, icon(n.icon, 16), L(n.l)))),

@@ -2,6 +2,7 @@ import { t, L } from './i18n.js';
 import { h, icon, fill, add } from './ui.js';
 import { GUIDES, stepText, stepRegion } from './content.js';
 import { regions } from './store.js';
+import { audioContext } from './platform.js';
 
 // Guias e passos de outras regiões ficam escondidos.
 const visible = g => !g.r || regions().includes(g.r);
@@ -89,7 +90,7 @@ function metronome(register) {
   };
   btn.addEventListener('click', () => {
     if (timer) return stop();
-    try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ctx = null; }
+    try { ctx = audioContext(); } catch (e) { ctx = null; }
     btn.lastChild.textContent = t('stop');
     beat(); timer = setInterval(beat, 60000 / 110);
   });

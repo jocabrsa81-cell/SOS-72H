@@ -2,6 +2,10 @@ import { store, autonomy, daysUntil, regions } from './store.js';
 import { t, L, fmtNum } from './i18n.js';
 import { h, icon, sheet, telHref, fill, add } from './ui.js';
 import { NUMBERS, KIT } from './content.js';
+import { isIOS, isStandalone } from './platform.js';
+
+const HINT_KEY = 'sos72h.iosHintClosed';
+const hintClosed = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return true; } };
 
 export function numbersSheet() {
   const body = h('div.numbers',
@@ -100,6 +104,9 @@ export function render(root) {
       icon('chevron', 20));
 
     fill(root, 
+      // iPhone no Safari: lembra que tem de ser adicionada ao ecrã principal para funcionar offline.
+      isIOS && !isStandalone() && !hintClosed() ? h('div.notice.install-hint', icon('download', 18), h('span', t('installIOS')),
+        h('button.icon-btn', { type: 'button', 'aria-label': t('close'), onclick: e => { try { localStorage.setItem(HINT_KEY, '1'); } catch (er) {} e.currentTarget.parentNode.remove(); } }, '×')) : null,
       isFirstMonday() && regions().includes('lu') ? h('p.notice', icon('siren', 18), t('sirenTestToday')) : null,
       h('section.sos',
         h('a.sos-call', { href: 'tel:112' }, icon('phone', 28), h('span', h('b', t('call112')), h('small', t('call112Sub')))),

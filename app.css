@@ -86,6 +86,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .block-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 750; letter-spacing: -.01em; }
 .foot { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; padding-top: 4px; }
 .notice { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: var(--radius); background: var(--signal); color: var(--signal-ink); font-weight: 600; font-size: 14px; }
+.install-hint span { flex: 1; }
+.install-hint .icon-btn { width: 32px; height: 32px; margin: -6px -6px 0 0; font-size: 22px; }
 .notice.warn { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); color: var(--ink); border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent); font-weight: 500; }
 .disclaimer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
 .empty { padding: 20px 16px; border: 1.5px dashed var(--line); border-radius: var(--radius); display: grid; gap: 12px; justify-items: start; color: var(--muted); }

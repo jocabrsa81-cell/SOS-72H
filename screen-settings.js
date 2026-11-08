@@ -1,11 +1,12 @@
 import { store } from './store.js';
 import { t, L, LANGS, LANG_NAMES } from './i18n.js';
 import { REGIONS } from './content.js';
+import { isIOS, isStandalone } from './platform.js';
 import { h, icon, toast, confirmBox, field, fill, add } from './ui.js';
 
 export function title() { return null; }
 
-const VERSION = '1.5.0';
+const VERSION = '1.6.0';
 
 export function render(root) {
   const s = store.get().settings;
@@ -67,6 +68,7 @@ export function render(root) {
 
   const install = window.__installPrompt
     ? h('button.btn.primary.block', { type: 'button', onclick: async () => { const p = window.__installPrompt; window.__installPrompt = null; p.prompt(); await p.userChoice; } }, icon('download', 18), t('install'))
+    : !isStandalone() ? h('section.block', h('h2.block-title', icon('download', 20), t('install')), h('p.muted', isIOS ? t('installIOS') : t('installAndroid')))
     : null;
 
   add(root, 

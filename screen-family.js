@@ -1,5 +1,6 @@
 import { store } from './store.js';
-import { omPoint, omSearch, parseCoords, kml, saveFile } from './maps.js';
+import { omPoint, omSearch, parseCoords, kml, saveFile, launch } from './maps.js';
+import { smsHref } from './platform.js';
 import { pickOnMap } from './picker.js';
 import { t, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, telHref, fill, add } from './ui.js';
@@ -50,7 +51,7 @@ export function render(root, params) {
     const omBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
       const v = ta.value.trim(); if (!v) return;
       const c = parseCoords(v);
-      location.href = c ? omPoint({ ...c, name: label }) : omSearch(v.split('\n')[0]);
+      launch(c ? omPoint({ ...c, name: label }) : omSearch(v.split('\n')[0]));
     } }, icon('compass', 16), t('omOpen'));
     // Escolher no mapa: substitui (ou acrescenta) a linha de coordenadas, mantendo o texto.
     const pickBtn = h('button.btn.small.ghost', { type: 'button', onclick: async () => {
@@ -123,7 +124,7 @@ function planText() {
 async function sharePlan() {
   const text = planText();
   if (navigator.share) { try { await navigator.share({ text }); return; } catch (e) { if (e.name === 'AbortError') return; } }
-  location.href = 'sms:?body=' + encodeURIComponent(text);
+  location.href = smsHref(text);
 }
 
 function contactForm(existing) {
