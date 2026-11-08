@@ -1,6 +1,6 @@
 // Service worker: guarda a app inteira na instalação para funcionar sem Internet.
 // Ao publicar uma nova versão, muda VERSION — a app avisa e atualiza com um toque.
-const VERSION = 'sos72h-1.2.0';
+const VERSION = 'sos72h-1.2.1';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './app.css',
   './app.js', './store.js', './i18n.js', './ui.js', './content.js',

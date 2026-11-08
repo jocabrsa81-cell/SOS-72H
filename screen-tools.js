@@ -4,18 +4,60 @@ import { h, icon, toast, fill, add } from './ui.js';
 export function title() { return null; }
 
 // ——— Lanterna (flash da câmara traseira) ———
+// Telemóveis com várias câmaras traseiras (S24: grande angular, ultra, tele) só têm flash
+// associado a uma delas. Testamos uma a uma e guardamos a que funciona.
+const TORCH_KEY = 'sos72h.torchCam';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+
 const torch = {
-  stream: null, track: null,
+  stream: null, track: null, video: null,
+  async open(constraints) {
+    const s = await navigator.mediaDevices.getUserMedia({ video: constraints, audio: false });
+    const tr = s.getVideoTracks()[0];
+    // Alguns Android só anunciam o flash depois de a câmara começar a enviar imagem.
+    const v = document.createElement('video');
+    v.muted = true; v.playsInline = true; v.srcObject = s;
+    try { await v.play(); } catch (e) {}
+    let caps = {};
+    for (let i = 0; i < 8; i++) {
+      caps = tr.getCapabilities ? tr.getCapabilities() : {};
+      if (caps.torch) break;
+      await sleep(150);
+    }
+    return { s, tr, v, torch: !!caps.torch, id: tr.getSettings ? tr.getSettings().deviceId : '' };
+  },
+  close(o) { o.s.getTracks().forEach(x => x.stop()); o.v.srcObject = null; },
   async on() {
-    if (!navigator.mediaDevices?.getUserMedia) throw new Error('unsupported');
-    this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
-    this.track = this.stream.getVideoTracks()[0];
-    const caps = this.track.getCapabilities ? this.track.getCapabilities() : {};
-    if (!caps.torch) { this.off(); throw new Error('unsupported'); }
-    await this.track.applyConstraints({ advanced: [{ torch: true }] });
+    if (!navigator.mediaDevices?.getUserMedia) throw Object.assign(new Error('unsupported'), { diag: 'getUserMedia: não' });
+    const tried = [];
+    const attempt = async (constraints, label) => {
+      const o = await this.open(constraints);
+      tried.push(label + (o.torch ? ' ✓' : ' ✗'));
+      if (!o.torch) { this.close(o); return false; }
+      await o.tr.applyConstraints({ advanced: [{ torch: true }] });
+      this.stream = o.s; this.track = o.tr; this.video = o.v;
+      if (o.id) lsSet(TORCH_KEY, o.id);
+      return true;
+    };
+    const saved = lsGet(TORCH_KEY);
+    if (saved) { try { if (await attempt({ deviceId: { exact: saved } }, 'guardada')) return; } catch (e) { if (e.name === 'NotAllowedError') throw e; } }
+    if (await attempt({ facingMode: { ideal: 'environment' } }, 'traseira')) return; // aqui pode surgir NotAllowedError
+    const cams = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+    const isBack = d => /back|rear|environment|traseira|arri|rück/i.test(d.label);
+    for (const d of [...cams.filter(isBack), ...cams.filter(d => !isBack(d))]) {
+      try { if (await attempt({ deviceId: { exact: d.deviceId } }, (d.label || 'câmara').replace(/camera2?\s*/i, 'cam '))) return; }
+      catch (e) { tried.push((d.label || 'câmara') + ' ! ' + e.name); }
+    }
+    throw Object.assign(new Error('unsupported'), { diag: `${cams.length} câmaras · ${tried.join(' · ')}` });
   },
   async set(v) { if (this.track) try { await this.track.applyConstraints({ advanced: [{ torch: v }] }); } catch (e) {} },
-  off() { if (this.stream) this.stream.getTracks().forEach(tr => tr.stop()); this.stream = this.track = null; },
+  off() {
+    if (this.stream) this.stream.getTracks().forEach(tr => tr.stop());
+    if (this.video) this.video.srcObject = null;
+    this.stream = this.track = this.video = null;
+  },
   get active() { return !!this.track; },
 };
 
@@ -110,13 +152,18 @@ export function render(root) {
   const torchBtn = h('button.tool-big', { type: 'button', 'aria-pressed': 'false' }, icon('torch', 40), h('span', t('torchOn')));
   torchBtn.addEventListener('click', async () => {
     if (torch.active) { torch.off(); torchBtn.setAttribute('aria-pressed', 'false'); torchBtn.lastChild.textContent = t('torchOn'); return; }
+    torchBtn.disabled = true; torchBtn.lastChild.textContent = t('torchSearching'); torchDiag.textContent = '';
     try {
       await torch.on();
       torchBtn.setAttribute('aria-pressed', 'true'); torchBtn.lastChild.textContent = t('torchOff');
     } catch (e) {
       toast(e.name === 'NotAllowedError' ? t('torchDenied') : t('torchUnsupported'));
+      torchDiag.textContent = e.diag || `${e.name}: ${e.message}`;
+      torchBtn.lastChild.textContent = t('torchOn');
     }
+    torchBtn.disabled = false;
   });
+  const torchDiag = h('small.diag');
   cleanups.push(() => torch.off());
 
   const useTorch = h('input', { type: 'checkbox' });
@@ -147,33 +194,69 @@ export function render(root) {
     }, { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 });
   });
 
-  // Bússola
+  // Bússola — 1.º tenta o sensor de orientação absoluta (Chrome Android), 2.º os eventos clássicos.
   const needle = h('div.rose-dial', ['N', 'E', 'S', 'W'].map((_, i) => h('span.rose-mark', { style: { transform: `rotate(${i * 90}deg)` } }, h('b', CARD[lang()][i * 2]))));
   const deg = h('output.compass-deg', '—');
   const compassMsg = h('p.muted', t('compassCalibrate'));
-  let compassOn = false;
-  const onOrient = e => {
-    let heading = null;
-    if (typeof e.webkitCompassHeading === 'number') heading = e.webkitCompassHeading;
-    else if (e.absolute && e.alpha !== null) heading = 360 - e.alpha;
-    if (heading === null) return;
-    heading = (heading + 360) % 360;
-    needle.style.transform = `rotate(${-heading}deg)`;
-    deg.textContent = `${Math.round(heading)}° ${cardinal(heading)}`;
+  const compassDiag = h('small.diag');
+  let compassOn = false, sensor = null, fromSensor = false, rot = 0, events = 0;
+  const diag = [];
+  const setHeading = hd => {
+    hd = ((hd % 360) + 360) % 360;
+    // Roda pelo caminho mais curto (evita a volta completa ao passar de 359° para 0°).
+    let d = -hd - rot; d = ((d + 540) % 360) - 180; rot += d;
+    needle.style.transform = `rotate(${rot}deg)`;
+    deg.textContent = `${Math.round(hd)}° ${cardinal(hd)}`;
   };
-  const compassBtn = h('button.btn.ghost.block', { type: 'button' }, icon('compass', 18), t('compassStart'));
-  compassBtn.addEventListener('click', async () => {
-    if (compassOn) return;
+  const onOrient = e => {
+    events++;
+    if (fromSensor) return;
+    if (typeof e.webkitCompassHeading === 'number') setHeading(e.webkitCompassHeading);
+    else if (e.absolute && e.alpha !== null) setHeading(360 - e.alpha);
+  };
+  const startSensor = () => {
+    if (!('AbsoluteOrientationSensor' in window)) { diag.push('sensor: não existe'); return; }
     try {
-      if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) await DeviceOrientationEvent.requestPermission();
-    } catch (e) {}
-    if (!('ondeviceorientationabsolute' in window) && !('ondeviceorientation' in window)) { compassMsg.textContent = t('compassUnsupported'); return; }
-    compassOn = true; compassBtn.hidden = true;
+      if (sensor) try { sensor.stop(); } catch (e) {}
+      sensor = new AbsoluteOrientationSensor({ frequency: 30 });
+      sensor.addEventListener('reading', () => {
+        const [x, y, z, w] = sensor.quaternion;
+        const yaw = Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z)) * 180 / Math.PI;
+        fromSensor = true; setHeading(360 - yaw);
+      });
+      sensor.addEventListener('error', e => diag.push('sensor: ' + (e.error ? e.error.name : 'erro')));
+      sensor.start();
+    } catch (e) { diag.push('sensor: ' + e.name); }
+  };
+  const report = () => {
+    if (deg.textContent !== '—') return;
+    compassBtn.hidden = false;
+    compassMsg.textContent = t('compassUnsupported') + ' ' + t('compassSensorsHelp');
+    compassDiag.textContent = diag.concat('eventos: ' + events).join(' · ');
+  };
+  // Arranca sozinha. Se em 3 s não houver leitura, mostra o botão (pede permissão) e o diagnóstico.
+  const startCompass = () => {
+    if (compassOn) return;
+    compassOn = true;
+    startSensor();
     window.addEventListener('deviceorientationabsolute', onOrient);
     window.addEventListener('deviceorientation', onOrient);
-    setTimeout(() => { if (deg.textContent === '—') compassMsg.textContent = t('compassUnsupported'); }, 3000);
+    setTimeout(report, 3000);
+  };
+  const compassBtn = h('button.btn.ghost.block', { type: 'button', hidden: true, onclick: async () => {
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) diag.push('permissão: ' + await DeviceOrientationEvent.requestPermission());
+    } catch (e) { diag.push('permissão: ' + e.name); }
+    compassBtn.hidden = true; compassMsg.textContent = t('compassCalibrate');
+    startSensor();
+    setTimeout(report, 3000);
+  } }, icon('compass', 18), t('compassStart'));
+  setTimeout(startCompass, 0);
+  cleanups.push(() => {
+    window.removeEventListener('deviceorientationabsolute', onOrient);
+    window.removeEventListener('deviceorientation', onOrient);
+    if (sensor) try { sensor.stop(); } catch (e) {}
   });
-  cleanups.push(() => { window.removeEventListener('deviceorientationabsolute', onOrient); window.removeEventListener('deviceorientation', onOrient); });
 
   // Bateria
   const batt = h('p.batt');
@@ -185,7 +268,7 @@ export function render(root) {
 
   add(root, 
     h('section.tool-grid',
-      h('div.tool-card.torch-card', torchBtn, h('small.muted', t('torchSub'))),
+      h('div.tool-card.torch-card', torchBtn, h('small.muted', t('torchSub')), torchDiag),
       h('button.tool-card', { type: 'button', onclick: () => overlay('white', h('div')) }, icon('screen', 28), h('b', t('screenLight')), h('small.muted', t('screenLightSub'))),
       h('button.tool-card', { type: 'button', onclick: () => sosSignal(useTorch.checked) }, icon('sos', 28), h('b', t('sosSignal')), h('small.muted', t('sosSignalSub'))),
       h('button.tool-card', { type: 'button', onclick: whistle }, icon('whistle', 28), h('b', t('whistle')), h('small.muted', t('whistleSub')))),
@@ -197,7 +280,7 @@ export function render(root) {
     h('section.block',
       h('h2.block-title', icon('compass', 20), t('compass')),
       h('div.compass', h('div.rose', needle, h('i.rose-pointer')), deg),
-      compassBtn, compassMsg),
+      compassBtn, compassMsg, compassDiag),
     h('section.block',
       h('h2.block-title', icon('battery', 20), t('battery')),
       batt, h('p.muted', t('batteryTips'))));

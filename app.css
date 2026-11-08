@@ -303,6 +303,8 @@ dialog.ice::backdrop { background: #000; }
 .rose-mark:first-child b { color: var(--danger); }
 .rose-pointer { position: absolute; left: 50%; top: -6px; width: 0; height: 0; transform: translateX(-50%); border: 8px solid transparent; border-top: 14px solid var(--ink); }
 .compass-deg { font-size: 30px; font-weight: 850; font-variant-numeric: tabular-nums; }
+.diag { display: block; font-size: 11.5px; color: var(--muted); font-family: ui-monospace, monospace; word-break: break-word; }
+.diag:empty { display: none; }
 .batt { display: flex; align-items: center; gap: 8px; font-size: 18px; }
 .batt:empty { display: none; }
 
