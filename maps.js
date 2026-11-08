@@ -25,7 +25,11 @@ export function omPoints(points) {
 export function omSearch(query, near, locale) {
   return omHref('search?' + (near ? `cll=${ll(near)}&` : '') + (locale ? `locale=${locale}&` : '') + `query=${enc(query)}`);
 }
-export const omOpenApp = () => omHref('map?v=1');
+// Abrir só a app, sem nenhum pedido (um "om://map" vazio é lido pelo Organic Maps como ficheiro de favoritos).
+export function omOpenApp() {
+  if (isAndroid && !inCapacitor) return `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${PKG};S.browser_fallback_url=${encodeURIComponent(STORE)};end`;
+  return 'om://';
+}
 
 // Encontra coordenadas num texto ("49.48060, 6.08750")
 export function parseCoords(text) {
