@@ -264,6 +264,7 @@ dialog.ice::backdrop { background: #000; }
 .guide-row > span:nth-child(2) { flex: 1; }
 .guide-ico { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none; }
 .guide-ico.aid { background: color-mix(in srgb, var(--danger) 13%, transparent); color: var(--danger); }
+.guide-ico.skill { background: color-mix(in srgb, var(--info) 15%, transparent); color: var(--info); }
 .guide-ico.proc { background: color-mix(in srgb, var(--signal) 30%, transparent); color: var(--ink); }
 .guide-row > .ico:last-child { color: var(--muted); }
 .guide { display: grid; gap: 18px; }

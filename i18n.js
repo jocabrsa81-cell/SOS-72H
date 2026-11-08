@@ -143,6 +143,7 @@ const S = {
   // Guias
   guidesTitle: ['Guias de emergência', 'Guides d’urgence', 'Notfall-Ratgeber', 'Emergency guides', 'Guías de emergencia'],
   firstAid: ['Primeiros socorros', 'Premiers secours', 'Erste Hilfe', 'First aid', 'Primeros auxilios'],
+  practical: ['Guias práticos', 'Savoir-faire pratique', 'Praktisches Wissen', 'Practical skills', 'Guías prácticas'],
   procedures: ['Situações e procedimentos', 'Situations et consignes', 'Lagen und Verhalten', 'Situations and what to do', 'Situaciones y qué hacer'],
   guidesSearch: ['Procurar: queimadura, gás, sirene…', 'Chercher : brûlure, gaz, sirène…', 'Suchen: Verbrennung, Gas, Sirene…', 'Search: burn, gas, siren…', 'Buscar: quemadura, gas, sirena…'],
   noResults: ['Nada encontrado para "{q}".', 'Rien trouvé pour « {q} ».', 'Nichts gefunden für „{q}“.', 'Nothing found for "{q}".', 'No se ha encontrado nada para «{q}».'],

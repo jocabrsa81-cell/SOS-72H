@@ -30,7 +30,7 @@ function list(root) {
   const draw = () => {
     const q = norm(query.trim());
     // Procura no início das palavras: "gas" encontra "gás" mas não "engasgamento".
-    const match = g => !q || norm(L(g.t) + ' ' + L(g.k) + ' ' + steps(g).map(L).join(' ')).split(/[^a-z0-9]+/).some(w => w.startsWith(q));
+    const match = g => !q || norm(L(g.t) + ' ' + L(g.k) + ' ' + (g.i ? L(g.i) + ' ' : '') + steps(g).map(L).join(' ')).split(/[^a-z0-9]+/).some(w => w.startsWith(q));
     const section = (kind, label) => {
       const items = GUIDES.filter(g => g.kind === kind && visible(g) && match(g));
       if (!items.length) return null;
@@ -43,8 +43,8 @@ function list(root) {
             g.call ? h('span.badge.bad', '112') : null,
             icon('chevron', 18))))));
     };
-    const a = section('aid', t('firstAid')), p = section('proc', t('procedures'));
-    fill(results, a || p ? [a, p] : h('p.empty', t('noResults', { q: query })));
+    const a = section('aid', t('firstAid')), p = section('proc', t('procedures')), k = section('skill', t('practical'));
+    fill(results, a || p || k ? [a, p, k] : h('p.empty', t('noResults', { q: query })));
   };
   input.addEventListener('input', () => { query = input.value; draw(); });
   add(root, h('div.search-wrap', icon('search', 18), input), results, h('p.disclaimer', t('guideDisclaimer')));
@@ -56,6 +56,7 @@ function detail(root, g) {
   add(root, 
     h('article.guide',
       g.call ? h('a.sos-call.compact', { href: 'tel:112' }, icon('phone', 22), h('b', t('call112'))) : null,
+      g.i ? h('p.lede', L(g.i)) : null,
       h('ol.steps', steps(g).map(st => h('li', L(st)))),
       g.extra === 'metronome' ? metronome(fn => { stopMetro = fn; }) : null,
       g.d.length ? h('section.dont', h('h2', t('doNot')), h('ul', g.d.map(x => h('li', L(x))))) : null,
