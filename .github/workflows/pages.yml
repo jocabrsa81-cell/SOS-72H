@@ -1,0 +1,40 @@
+# Publica a app no GitHub Pages e recolhe os alertas (MeteoAlarm, IPMA, USGS, GDACS) de 15 em 15 minutos.
+# Em Settings → Pages → Source tem de estar "GitHub Actions".
+name: Publicar app e alertas
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Juntar os ficheiros da app
+        run: |
+          mkdir -p _site
+          cp index.html sw.js manifest.webmanifest app.css *.js icon.svg icon-192.png icon-512.png icon-maskable-512.png _site/
+      - name: Recolher alertas
+        run: node fetch-alerts.mjs _site/alerts.json
+        continue-on-error: true
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
