@@ -7,7 +7,7 @@ import { h, icon, toast, confirmBox, field, fill, add } from './ui.js';
 
 export function title() { return null; }
 
-const VERSION = '1.7.2';
+const VERSION = '1.7.3';
 
 // Nível mínimo dos avisos de tempo, por país das regiões escolhidas.
 function weatherMin() {

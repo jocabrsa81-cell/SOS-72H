@@ -100,7 +100,7 @@ function relevant(items, here, regs = regions(), ignoreMin = false) {
     }
     if (it.kind === 'disaster') return it.level === 'red' || (it.km != null && it.km < 3000);
     return false;
-  }).sort((a, b) => RANK[b.level] - RANK[a.level] || Date.parse(b.start) - Date.parse(a.start));
+  }).sort(byDate);
 }
 
 let running = null;
@@ -163,6 +163,14 @@ export function checkAlerts(here) {
 }
 
 // Junta avisos iguais (mesma fonte, país, tipo e nível) numa só linha com a lista de zonas.
+// Ordem por data: avisos de tempo pela hora de início (os em vigor primeiro, depois os próximos);
+// sismos e catástrofes, os mais recentes primeiro. Em empate, o mais grave primeiro.
+const ts = iso => { const n = Date.parse(iso); return Number.isFinite(n) ? n : 0; };
+export function byDate(a, b) {
+  if (a.kind === 'weather' && b.kind === 'weather') return ts(a.start) - ts(b.start) || ts(a.end) - ts(b.end) || RANK[b.level] - RANK[a.level];
+  return ts(b.start) - ts(a.start) || RANK[b.level] - RANK[a.level];
+}
+
 export function groupWeather(items) {
   const groups = new Map();
   for (const it of items) {
@@ -177,7 +185,7 @@ export function groupWeather(items) {
       if (it.end && (!g.end || Date.parse(it.end) > Date.parse(g.end))) g.end = it.end;
     }
   }
-  return [...groups.values()];
+  return [...groups.values()].sort(byDate);
 }
 // Número de alertas para mostrar (avisos de tempo agrupados).
 export const countAlerts = items => groupWeather(items).length + items.filter(i => i.kind !== 'weather').length;
