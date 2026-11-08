@@ -13,7 +13,9 @@ const DEFAULTS = () => ({
     waterPerPet: 1,
     kcalPerPerson: 2000,
     goalHours: 72,
-    regions: ['lu', 'pt'],   // lu = Luxemburgo e arredores, pt = Portugal e Espanha
+    regions: ['lu', 'pt'],
+    alertsAuto: true,      // verificar alertas com a app aberta
+    alertsNotify: false,   // notificação do sistema para alertas fortes   // lu = Luxemburgo e arredores, pt = Portugal e Espanha
   },
   kit: {},            // { itemId: true }
   inventory: [],      // { id, name, category, qty, unit, content, contentUnit, kcal, expiry, location }

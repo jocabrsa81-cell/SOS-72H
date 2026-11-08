@@ -1,11 +1,11 @@
 // Service worker: guarda a app inteira na instalação para funcionar sem Internet.
 // Ao publicar uma nova versão, muda VERSION — a app avisa e atualiza com um toque.
-const VERSION = 'sos72h-1.6.0';
+const VERSION = 'sos72h-1.7.0';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './app.css',
-  './app.js', './store.js', './i18n.js', './ui.js', './content.js', './maps.js', './picker.js', './platform.js',
+  './app.js', './store.js', './i18n.js', './ui.js', './content.js', './maps.js', './picker.js', './platform.js', './alerts.js',
   './screen-home.js', './screen-kit.js', './screen-family.js', './screen-guides.js',
-  './screen-tools.js', './screen-vault.js', './screen-settings.js',
+  './screen-tools.js', './screen-vault.js', './screen-settings.js', './screen-alerts.js',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png',
 ];
 
@@ -24,6 +24,8 @@ self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipW
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  // Alertas: nunca da cache (a app guarda a última verificação por conta própria).
+  if (new URL(req.url).pathname.endsWith('/alerts.json')) return;
   // Páginas: se falhar a rede e não houver cópia, devolve a app. Outros ficheiros: só da cache.
   if (req.mode === 'navigate') {
     e.respondWith(caches.match('./index.html').then(hit => hit || fetch(req)));

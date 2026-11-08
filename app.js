@@ -9,6 +9,8 @@ import * as guides from './screen-guides.js';
 import * as tools from './screen-tools.js';
 import * as vault from './screen-vault.js';
 import * as settings from './screen-settings.js';
+import * as alertsScreen from './screen-alerts.js';
+import { startPolling, notify } from './alerts.js';
 
 const ROUTES = {
   home: { mod: home, tab: 'home' },
@@ -18,6 +20,7 @@ const ROUTES = {
   tools: { mod: tools, tab: 'tools', title: 'toolsTitle' },
   docs: { mod: vault, tab: null, title: 'vaultTitle', back: true },
   settings: { mod: settings, tab: null, title: 'settings', back: true },
+  alerts: { mod: alertsScreen, tab: null, title: 'alertsTitle', back: true },
 };
 const TABS = [
   ['home', 'home', 'navHome'], ['kit', 'kit', 'navKit'], ['family', 'family', 'navFamily'],
@@ -112,6 +115,18 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:' && !window.Cap
   let reloading = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (!reloading) { reloading = true; location.reload(); } });
 }
+
+// Alertas com a app aberta: avisa de alertas fortes novos e atualiza o início.
+startPolling(r => {
+  window.dispatchEvent(new CustomEvent('sos72h:alerts', { detail: r }));
+  const fresh = (r && r.fresh) || [];
+  if (!fresh.length) return;
+  const first = fresh[0];
+  const text = `${first.title}${first.area ? ' — ' + first.area : ''}`;
+  toast(`${t('alertsNew')}: ${text}`, { label: t('alertsTitle'), fn: () => { location.hash = '#/alerts'; } });
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  if (store.get().settings.alertsNotify) notify('SOS 72H — ' + t('alertsNew'), text + (fresh.length > 1 ? ` (+${fresh.length - 1})` : ''));
+});
 
 // Instalação como app (Android/Chrome)
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.__installPrompt = e; });

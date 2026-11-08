@@ -2,6 +2,7 @@ import { t, L, lang, fmtNum } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
 import { omPoint, omSearch, omOpenApp, omStore, launch, geoHref } from './maps.js';
 import { isIOS, smsHref, audioContext } from './platform.js';
+import { savePosition } from './alerts.js';
 import { NEARBY } from './content.js';
 
 let lastFix = null; // última posição GPS, para centrar as pesquisas
@@ -161,8 +162,36 @@ function nearby(n) {
   const timer = setTimeout(() => { if (!done) { done = true; go(null); } }, 6000);
   navigator.geolocation.getCurrentPosition(p => {
     if (done) return; done = true; clearTimeout(timer);
-    lastFix = { lat: p.coords.latitude, lon: p.coords.longitude }; go(lastFix);
+    lastFix = { lat: p.coords.latitude, lon: p.coords.longitude }; savePosition(lastFix); go(lastFix);
   }, () => { if (!done) { done = true; clearTimeout(timer); go(null); } }, { maximumAge: 600000, timeout: 6000 });
+}
+
+// Lê a bateria: no APK pelo plugin nativo; no browser pela Battery API, se for fiável.
+// Chama show(nível 0–1 | null, a carregar). Devolve uma função para parar.
+async function readBattery(show) {
+  const Cap = window.Capacitor;
+  const Device = Cap && (Cap.Plugins?.Device || (Cap.registerPlugin && Cap.registerPlugin('Device')));
+  if (Device && Device.getBatteryInfo) {
+    const poll = async () => {
+      try { const i = await Device.getBatteryInfo(); show(typeof i.batteryLevel === 'number' ? i.batteryLevel : null, !!i.isCharging); }
+      catch (e) { show(null); }
+    };
+    poll(); const id = setInterval(poll, 60000);
+    return () => clearInterval(id);
+  }
+  // O Brave falsifica a leitura por privacidade.
+  if (!navigator.getBattery || navigator.brave) { show(null); return null; }
+  let b;
+  try { b = await navigator.getBattery(); } catch (e) { show(null); return null; }
+  if (!b || typeof b.level !== 'number' || Number.isNaN(b.level)) { show(null); return null; }
+  // Valores típicos de uma leitura fixa/falsa: 100 %, a carregar, tempo de carga 0. Só se confia depois de um evento real.
+  const looksFixed = b.level === 1 && b.charging === true && b.chargingTime === 0;
+  let trusted = !looksFixed;
+  const draw = () => show(trusted ? b.level : null, b.charging);
+  const onChange = () => { trusted = true; draw(); };
+  draw();
+  b.addEventListener('levelchange', onChange); b.addEventListener('chargingchange', onChange);
+  return () => { b.removeEventListener('levelchange', onChange); b.removeEventListener('chargingchange', onChange); };
 }
 
 export function render(root) {
@@ -199,6 +228,7 @@ export function render(root) {
       gpsBtn.disabled = false; gpsBtn.lastChild.textContent = t('getLocation');
       const { latitude: la, longitude: lo, accuracy, altitude } = p.coords;
       lastFix = { lat: la, lon: lo };
+      savePosition(lastFix);
       const dec = `${la.toFixed(5)}, ${lo.toFixed(5)}`;
       const url = `https://www.openstreetmap.org/?mlat=${la.toFixed(5)}&mlon=${lo.toFixed(5)}#map=17/${la.toFixed(5)}/${lo.toFixed(5)}`;
       const sms = t('smsLocation', { c: dec, a: Math.round(accuracy), url });
@@ -283,13 +313,12 @@ export function render(root) {
     if (sensor) try { sensor.stop(); } catch (e) {}
   });
 
-  // Bateria
+  // Bateria — "indisponível" quando a leitura falha ou vem fixa (o Brave devolve sempre 100 % e "a carregar").
   const batt = h('p.batt');
-  if (navigator.getBattery) navigator.getBattery().then(b => {
-    const draw = () => fill(batt, icon('battery', 18), h('b', Math.round(b.level * 100) + '%'), b.charging ? h('span.muted', ' · ' + t('charging')) : null);
-    draw(); b.addEventListener('levelchange', draw); b.addEventListener('chargingchange', draw);
-    cleanups.push(() => { b.removeEventListener('levelchange', draw); b.removeEventListener('chargingchange', draw); });
-  });
+  const showBatt = (level, charging) => fill(batt, icon('battery', 18),
+    level == null ? h('span.muted', t('batteryUnavailable'))
+      : [h('b', Math.round(level * 100) + '%'), charging ? h('span.muted', ' · ' + t('charging')) : null]);
+  readBattery(showBatt).then(stop => stop && cleanups.push(stop));
 
   add(root, 
     h('section.tool-grid',

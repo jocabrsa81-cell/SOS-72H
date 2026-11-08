@@ -3,6 +3,7 @@ import { t, L, fmtNum } from './i18n.js';
 import { h, icon, sheet, telHref, fill, add } from './ui.js';
 import { NUMBERS, KIT } from './content.js';
 import { isIOS, isStandalone } from './platform.js';
+import { lastResult, topLevel, when } from './alerts.js';
 
 const HINT_KEY = 'sos72h.iosHintClosed';
 const hintClosed = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return true; } };
@@ -97,6 +98,15 @@ export function render(root) {
           h('span', it.name),
           h('span.badge.' + (d < 0 ? 'bad' : 'warn'), d < 0 ? t('expired') : d === 0 ? t('expiresToday') : t('expiresIn', { n: d }))))))) : null;
 
+    // Cartão de alertas (resumo da última verificação)
+    const ar = lastResult();
+    const nAlerts = ar ? (ar.items || []).length : 0;
+    const alertCard = h('a.alert-card.lvl-' + (nAlerts ? topLevel(ar.items) : 'none'), { href: '#/alerts' },
+      icon('siren', 22),
+      h('div', h('b', !ar ? t('alertsTitle') : nAlerts ? t('alertsSummary', { n: nAlerts }) : t('alertsSummaryNone')),
+        h('span.muted', ar ? t('alertsLastCheck', { t: when(ar.checked) }) : t('alertsNever'))),
+      icon('chevron', 20));
+
     const done = KIT.filter(k => s.kit[k.id]).length;
     const kitRow = h('a.kit-row', { href: '#/kit' },
       h('div', h('b', t('kitProgress')), h('span.muted', t('kitProgressSub', { done, total: KIT.length }))),
@@ -111,6 +121,7 @@ export function render(root) {
       h('section.sos',
         h('a.sos-call', { href: 'tel:112' }, icon('phone', 28), h('span', h('b', t('call112')), h('small', t('call112Sub')))),
         h('button.sos-more', { type: 'button', onclick: numbersSheet }, t('otherNumbers'))),
+      alertCard,
       gauge,
       attention,
       kitRow,
@@ -121,5 +132,7 @@ export function render(root) {
       regions().includes('lu') ? h('p.foot', icon('siren', 16), t('sirenTest')) : null);
   };
   draw();
-  return store.subscribe(draw);
+  const off = store.subscribe(draw);
+  window.addEventListener('sos72h:alerts', draw);
+  return () => { off(); window.removeEventListener('sos72h:alerts', draw); };
 }

@@ -334,6 +334,35 @@ dialog.ice::backdrop { background: #000; }
 .doc-view img { width: 100%; height: auto; border-radius: var(--radius-s); background: var(--sunk); }
 .vault-admin { justify-content: flex-end; }
 
+/* ——— Alertas ——— */
+:root { --lvl-yellow: #D9A400; --lvl-orange: #E0700A; --lvl-red: var(--danger); --lvl-info: var(--line); }
+.alert-card { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--line); border-radius: var(--radius); text-decoration: none; }
+.alert-card b { display: block; }
+.alert-card.lvl-yellow { border-left-color: var(--lvl-yellow); }
+.alert-card.lvl-orange { border-left-color: var(--lvl-orange); }
+.alert-card.lvl-red { border-left-color: var(--lvl-red); }
+.alert-card.lvl-orange > .ico:first-child { color: var(--lvl-orange); }
+.alert-card.lvl-red > .ico:first-child { color: var(--lvl-red); }
+.alert-box { display: grid; gap: 18px; }
+.alert-status { display: grid; gap: 6px; }
+.src-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; }
+.src-chip { display: inline-flex; align-items: center; gap: 2px; padding: 3px 9px; border-radius: 999px; text-decoration: none; font-weight: 700; border: 1px solid var(--line); }
+.src-chip.ok { color: var(--ok); }
+.src-chip.bad { color: var(--danger); }
+.src-chip small { font-weight: 500; }
+.alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.alert { background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--lvl-info); border-radius: var(--radius); padding: 10px 12px; display: grid; gap: 3px; }
+.alert.lvl-yellow { border-left-color: var(--lvl-yellow); }
+.alert.lvl-orange { border-left-color: var(--lvl-orange); }
+.alert.lvl-red { border-left-color: var(--lvl-red); }
+.alert-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.alert-src { font-size: 12px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.alert-area { font-size: 14px; }
+.alert-meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.alert-text { font-size: 13.5px; }
+.alert-tsunami { display: flex; align-items: center; gap: 6px; color: var(--danger); font-weight: 700; font-size: 14px; }
+.alert-link { font-size: 13px; font-weight: 700; color: var(--info); }
+
 /* ——— Escolher no mapa ——— */
 .picker { display: grid; gap: 10px; }
 .picker-search { position: relative; }
