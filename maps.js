@@ -7,28 +7,28 @@ const SITE = 'https://organicmaps.app/';
 const isAndroid = /Android/i.test(navigator.userAgent);
 const inCapacitor = !!window.Capacitor;
 
-// path sem o esquema, ex.: "map?v=1&ll=49.5,6.1&n=Casa"
-export function omHref(path) {
-  if (inCapacitor) return 'om://' + path;
-  if (isAndroid) return `intent://${path}#Intent;scheme=om;package=${PKG};S.browser_fallback_url=${encodeURIComponent(STORE)};end`;
-  return 'om://' + path; // iPhone: abre se estiver instalada
+// Os links usam o esquema padrão "geo:" (Android), dirigido ao Organic Maps.
+// Num link "intent:" o Chrome abre a app se estiver instalada; senão, a Play Store.
+function geoIntent(rest) {
+  if (isAndroid && !inCapacitor) return `intent:${rest}#Intent;scheme=geo;package=${PKG};S.browser_fallback_url=${encodeURIComponent(STORE)};end`;
+  return 'geo:' + rest;
 }
 export const omStore = () => (isAndroid ? STORE : SITE);
 const enc = s => encodeURIComponent(String(s || '').slice(0, 60));
 const ll = p => `${p.lat.toFixed(6)},${p.lon.toFixed(6)}`;
 
-// Um ou vários pontos com nome
-export function omPoints(points) {
-  return omHref('map?v=1&' + points.map(p => `ll=${ll(p)}` + (p.name ? `&n=${enc(p.name)}` : '')).join('&'));
+// Um ponto com nome. O "geo:" só leva um ponto — vários pontos vão pelo ficheiro KML.
+export function omPoint(p) {
+  return geoIntent(`${ll(p)}?q=${ll(p)}` + (p.name ? `(${enc(p.name)})` : '') + '&z=17');
 }
 // Pesquisa (ex.: "hospital"), centrada numa posição se a houver
-export function omSearch(query, near, locale) {
-  return omHref('search?' + (near ? `cll=${ll(near)}&` : '') + (locale ? `locale=${locale}&` : '') + `query=${enc(query)}`);
+export function omSearch(query, near) {
+  return geoIntent(`${near ? ll(near) : '0,0'}?q=${enc(query)}`);
 }
-// Abrir só a app, sem nenhum pedido (um "om://map" vazio é lido pelo Organic Maps como ficheiro de favoritos).
+// Abrir só a app, sem nenhum pedido.
 export function omOpenApp() {
   if (isAndroid && !inCapacitor) return `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${PKG};S.browser_fallback_url=${encodeURIComponent(STORE)};end`;
-  return 'om://';
+  return SITE;
 }
 
 // Encontra coordenadas num texto ("49.48060, 6.08750")

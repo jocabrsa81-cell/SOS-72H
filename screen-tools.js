@@ -1,6 +1,6 @@
 import { t, L, lang, fmtNum } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
-import { omPoints, omSearch, omOpenApp, omStore, geoHref } from './maps.js';
+import { omPoint, omSearch, omOpenApp, omStore, geoHref } from './maps.js';
 import { NEARBY } from './content.js';
 
 let lastFix = null; // última posição GPS, para centrar as pesquisas
@@ -151,7 +151,7 @@ function dms(v, pos, neg) {
 
 // Pesquisa no Organic Maps centrada na posição atual (se for rápida a obter) ou sem centro.
 function nearby(n) {
-  const go = pos => { location.href = omSearch(L(n.q), pos, lang()); };
+  const go = pos => { location.href = omSearch(L(n.q), pos); };
   if (lastFix) return go(lastFix);
   if (!navigator.geolocation) return go(null);
   let done = false;
@@ -205,7 +205,7 @@ export function render(root) {
         h('div.inline-actions',
           h('button.btn.small.ghost', { type: 'button', onclick: () => navigator.clipboard?.writeText(dec).then(() => toast(t('copied'))) }, icon('copy', 16), t('copy')),
           h('a.btn.small.ghost', { href: 'sms:?body=' + encodeURIComponent(sms) }, icon('share', 16), t('sendBySms')),
-          h('a.btn.small.ghost', { href: omPoints([{ lat: la, lon: lo, name: t('omHere') }]) }, icon('compass', 16), t('omOpen')),
+          h('a.btn.small.ghost', { href: omPoint({ lat: la, lon: lo, name: t('omHere') }) }, icon('compass', 16), t('omOpen')),
           h('a.btn.small.ghost', { href: geoHref({ lat: la, lon: lo }, t('omHere')) }, t('omOther'))));
     }, e => {
       gpsBtn.disabled = false; gpsBtn.lastChild.textContent = t('getLocation');

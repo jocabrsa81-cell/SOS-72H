@@ -1,5 +1,5 @@
 import { store } from './store.js';
-import { omPoints, omSearch, parseCoords, geoHref, kml, saveFile } from './maps.js';
+import { omPoint, omSearch, parseCoords, geoHref, kml, saveFile } from './maps.js';
 import { t, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, telHref, fill, add } from './ui.js';
 
@@ -49,7 +49,7 @@ export function render(root, params) {
     const omBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
       const v = ta.value.trim(); if (!v) return;
       const c = parseCoords(v);
-      location.href = c ? omPoints([{ ...c, name: label }]) : omSearch(v.split('\n')[0]);
+      location.href = c ? omPoint({ ...c, name: label }) : omSearch(v.split('\n')[0]);
     } }, icon('compass', 16), t('omOpen'));
     const otherBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
       const v = ta.value.trim(); if (!v) return;
@@ -67,10 +67,6 @@ export function render(root, params) {
       .filter(Boolean);
   };
   const mapActions = h('div.inline-actions',
-    h('button.btn.small.ghost', { type: 'button', onclick: () => {
-      const pts = meetPoints(); if (!pts.length) return toast(t('omNoCoords'));
-      location.href = omPoints(pts);
-    } }, icon('pin', 16), t('omAllPoints')),
     h('button.btn.small.ghost', { type: 'button', onclick: () => {
       const pts = meetPoints(); if (!pts.length) return toast(t('omNoCoords'));
       saveFile(kml('SOS 72H — ' + t('meetingTitle'), pts), 'sos72h-pontos.kml', 'application/vnd.google-earth.kml+xml');
