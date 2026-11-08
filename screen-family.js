@@ -1,4 +1,5 @@
 import { store } from './store.js';
+import { omPoints, omSearch, parseCoords, geoHref, kml, saveFile } from './maps.js';
 import { t, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, telHref, fill, add } from './ui.js';
 
@@ -44,13 +45,36 @@ export function render(root, params) {
       }, e => { toast(e.code === 1 ? t('gpsDenied') : t('gpsFail')); locBtn.disabled = false; locBtn.lastChild.textContent = t('useMyLocation'); },
       { enableHighAccuracy: true, timeout: 30000 });
     } }, icon('pin', 16), h('span', t('useMyLocation')));
-    const mapBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
+    // Abre no Organic Maps (coordenadas → ponto; texto → pesquisa) ou noutra app de mapas.
+    const omBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
       const v = ta.value.trim(); if (!v) return;
-      const m = v.match(/(-?\d{1,2}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
-      location.href = m ? `geo:${m[1]},${m[2]}?q=${m[1]},${m[2]}` : `geo:0,0?q=${encodeURIComponent(v.split('\n')[0])}`;
-    } }, icon('compass', 16), t('openMap'));
-    return h('div.field', h('label', label), ta, h('div.inline-actions', locBtn, mapBtn));
+      const c = parseCoords(v);
+      location.href = c ? omPoints([{ ...c, name: label }]) : omSearch(v.split('\n')[0]);
+    } }, icon('compass', 16), t('omOpen'));
+    const otherBtn = h('button.btn.small.ghost', { type: 'button', onclick: () => {
+      const v = ta.value.trim(); if (!v) return;
+      const c = parseCoords(v);
+      location.href = c ? geoHref(c, label) : `geo:0,0?q=${encodeURIComponent(v.split('\n')[0])}`;
+    } }, t('omOther'));
+    return h('div.field', h('label', label), ta, h('div.inline-actions', locBtn, omBtn, otherBtn));
   };
+
+  // Pontos de encontro com coordenadas, para o mapa e para o ficheiro KML.
+  const meetPoints = () => {
+    const m = store.get().meeting;
+    return [['home', 'meetHome'], ['area', 'meetArea'], ['region', 'meetRegion']]
+      .map(([k, lk]) => { const c = parseCoords(m[k]); return c ? { ...c, name: t(lk), desc: (m[k] || '').replace(/\n/g, ' ') } : null; })
+      .filter(Boolean);
+  };
+  const mapActions = h('div.inline-actions',
+    h('button.btn.small.ghost', { type: 'button', onclick: () => {
+      const pts = meetPoints(); if (!pts.length) return toast(t('omNoCoords'));
+      location.href = omPoints(pts);
+    } }, icon('pin', 16), t('omAllPoints')),
+    h('button.btn.small.ghost', { type: 'button', onclick: () => {
+      const pts = meetPoints(); if (!pts.length) return toast(t('omNoCoords'));
+      saveFile(kml('SOS 72H — ' + t('meetingTitle'), pts), 'sos72h-pontos.kml', 'application/vnd.google-earth.kml+xml');
+    } }, icon('download', 16), t('omExport')));
 
   add(root, 
     h('section.block',
@@ -63,7 +87,9 @@ export function render(root, params) {
       h('p.muted', t('meetingIntro')),
       meet('home', t('meetHome'), t('meetHomePh')),
       meet('area', t('meetArea'), t('meetAreaPh')),
-      meet('region', t('meetRegion'), t('meetRegionPh'))),
+      meet('region', t('meetRegion'), t('meetRegionPh')),
+      mapActions,
+      h('small.help', t('omExportHelp'))),
     h('section.block', { id: 'cards' },
       h('div.block-head', h('h2.block-title', icon('card', 20), t('membersTitle')),
         h('button.btn.small.primary', { type: 'button', onclick: () => memberForm() }, icon('plus', 16), t('add'))),

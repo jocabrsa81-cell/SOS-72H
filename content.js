@@ -41,6 +41,15 @@ export const NUMBERS = [
   ]},
 ];
 
+// Pesquisas rápidas no Organic Maps: rótulo e termo de pesquisa por idioma.
+export const NEARBY = [
+  { icon: 'alert', l: ['Hospital', 'Hôpital', 'Krankenhaus', 'Hospital', 'Hospital'], q: ['hospital', 'hôpital', 'Krankenhaus', 'hospital', 'hospital'] },
+  { icon: 'kit', l: ['Farmácia', 'Pharmacie', 'Apotheke', 'Pharmacy', 'Farmacia'], q: ['farmácia', 'pharmacie', 'Apotheke', 'pharmacy', 'farmacia'] },
+  { icon: 'battery', l: ['Bombas de gasolina', 'Station-service', 'Tankstelle', 'Fuel station', 'Gasolinera'], q: ['bomba de gasolina', 'station-service', 'Tankstelle', 'fuel', 'gasolinera'] },
+  { icon: 'phone', l: ['Polícia', 'Police', 'Polizei', 'Police', 'Policía'], q: ['polícia', 'police', 'Polizei', 'police', 'policía'] },
+  { icon: 'water', l: ['Água potável', 'Eau potable', 'Trinkwasser', 'Drinking water', 'Agua potable'], q: ['água potável', 'eau potable', 'Trinkwasser', 'drinking water', 'agua potable'] },
+];
+
 export const REGIONS = {
   lu: ['Luxemburgo e arredores (FR, DE, BE)', 'Luxembourg et alentours (FR, DE, BE)', 'Luxemburg und Umgebung (FR, DE, BE)', 'Luxembourg and surroundings (FR, DE, BE)', 'Luxemburgo y alrededores (FR, DE, BE)'],
   pt: ['Portugal e Espanha', 'Portugal et Espagne', 'Portugal und Spanien', 'Portugal and Spain', 'Portugal y España'],

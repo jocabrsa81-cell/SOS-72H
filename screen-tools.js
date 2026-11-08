@@ -1,5 +1,9 @@
-import { t, lang, fmtNum } from './i18n.js';
+import { t, L, lang, fmtNum } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
+import { omPoints, omSearch, omOpenApp, omStore, geoHref } from './maps.js';
+import { NEARBY } from './content.js';
+
+let lastFix = null; // última posição GPS, para centrar as pesquisas
 
 export function title() { return null; }
 
@@ -145,6 +149,19 @@ function dms(v, pos, neg) {
   return `${d}° ${m}′ ${s.toFixed(1)}″ ${v >= 0 ? pos : neg}`;
 }
 
+// Pesquisa no Organic Maps centrada na posição atual (se for rápida a obter) ou sem centro.
+function nearby(n) {
+  const go = pos => { location.href = omSearch(L(n.q), pos, lang()); };
+  if (lastFix) return go(lastFix);
+  if (!navigator.geolocation) return go(null);
+  let done = false;
+  const timer = setTimeout(() => { if (!done) { done = true; go(null); } }, 6000);
+  navigator.geolocation.getCurrentPosition(p => {
+    if (done) return; done = true; clearTimeout(timer);
+    lastFix = { lat: p.coords.latitude, lon: p.coords.longitude }; go(lastFix);
+  }, () => { if (!done) { done = true; clearTimeout(timer); go(null); } }, { maximumAge: 600000, timeout: 6000 });
+}
+
 export function render(root) {
   const cleanups = [];
 
@@ -177,6 +194,7 @@ export function render(root) {
     navigator.geolocation.getCurrentPosition(p => {
       gpsBtn.disabled = false; gpsBtn.lastChild.textContent = t('getLocation');
       const { latitude: la, longitude: lo, accuracy, altitude } = p.coords;
+      lastFix = { lat: la, lon: lo };
       const dec = `${la.toFixed(5)}, ${lo.toFixed(5)}`;
       const url = `https://www.openstreetmap.org/?mlat=${la.toFixed(5)}&mlon=${lo.toFixed(5)}#map=17/${la.toFixed(5)}/${lo.toFixed(5)}`;
       const sms = t('smsLocation', { c: dec, a: Math.round(accuracy), url });
@@ -187,7 +205,8 @@ export function render(root) {
         h('div.inline-actions',
           h('button.btn.small.ghost', { type: 'button', onclick: () => navigator.clipboard?.writeText(dec).then(() => toast(t('copied'))) }, icon('copy', 16), t('copy')),
           h('a.btn.small.ghost', { href: 'sms:?body=' + encodeURIComponent(sms) }, icon('share', 16), t('sendBySms')),
-          h('a.btn.small.ghost', { href: `geo:${la},${lo}?q=${la},${lo}` }, icon('compass', 16), t('openMap'))));
+          h('a.btn.small.ghost', { href: omPoints([{ lat: la, lon: lo, name: t('omHere') }]) }, icon('compass', 16), t('omOpen')),
+          h('a.btn.small.ghost', { href: geoHref({ lat: la, lon: lo }, t('omHere')) }, t('omOther'))));
     }, e => {
       gpsBtn.disabled = false; gpsBtn.lastChild.textContent = t('getLocation');
       fill(gpsOut, h('p.form-error', e.code === 1 ? t('gpsDenied') : t('gpsFail')));
@@ -277,6 +296,16 @@ export function render(root) {
       h('h2.block-title', icon('pin', 20), t('gpsTitle')),
       h('p.muted', t('gpsSub')),
       gpsBtn, gpsOut),
+    h('section.block',
+      h('h2.block-title', icon('pin', 20), t('omTitle')),
+      h('p.muted', t('omIntro')),
+      h('div.inline-actions',
+        h('a.btn.primary', { href: omOpenApp() }, icon('compass', 18), t('omOpenApp')),
+        h('a.btn.ghost', { href: omStore(), target: '_blank', rel: 'noopener' }, icon('download', 18), t('omInstall'))),
+      h('small.help', t('omInstallHint')),
+      h('h3.sub-title', t('omNearby')),
+      h('div.nearby', NEARBY.map(n => h('button.btn.small.ghost', { type: 'button', onclick: () => nearby(n) }, icon(n.icon, 16), L(n.l)))),
+      h('small.help', t('omNearbyHelp'))),
     h('section.block',
       h('h2.block-title', icon('compass', 20), t('compass')),
       h('div.compass', h('div.rose', needle, h('i.rose-pointer')), deg),
