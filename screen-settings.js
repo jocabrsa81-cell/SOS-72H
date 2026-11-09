@@ -115,6 +115,7 @@ export function render(root) {
       h('h2.block-title', t('backupTitle')),
       h('p.muted', t('backupIntro')),
       prot,
+      h('a.btn.ghost', { href: '#/print' }, icon('doc', 18), t('printPlan')),
       h('div.inline-actions',
         h('button.btn.ghost', { type: 'button', onclick: exportData }, icon('download', 18), t('exportData')),
         h('button.btn.ghost', { type: 'button', onclick: () => fileIn.click() }, icon('upload', 18), t('importData'))),

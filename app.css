@@ -195,6 +195,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .check input:checked ~ .check-text { color: var(--muted); }
 .check-qty { font-weight: 750; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
+.check.auto { text-decoration: none; color: inherit; }
+.check-box.on { background: var(--signal); border-color: var(--signal); color: var(--signal-ink); }
+.check.auto.is-done .check-text { color: var(--muted); }
+.check-sub { display: block; font-size: 12px; color: var(--muted); font-weight: 500; }
+.mini-meter { display: block; height: 5px; margin-top: 4px; background: var(--sunk); border-radius: 3px; overflow: hidden; min-width: 80px; }
+.mini-meter i { display: block; height: 100%; background: var(--signal); }
+
 /* ——— Inventário ——— */
 .inv-head { display: grid; gap: 8px; }
 .inv-head .btn { width: 100%; }
@@ -218,6 +225,41 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .sources h2 { font-size: 15px; }
 .sources ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
 .sources a { color: var(--info); }
+
+/* ——— Plano em papel ——— */
+.print-link { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; }
+.print-link b, .print-link small { display: block; }
+.print-link small { color: var(--muted); font-size: 13px; }
+.print-bar { display: grid; gap: 10px; }
+.paper { background: #fff; color: #111; border-radius: 6px; padding: 18px 16px; display: grid; gap: 14px; font-size: 13px; line-height: 1.4; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+.paper h1 { font-size: 20px; }
+.paper h2 { font-size: 14px; border-bottom: 2px solid #111; padding-bottom: 2px; margin-bottom: 6px; }
+.paper h3 { font-size: 13px; margin: 0 0 4px; }
+.paper-head p { color: #444; font-size: 12px; }
+.paper table { width: 100%; border-collapse: collapse; }
+.paper th, .paper td { text-align: left; vertical-align: top; padding: 3px 6px 3px 0; border-bottom: 1px solid #ddd; white-space: pre-wrap; }
+.paper th { width: 38%; font-weight: 700; }
+.paper ol { margin: 0; padding-left: 18px; }
+.paper-first { border: 2px solid #C42B2B; border-radius: 6px; padding: 8px 10px; }
+.paper-first h2 { color: #C42B2B; border-color: #C42B2B; }
+.paper-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.paper-card { border: 1px solid #999; border-radius: 4px; padding: 6px 8px; break-inside: avoid; }
+.paper-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.paper-nums th { width: 1%; white-space: nowrap; padding-right: 10px; font-variant-numeric: tabular-nums; }
+.paper-small { font-size: 11px; color: #444; margin-top: 4px; }
+.wallet-card { width: 85mm; min-height: 54mm; border: 1.5px dashed #111; border-radius: 4px; padding: 6px 8px; font-size: 11px; line-height: 1.35; }
+.wallet-card p { margin: 0; }
+.wallet-title { font-weight: 800; }
+@media (max-width: 480px) { .paper-cards, .paper-nums { grid-template-columns: 1fr; } }
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { background: #fff !important; padding: 0 !important; }
+  .appbar, .tabbar, .netstate, .toast, .no-print, dialog { display: none !important; }
+  .view { max-width: none; padding: 0; }
+  .paper { box-shadow: none; padding: 0; font-size: 11.5pt; }
+  .paper-cards, .paper-nums { grid-template-columns: 1fr 1fr !important; }
+  section { break-inside: avoid; }
+}
 
 /* ——— Estou em emergência ——— */
 .now-button { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 16px 18px; min-height: 76px;

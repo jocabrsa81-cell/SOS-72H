@@ -1,6 +1,6 @@
 {
   "name": "sos72h",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "SOS 72H \u2014 prepara\u00e7\u00e3o para emerg\u00eancias, funciona sem Internet",
   "scripts": {
@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.2.0",
-    "@capacitor/core": "^6.2.0",
-    "@capacitor/device": "^6.0.0"
+    "@capacitor/core": "^6.2.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

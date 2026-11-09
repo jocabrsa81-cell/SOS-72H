@@ -79,6 +79,7 @@ export function render(root, params) {
     } }, icon('download', 16), t('omExport')));
 
   add(root, 
+    h('a.print-link', { href: '#/print' }, icon('doc', 22), h('span', h('b', t('printPlan')), h('small', t('printPlanSub'))), icon('chevron', 20)),
     h('section.block',
       h('div.block-head', h('h2.block-title', icon('phone', 20), t('contactsTitle')),
         h('button.btn.small.primary', { type: 'button', onclick: () => contactForm() }, icon('plus', 16), t('add'))),

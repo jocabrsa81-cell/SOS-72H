@@ -1,4 +1,4 @@
-import { store, autonomy, daysUntil, regions } from './store.js';
+import { store, autonomy, daysUntil, regions, kitDone } from './store.js';
 import { t, L, fmtNum } from './i18n.js';
 import { h, icon, sheet, telHref, fill, add, toast } from './ui.js';
 import { NUMBERS, KIT } from './content.js';
@@ -108,7 +108,7 @@ export function render(root) {
         h('span.muted', ar ? t('alertsLastCheck', { t: when(ar.checked) }) : t('alertsNever'))),
       icon('chevron', 20));
 
-    const done = KIT.filter(k => s.kit[k.id]).length;
+    const done = KIT.filter(k => kitDone(k.id, s)).length;
     const kitRow = h('a.kit-row', { href: '#/kit' },
       h('div', h('b', t('kitProgress')), h('span.muted', t('kitProgressSub', { done, total: KIT.length }))),
       h('div.meter', h('i', { style: { width: (done / KIT.length * 100) + '%' } })),

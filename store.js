@@ -128,6 +128,30 @@ export function toLitres(item) {
   return 0;
 }
 
+// Itens da lista ligados ao inventário: ficam feitos sozinhos quando o inventário os cobre.
+const KIT_LINKS = { firstaid: ['firstaid'], toilet: ['tp'] };
+// Devolve { id: { done, auto, have, need, unit, count } } para os itens com ligação; os restantes vêm de state.kit.
+export function kitAuto(s = state) {
+  const a = autonomy(s);
+  const st = s.settings;
+  const days = st.goalHours / 24;
+  const needL = Math.ceil(days * (st.people * st.waterPerPerson + st.pets * st.waterPerPet));
+  const needK = Math.ceil(days * st.people * st.kcalPerPerson);
+  const out = {
+    water: { auto: true, done: a.litres >= needL, have: a.litres, need: needL, unit: 'L' },
+    food: { auto: true, done: a.kcal >= needK, have: a.kcal, need: needK, unit: 'kcal' },
+  };
+  for (const [id, presets] of Object.entries(KIT_LINKS)) {
+    const count = s.inventory.filter(i => presets.includes(i.presetId) && i.qty > 0 && !(daysUntil(i.expiry) < 0)).reduce((n, i) => n + i.qty, 0);
+    if (count > 0) out[id] = { auto: true, done: true, count };
+  }
+  return out;
+}
+export function kitDone(id, s = state) {
+  const a = kitAuto(s)[id];
+  return a ? a.done : !!s.kit[id];
+}
+
 export function autonomy(s = state) {
   const st = s.settings;
   let litres = 0, kcal = 0, waterNoVol = 0, foodNoKcal = 0, expired = 0;

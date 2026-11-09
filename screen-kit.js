@@ -1,4 +1,4 @@
-import { store, daysUntil, toLitres } from './store.js';
+import { store, daysUntil, toLitres, kitAuto } from './store.js';
 import { t, L, catName, unitName, UNIT_KEYS, CAT_KEYS, fmtNum, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, fill, add } from './ui.js';
 import { KIT, PRESETS } from './content.js';
@@ -23,7 +23,9 @@ function checklist(root) {
   const draw = () => {
     const s = store.get();
     const st = s.settings, days = st.goalHours / 24;
-    const done = KIT.filter(k => s.kit[k.id]).length;
+    const auto = kitAuto(s);
+    const isDone = k => (auto[k.id] ? auto[k.id].done : !!s.kit[k.id]);
+    const done = KIT.filter(isDone).length;
     const groups = CAT_KEYS.map(c => [c, KIT.filter(k => k.cat === c)]).filter(([, items]) => items.length);
     fill(root, 
       h('div.progress-head',
@@ -34,13 +36,29 @@ function checklist(root) {
         h('h2.block-title', catName(c)),
         h('ul.checks', items.map(k => {
           const q = k.q ? k.q(st.people, days, st) : null;
+          const au = auto[k.id];
+          // Água e comida: calculadas do inventário (não se marcam à mão). Toque abre o inventário.
+          if (au && au.need !== undefined) {
+            const pct = Math.min(100, au.need ? au.have / au.need * 100 : 0);
+            return h('li', h('a.check.auto' + (au.done ? '.is-done' : ''), { href: '#/kit/inventory' },
+              h('span.check-box' + (au.done ? '.on' : ''), icon('check', 16)),
+              h('span.check-text', L(k.l), h('small.check-sub', t('kitAuto'))),
+              h('span.check-qty', t('kitHave', { have: fmtNum(Math.floor(au.have), 0), need: fmtNum(au.need, 0) }) + ' ' + au.unit,
+                h('span.mini-meter', h('i', { style: { width: pct + '%' } })))));
+          }
+          if (au && au.count) {
+            return h('li', h('a.check.auto.is-done', { href: '#/kit/inventory' },
+              h('span.check-box.on', icon('check', 16)),
+              h('span.check-text', L(k.l), h('small.check-sub', t('kitInInventory', { n: fmtNum(au.count, 0) }))),
+              q ? h('span.check-qty', fmtNum(q.n, 0) + (q.u ? ' ' + q.u : '')) : null));
+          }
           return h('li', h('label.check',
             h('input', { type: 'checkbox', checked: !!s.kit[k.id], onchange: e => store.update(x => { if (e.target.checked) x.kit[k.id] = true; else delete x.kit[k.id]; }) }),
             h('span.check-box', icon('check', 16)),
             h('span.check-text', L(k.l)),
             q ? h('span.check-qty', fmtNum(q.n, 0) + (q.u ? ' ' + q.u : '')) : null));
         })))),
-      done ? h('button.btn.ghost', { type: 'button', onclick: async () => { if (await confirmBox(t('confirmResetChecklist'), t('resetChecklist'))) store.update(x => { x.kit = {}; }); } }, t('resetChecklist')) : null);
+      Object.keys(s.kit).length ? h('button.btn.ghost', { type: 'button', onclick: async () => { if (await confirmBox(t('confirmResetChecklist'), t('resetChecklist'))) store.update(x => { x.kit = {}; }); } }, t('resetChecklist')) : null);
   };
   draw();
   return store.subscribe(draw);

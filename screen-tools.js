@@ -166,34 +166,6 @@ function nearby(n) {
   }, () => { if (!done) { done = true; clearTimeout(timer); go(null); } }, { maximumAge: 600000, timeout: 6000 });
 }
 
-// Lê a bateria: no APK pelo plugin nativo; no browser pela Battery API, se for fiável.
-// Chama show(nível 0–1 | null, a carregar). Devolve uma função para parar.
-async function readBattery(show) {
-  const Cap = window.Capacitor;
-  const Device = Cap && (Cap.Plugins?.Device || (Cap.registerPlugin && Cap.registerPlugin('Device')));
-  if (Device && Device.getBatteryInfo) {
-    const poll = async () => {
-      try { const i = await Device.getBatteryInfo(); show(typeof i.batteryLevel === 'number' ? i.batteryLevel : null, !!i.isCharging); }
-      catch (e) { show(null); }
-    };
-    poll(); const id = setInterval(poll, 60000);
-    return () => clearInterval(id);
-  }
-  // O Brave falsifica a leitura por privacidade.
-  if (!navigator.getBattery || navigator.brave) { show(null); return null; }
-  let b;
-  try { b = await navigator.getBattery(); } catch (e) { show(null); return null; }
-  if (!b || typeof b.level !== 'number' || Number.isNaN(b.level)) { show(null); return null; }
-  // Valores típicos de uma leitura fixa/falsa: 100 %, a carregar, tempo de carga 0. Só se confia depois de um evento real.
-  const looksFixed = b.level === 1 && b.charging === true && b.chargingTime === 0;
-  let trusted = !looksFixed;
-  const draw = () => show(trusted ? b.level : null, b.charging);
-  const onChange = () => { trusted = true; draw(); };
-  draw();
-  b.addEventListener('levelchange', onChange); b.addEventListener('chargingchange', onChange);
-  return () => { b.removeEventListener('levelchange', onChange); b.removeEventListener('chargingchange', onChange); };
-}
-
 export function render(root) {
   const cleanups = [];
 
@@ -313,13 +285,6 @@ export function render(root) {
     if (sensor) try { sensor.stop(); } catch (e) {}
   });
 
-  // Bateria — "indisponível" quando a leitura falha ou vem fixa (o Brave devolve sempre 100 % e "a carregar").
-  const batt = h('p.batt');
-  const showBatt = (level, charging) => fill(batt, icon('battery', 18),
-    level == null ? h('span.muted', t('batteryUnavailable'))
-      : [h('b', Math.round(level * 100) + '%'), charging ? h('span.muted', ' · ' + t('charging')) : null]);
-  readBattery(showBatt).then(stop => stop && cleanups.push(stop));
-
   add(root, 
     h('section.tool-grid',
       h('div.tool-card.torch-card', torchBtn, h('small.muted', isIOS ? t('torchIOS') : t('torchSub')), torchDiag),
@@ -348,7 +313,7 @@ export function render(root) {
       compassBtn, compassMsg, compassDiag),
     h('section.block',
       h('h2.block-title', icon('battery', 20), t('battery')),
-      batt, h('p.muted', t('batteryTips'))));
+      h('p.muted', t('batteryTips'))));
 
   return () => cleanups.forEach(f => f());
 }

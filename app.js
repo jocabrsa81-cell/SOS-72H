@@ -11,6 +11,7 @@ import * as vault from './screen-vault.js';
 import * as settings from './screen-settings.js';
 import * as alertsScreen from './screen-alerts.js';
 import * as now from './screen-now.js';
+import * as printPlan from './screen-print.js';
 import { startPolling, notify } from './alerts.js';
 
 const ROUTES = {
@@ -23,6 +24,7 @@ const ROUTES = {
   settings: { mod: settings, tab: null, title: 'settings', back: true },
   alerts: { mod: alertsScreen, tab: null, title: 'alertsTitle', back: true },
   now: { mod: now, tab: null, title: 'nowTitle', back: true },
+  print: { mod: printPlan, tab: null, title: 'printPlan', back: true },
 };
 const TABS = [
   ['home', 'home', 'navHome'], ['kit', 'kit', 'navKit'], ['family', 'family', 'navFamily'],
