@@ -565,8 +565,8 @@ export default {
    "k": "Heimlich obstruction",
    "s": [
     "Si elle peut tousser, encouragez-la à tousser fort.",
-    "Si elle ne peut ni tousser ni parler : penchez-la en avant, 5 claques entre les omoplates.",
-    "Puis 5 compressions abdominales : poing au-dessus du nombril, vers l’intérieur et le haut.",
+    "Si elle ne peut ni tousser, ni parler, ni respirer : penchez-la bien en avant (l’objet a ainsi tendance à sortir, pas à descendre) et donnez jusqu’à 5 claques fermes entre les omoplates, avec le talon de la main.",
+    "Puis jusqu’à 5 compressions abdominales : derrière elle, poing entre le nombril et les côtes, tirez fort vers l’intérieur et vers le haut. Femme enceinte ou ventre impossible à entourer : compressions au milieu de la poitrine.",
     "Alternez 5 et 5. Appelez le 112 si ça ne passe pas.",
     "Si elle perd connaissance : 112 et réanimation."
    ],

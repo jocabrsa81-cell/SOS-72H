@@ -565,8 +565,8 @@ export default {
    "k": "asfixia heimlich engasgar",
    "s": [
     "Se consegue tossir, incentiva-a a tossir com força.",
-    "Se não consegue tossir, falar ou respirar: inclina-a para a frente e dá 5 pancadas firmes entre as omoplatas.",
-    "Depois, 5 compressões abdominais: punho acima do umbigo, puxa para dentro e para cima.",
+    "Se não consegue tossir, falar ou respirar: inclina-a bem para a frente (assim o objeto tende a sair, e não a descer) e dá até 5 pancadas firmes entre as omoplatas, com a base da mão.",
+    "Depois, até 5 compressões abdominais: por trás, punho entre o umbigo e as costelas, puxa com força para dentro e para cima. Grávida ou pessoa a quem não consegues abraçar a barriga: compressões no meio do peito.",
     "Alterna 5 e 5 até sair. Liga 112 se não resolver.",
     "Se ficar inconsciente: 112 e reanimação."
    ],

@@ -565,8 +565,8 @@ export default {
    "k": "asfixia heimlich atragantarse",
    "s": [
     "Si puede toser, anímala a toser con fuerza.",
-    "Si no puede toser, hablar ni respirar: inclínala hacia delante y dale 5 golpes firmes entre los omóplatos.",
-    "Después, 5 compresiones abdominales: puño encima del ombligo, tira hacia dentro y hacia arriba.",
+    "Si no puede toser, hablar ni respirar: inclínala bien hacia delante (así el objeto tiende a salir y no a bajar) y da hasta 5 golpes firmes entre los omóplatos con el talón de la mano.",
+    "Después, hasta 5 compresiones abdominales: por detrás, puño entre el ombligo y las costillas, tira con fuerza hacia dentro y hacia arriba. Embarazada o si no puedes rodear la barriga: compresiones en el centro del pecho.",
     "Alterna 5 y 5 hasta que salga. Llama al 112 si no se resuelve.",
     "Si pierde el conocimiento: 112 y reanimación."
    ],

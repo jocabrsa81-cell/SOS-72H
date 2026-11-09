@@ -565,8 +565,8 @@ export default {
    "k": "Heimlich verschluckt",
    "s": [
     "Kann sie husten: zum kräftigen Husten ermutigen.",
-    "Kann sie nicht husten oder sprechen: nach vorn beugen, 5 kräftige Schläge zwischen die Schulterblätter.",
-    "Dann 5 Oberbauchkompressionen: Faust über dem Nabel, nach innen und oben ziehen.",
+    "Kann sie nicht husten, sprechen oder atmen: weit nach vorn beugen (so kommt der Fremdkörper eher heraus, statt tiefer zu rutschen) und bis zu 5 kräftige Schläge mit dem Handballen zwischen die Schulterblätter.",
+    "Dann bis zu 5 Oberbauchkompressionen: von hinten, Faust zwischen Nabel und Rippen, kräftig nach innen und oben ziehen. Bei Schwangeren oder wenn du den Bauch nicht umfassen kannst: Kompressionen in der Brustmitte.",
     "5 und 5 abwechseln. 112 rufen, wenn es nicht hilft.",
     "Wird sie bewusstlos: 112 und Wiederbelebung."
    ],

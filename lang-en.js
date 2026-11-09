@@ -565,8 +565,8 @@ export default {
    "k": "Heimlich obstruction",
    "s": [
     "If they can cough, encourage them to cough hard.",
-    "If they can’t cough, speak or breathe: lean them forward, give 5 firm blows between the shoulder blades.",
-    "Then 5 abdominal thrusts: fist above the navel, pull in and up.",
+    "If they can’t cough, speak or breathe: lean them well forward (so the object tends to come out rather than slip down) and give up to 5 firm blows between the shoulder blades with the heel of your hand.",
+    "Then up to 5 abdominal thrusts: from behind, fist between the navel and the ribs, pull sharply in and up. Pregnant, or you can’t get your arms around the belly: chest thrusts on the middle of the chest.",
     "Alternate 5 and 5 until it clears. Call 112 if it doesn’t.",
     "If they become unconscious: 112 and CPR."
    ],

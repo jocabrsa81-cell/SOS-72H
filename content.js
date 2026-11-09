@@ -396,6 +396,9 @@ const KIT_BASE = [
 const SRC = {
   erc: { n: 'European Resuscitation Council — Guidelines 2021', u: 'https://cprguidelines.eu/' },
   ifrc: { n: 'IFRC — International First Aid Guidelines 2020', u: 'https://www.ifrc.org/document/international-first-aid-resuscitation-and-education-guidelines' },
+  rcuk: { n: 'Resuscitation Council UK — Adult basic life support (choking)', u: 'https://www.resus.org.uk/node/11316' },
+  psc1: { n: 'France — Guide technique PSC1 (2024): obstruction des voies aériennes', u: 'https://thema.ufolep.org/secourisme/secourisme_d/data_1/pdf/ps/psc1guidetechniquejuin24.v1.pdf' },
+  redcross: { n: 'American Red Cross — Scientific Advisory Council: foreign body airway obstruction', u: 'https://guidelines.redcross.org/guidelines-database/foreign-body-airway-obstruction/' },
   infocrise: { n: 'Gouvernement du Luxembourg — infocrise.lu', u: 'https://infocrise.public.lu/' },
   anepc: { n: 'ANEPC — Proteção Civil (Portugal)', u: 'https://prociv.gov.pt/' },
   ipma: { n: 'IPMA', u: 'https://www.ipma.pt/' },
@@ -404,7 +407,7 @@ const SRC = {
   scouts: { n: 'Técnicas de escutismo / campismo (conhecimento comum)', u: '' },
 };
 const GUIDE_SRC = {
-  bleeding: ['ifrc'], recovery: ['erc', 'ifrc'], cpr: ['erc'], choking: ['erc'], burn: ['ifrc'], hypothermia: ['ifrc'],
+  bleeding: ['ifrc'], recovery: ['erc', 'ifrc'], cpr: ['erc'], choking: ['erc', 'rcuk', 'psc1', 'redcross'], burn: ['ifrc'], hypothermia: ['ifrc'],
   heatstroke: ['ifrc'], fracture: ['ifrc'], stroke: ['ifrc'], poison: ['ifrc'],
   sirens: ['infocrise', 'gouvfr'], nuclear: ['infocrise'], chemical: ['infocrise', 'gouvfr'], fire: ['gouvfr', 'anepc'],
   gas: ['gouvfr'], blackout: ['infocrise', 'gouvfr'], flood: ['infocrise', 'ipma'], storm: ['infocrise', 'gouvfr'],
