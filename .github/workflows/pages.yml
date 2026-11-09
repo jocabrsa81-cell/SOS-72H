@@ -1,5 +1,5 @@
-# Publica a app no GitHub Pages e recolhe os alertas (MeteoAlarm, IPMA, USGS, GDACS) de 15 em 15 minutos.
-# Em Settings → Pages → Source tem de estar "GitHub Actions".
+# Publica a SOS 72H no GitHub Pages: verifica as traduções, monta a app e recolhe os alertas.
+# Corre a cada envio para main e de 15 em 15 minutos (alertas). Em Settings → Pages → Source: "GitHub Actions".
 name: Publicar app e alertas
 on:
   push:
@@ -25,10 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Juntar os ficheiros da app
-        run: |
-          mkdir -p _site
-          cp index.html sw.js manifest.webmanifest app.css *.js icon.svg icon-192.png icon-512.png icon-maskable-512.png _site/
+      - name: Verificar traduções e montar a app
+        run: node build.mjs
       - name: Recolher alertas
         run: node fetch-alerts.mjs _site/alerts.json
         continue-on-error: true
