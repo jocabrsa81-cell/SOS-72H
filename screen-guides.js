@@ -61,7 +61,11 @@ function detail(root, g) {
       h('ol.steps', steps(g).map(st => h('li', L(st)))),
       g.extra === 'metronome' ? metronome(fn => { stopMetro = fn; }) : null,
       g.d.length ? h('section.dont', h('h2', t('doNot')), h('ul', g.d.map(x => h('li', L(x))))) : null,
-      h('p.disclaimer', t('guideDisclaimer'))));
+      h('p.disclaimer', t('guideDisclaimer')),
+      g.src && g.src.length ? h('section.sources',
+        h('h2', t('sourcesTitle')),
+        h('ul', g.src.map(s => h('li', s.u ? h('a', { href: s.u, target: '_blank', rel: 'noopener' }, s.n) : s.n))),
+        h('p.muted', g.kind === 'aid' ? t('reviewAid') : t('reviewOther'))) : null));
   return () => { stopMetro && stopMetro(); };
 }
 

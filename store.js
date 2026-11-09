@@ -77,6 +77,7 @@ function load() {
 }
 
 let state = load();
+let persistAsked = false;
 const listeners = new Set();
 
 export const store = {
@@ -87,6 +88,11 @@ export const store = {
     fn(state);
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('Não foi possível guardar', e); }
     listeners.forEach(l => l(state));
+    // Primeira vez que há dados: pede armazenamento persistente (o browser não os apaga por falta de espaço).
+    if (!persistAsked && (state.inventory.length || state.contacts.length || state.members.length)) {
+      persistAsked = true;
+      try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+    }
   },
   subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
   exportJSON() {

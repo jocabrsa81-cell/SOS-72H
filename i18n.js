@@ -1,373 +1,45 @@
-// Um só dicionário para toda a app. Cada chave tem [pt, fr, de, en, es].
-// Se faltar uma tradução, cai para português — nunca aparece a chave em bruto.
+// Traduções: um ficheiro por língua (lang-pt.js, lang-fr.js, …), carregado quando é preciso.
+// O português é a língua de referência: o que faltar noutra língua aparece em português.
 import { store } from './store.js';
+import { applyContent } from './content.js';
 
 export const LANGS = ['pt', 'fr', 'de', 'en', 'es'];
 export const LANG_NAMES = { pt: 'Português', fr: 'Français', de: 'Deutsch', en: 'English', es: 'Español' };
-const IDX = { pt: 0, fr: 1, de: 2, en: 3, es: 4 };
+export const UNIT_KEYS = ['bottle', 'jerrycan', 'can', 'jar', 'pack', 'box', 'bag', 'un'];
+export const CAT_KEYS = ['water', 'food', 'medical', 'equipment', 'hygiene', 'energy', 'documents', 'other'];
 
-const S = {
-  // Navegação
-  navHome: ['Início', 'Accueil', 'Start', 'Home', 'Inicio'],
-  navKit: ['Kit', 'Kit', 'Vorrat', 'Kit', 'Kit'],
-  navFamily: ['Família', 'Famille', 'Familie', 'Family', 'Familia'],
-  navGuides: ['Guias', 'Guides', 'Ratgeber', 'Guides', 'Guías'],
-  navTools: ['Ferramentas', 'Outils', 'Werkzeuge', 'Tools', 'Herramientas'],
-  back: ['Voltar', 'Retour', 'Zurück', 'Back', 'Volver'],
-  settings: ['Definições', 'Réglages', 'Einstellungen', 'Settings', 'Ajustes'],
-  documents: ['Documentos', 'Documents', 'Dokumente', 'Documents', 'Documentos'],
-
-  // Comum
-  save: ['Guardar', 'Enregistrer', 'Speichern', 'Save', 'Guardar'],
-  saved: ['Guardado', 'Enregistré', 'Gespeichert', 'Saved', 'Guardado'],
-  cancel: ['Cancelar', 'Annuler', 'Abbrechen', 'Cancel', 'Cancelar'],
-  delete: ['Eliminar', 'Supprimer', 'Löschen', 'Delete', 'Eliminar'],
-  deleted: ['Eliminado', 'Supprimé', 'Gelöscht', 'Deleted', 'Eliminado'],
-  edit: ['Editar', 'Modifier', 'Bearbeiten', 'Edit', 'Editar'],
-  add: ['Adicionar', 'Ajouter', 'Hinzufügen', 'Add', 'Añadir'],
-  close: ['Fechar', 'Fermer', 'Schließen', 'Close', 'Cerrar'],
-  call: ['Ligar', 'Appeler', 'Anrufen', 'Call', 'Llamar'],
-  optional: ['opcional', 'facultatif', 'optional', 'optional', 'opcional'],
-  confirmDelete: ['Eliminar "{name}"?', 'Supprimer « {name} » ?', '„{name}“ löschen?', 'Delete "{name}"?', '¿Eliminar «{name}»?'],
-  copied: ['Copiado', 'Copié', 'Kopiert', 'Copied', 'Copiado'],
-  copy: ['Copiar', 'Copier', 'Kopieren', 'Copy', 'Copiar'],
-  share: ['Partilhar', 'Partager', 'Teilen', 'Share', 'Compartir'],
-  online: ['Com Internet', 'En ligne', 'Online', 'Online', 'Con Internet'],
-  offline: ['Sem Internet — tudo continua a funcionar', 'Hors ligne — tout continue de fonctionner', 'Offline — alles funktioniert weiter', 'Offline — everything still works', 'Sin Internet — todo sigue funcionando'],
-
-  // Início
-  call112: ['Ligar 112', 'Appeler le 112', '112 anrufen', 'Call 112', 'Llamar al 112'],
-  call112Sub: ['Emergência médica, incêndio, acidente', 'Urgence médicale, incendie, accident', 'Notfall, Feuer, Unfall', 'Medical, fire, accident', 'Emergencia médica, incendio, accidente'],
-  otherNumbers: ['Outros números', 'Autres numéros', 'Weitere Nummern', 'Other numbers', 'Otros números'],
-  autonomyTitle: ['A tua autonomia', 'Votre autonomie', 'Deine Autarkie', 'How long you can last', 'Tu autonomía'],
-  autonomyGoal: ['Objetivo: 72 horas sem ajuda externa', 'Objectif : 72 heures sans aide extérieure', 'Ziel: 72 Stunden ohne Hilfe von außen', 'Goal: 72 hours without outside help', 'Objetivo: 72 horas sin ayuda externa'],
-  water: ['Água', 'Eau', 'Wasser', 'Water', 'Agua'],
-  food: ['Comida', 'Nourriture', 'Essen', 'Food', 'Comida'],
-  hoursShort: ['h', 'h', 'Std.', 'h', 'h'],
-  day: ['dia', 'jour', 'Tag', 'day', 'día'],
-  dayN: ['Dia {n}', 'Jour {n}', 'Tag {n}', 'Day {n}', 'Día {n}'],
-  people: ['Pessoas', 'Personnes', 'Personen', 'People', 'Personas'],
-  pets: ['Animais', 'Animaux', 'Haustiere', 'Pets', 'Animales'],
-  limitedBy: ['Limitado pela {what}', 'Limité par : {what}', 'Begrenzt durch: {what}', 'Limited by {what}', 'Limitado por: {what}'],
-  goalReached: ['Objetivo das 72 h cumprido', 'Objectif de 72 h atteint', '72-Stunden-Ziel erreicht', '72-hour goal reached', 'Objetivo de 72 h cumplido'],
-  missingWater: ['Faltam {n} L de água', 'Il manque {n} L d’eau', 'Es fehlen {n} L Wasser', '{n} L of water missing', 'Faltan {n} L de agua'],
-  missingFood: ['Faltam {n} kcal de comida', 'Il manque {n} kcal de nourriture', 'Es fehlen {n} kcal Essen', '{n} kcal of food missing', 'Faltan {n} kcal de comida'],
-  foodNoKcal: ['{n} artigo(s) de comida sem kcal — não entram na conta', '{n} aliment(s) sans kcal — non comptés', '{n} Lebensmittel ohne kcal — nicht mitgezählt', '{n} food item(s) without kcal — not counted', '{n} alimento(s) sin kcal — no se cuentan'],
-  waterNoVolume: ['{n} artigo(s) de água sem volume — não entram na conta', '{n} article(s) d’eau sans volume — non comptés', '{n} Wasserartikel ohne Volumen — nicht mitgezählt', '{n} water item(s) without volume — not counted', '{n} artículo(s) de agua sin volumen — no se cuentan'],
-  expiredExcluded: ['{n} artigo(s) fora de validade excluídos', '{n} article(s) périmé(s) exclus', '{n} abgelaufene Artikel ausgeschlossen', '{n} expired item(s) excluded', '{n} artículo(s) caducado(s) excluido(s)'],
-  emptyAutonomy: ['Regista a água e a comida que tens em casa para veres quantas horas aguentas.', 'Enregistrez l’eau et la nourriture que vous avez pour voir combien d’heures vous tenez.', 'Erfasse Wasser und Essen, die du zu Hause hast, um zu sehen, wie lange du durchhältst.', 'Record the water and food you have at home to see how many hours you can last.', 'Registra el agua y la comida que tienes en casa para ver cuántas horas aguantas.'],
-  openInventory: ['Abrir inventário', 'Ouvrir l’inventaire', 'Inventar öffnen', 'Open inventory', 'Abrir inventario'],
-  attention: ['Precisa de atenção', 'À surveiller', 'Braucht Aufmerksamkeit', 'Needs attention', 'Requiere atención'],
-  kitProgress: ['Kit de 72 horas', 'Kit de 72 heures', '72-Stunden-Vorrat', '72-hour kit', 'Kit de 72 horas'],
-  kitProgressSub: ['{done} de {total} itens preparados', '{done} sur {total} prêts', '{done} von {total} bereit', '{done} of {total} ready', '{done} de {total} preparados'],
-  sirenTest: ['Teste de sirenes no Luxemburgo: 1.ª segunda-feira do mês', 'Test des sirènes au Luxembourg : 1er lundi du mois', 'Sirenentest in Luxemburg: 1. Montag im Monat', 'Siren test in Luxembourg: 1st Monday of the month', 'Prueba de sirenas en Luxemburgo: 1.er lunes del mes'],
-  sirenTestToday: ['Hoje é dia de teste de sirenes no Luxemburgo. Não é alerta.', 'Aujourd’hui : test des sirènes au Luxembourg. Pas une alerte.', 'Heute ist Sirenentest in Luxemburg. Kein Alarm.', 'Siren test in Luxembourg today. Not an alert.', 'Hoy hay prueba de sirenas en Luxemburgo. No es una alerta.'],
-
-  // Números
-  numbersTitle: ['Números de emergência', 'Numéros d’urgence', 'Notrufnummern', 'Emergency numbers', 'Números de emergencia'],
-  numbersNote: ['O 112 funciona em toda a UE, mesmo sem cartão SIM ou sem saldo.', 'Le 112 fonctionne dans toute l’UE, même sans carte SIM ni crédit.', 'Die 112 funktioniert in der ganzen EU, auch ohne SIM-Karte oder Guthaben.', '112 works across the EU, even without a SIM card or credit.', 'El 112 funciona en toda la UE, incluso sin tarjeta SIM o sin saldo.'],
-  numbersMore: ['Mudar regiões nas definições', 'Changer les régions dans les réglages', 'Regionen in den Einstellungen ändern', 'Change regions in settings', 'Cambiar regiones en los ajustes'],
-
-  // Kit / Inventário
-  kitTitle: ['Kit de 72 horas', 'Kit de 72 heures', '72-Stunden-Vorrat', '72-hour kit', 'Kit de 72 horas'],
-  tabChecklist: ['Lista', 'Liste', 'Checkliste', 'Checklist', 'Lista'],
-  tabInventory: ['Inventário', 'Inventaire', 'Inventar', 'Inventory', 'Inventario'],
-  checklistIntro: ['As quantidades ajustam-se ao número de pessoas definido no início.', 'Les quantités s’adaptent au nombre de personnes défini à l’accueil.', 'Die Mengen passen sich der Personenzahl auf der Startseite an.', 'Quantities follow the number of people set on the home screen.', 'Las cantidades se ajustan al número de personas indicado en el inicio.'],
-  resetChecklist: ['Desmarcar tudo', 'Tout décocher', 'Alles abwählen', 'Uncheck all', 'Desmarcar todo'],
-  confirmResetChecklist: ['Desmarcar todos os itens da lista?', 'Décocher tous les éléments ?', 'Alle Einträge abwählen?', 'Uncheck every item?', '¿Desmarcar todos los elementos?'],
-  invEmpty: ['O inventário está vazio. Começa pela água: quantas garrafas tens em casa?', 'L’inventaire est vide. Commencez par l’eau : combien de bouteilles avez-vous ?', 'Das Inventar ist leer. Fang mit Wasser an: Wie viele Flaschen hast du?', 'The inventory is empty. Start with water: how many bottles do you have?', 'El inventario está vacío. Empieza por el agua: ¿cuántas botellas tienes en casa?'],
-  addItem: ['Adicionar artigo', 'Ajouter un article', 'Artikel hinzufügen', 'Add item', 'Añadir artículo'],
-  editItem: ['Editar artigo', 'Modifier l’article', 'Artikel bearbeiten', 'Edit item', 'Editar artículo'],
-  itemName: ['Artigo', 'Article', 'Artikel', 'Item', 'Artículo'],
-  itemNamePh: ['Ex.: água mineral', 'Ex. : eau minérale', 'z. B. Mineralwasser', 'e.g. mineral water', 'Ej.: agua mineral'],
-  category: ['Categoria', 'Catégorie', 'Kategorie', 'Category', 'Categoría'],
-  quantity: ['Quantidade', 'Quantité', 'Menge', 'Quantity', 'Cantidad'],
-  countUnit: ['Unidade', 'Unité', 'Einheit', 'Unit', 'Unidad'],
-  contentPer: ['Conteúdo de cada', 'Contenu de chaque', 'Inhalt pro Stück', 'Contents of each', 'Contenido de cada uno'],
-  kcalPer: ['kcal de cada', 'kcal par unité', 'kcal pro Stück', 'kcal each', 'kcal de cada uno'],
-  kcalHelp: ['Está no rótulo: kcal por 100 g × peso ÷ 100. Sem este valor, a comida não conta para a autonomia.', 'Sur l’étiquette : kcal pour 100 g × poids ÷ 100. Sans cette valeur, l’aliment n’est pas compté.', 'Steht auf dem Etikett: kcal pro 100 g × Gewicht ÷ 100. Ohne Wert zählt das Lebensmittel nicht.', 'On the label: kcal per 100 g × weight ÷ 100. Without it, the food is not counted.', 'En la etiqueta: kcal por 100 g × peso ÷ 100. Sin este valor, la comida no cuenta para la autonomía.'],
-  kcalCalc: ['Calcular: {kcal} kcal/100 g × {w}', 'Calculer : {kcal} kcal/100 g × {w}', 'Berechnen: {kcal} kcal/100 g × {w}', 'Calculate: {kcal} kcal/100 g × {w}', 'Calcular: {kcal} kcal/100 g × {w}'],
-  per100: ['kcal por 100 g/ml (rótulo)', 'kcal pour 100 g/ml (étiquette)', 'kcal pro 100 g/ml (Etikett)', 'kcal per 100 g/ml (label)', 'kcal por 100 g/ml (etiqueta)'],
-  expiry: ['Validade', 'Date de péremption', 'Haltbar bis', 'Expiry date', 'Fecha de caducidad'],
-  location: ['Onde está guardado', 'Où c’est rangé', 'Lagerort', 'Where it is stored', 'Dónde está guardado'],
-  locationPh: ['Ex.: garagem, prateleira de cima', 'Ex. : garage, étagère du haut', 'z. B. Garage, oberes Regal', 'e.g. garage, top shelf', 'Ej.: garaje, estante de arriba'],
-  total: ['Total', 'Total', 'Gesamt', 'Total', 'Total'],
-  expired: ['Fora de validade', 'Périmé', 'Abgelaufen', 'Expired', 'Caducado'],
-  expiresIn: ['Expira em {n} dias', 'Expire dans {n} jours', 'Läuft in {n} Tagen ab', 'Expires in {n} days', 'Caduca en {n} días'],
-  expiresToday: ['Expira hoje', 'Expire aujourd’hui', 'Läuft heute ab', 'Expires today', 'Caduca hoy'],
-  validUntil: ['Válido até {d}', 'Valable jusqu’au {d}', 'Haltbar bis {d}', 'Good until {d}', 'Válido hasta {d}'],
-  filterAll: ['Tudo', 'Tout', 'Alle', 'All', 'Todo'],
-  invSummary: ['{n} artigos · {l} L de água · {k} kcal', '{n} articles · {l} L d’eau · {k} kcal', '{n} Artikel · {l} L Wasser · {k} kcal', '{n} items · {l} L water · {k} kcal', '{n} artículos · {l} L de agua · {k} kcal'],
-  invSummary1: ['1 artigo · {l} L de água · {k} kcal', '1 article · {l} L d’eau · {k} kcal', '1 Artikel · {l} L Wasser · {k} kcal', '1 item · {l} L water · {k} kcal', '1 artículo · {l} L de agua · {k} kcal'],
-  itemAdded: ['Artigo adicionado', 'Article ajouté', 'Artikel hinzugefügt', 'Item added', 'Artículo añadido'],
-  useOne: ['Gastar 1', 'Utiliser 1', '1 verbrauchen', 'Use 1', 'Gastar 1'],
-
-  // Família
-  familyTitle: ['Plano familiar', 'Plan familial', 'Familienplan', 'Family plan', 'Plan familiar'],
-  contactsTitle: ['Contactos de emergência', 'Contacts d’urgence', 'Notfallkontakte', 'Emergency contacts', 'Contactos de emergencia'],
-  contactsIntro: ['Inclui uma pessoa fora da região: em catástrofes locais, chamadas para longe passam muitas vezes melhor do que as locais.', 'Incluez une personne hors de la région : lors d’une catastrophe locale, les appels lointains passent souvent mieux.', 'Nimm eine Person außerhalb der Region auf: Bei lokalen Katastrophen kommen Ferngespräche oft besser durch.', 'Include someone outside the region: in a local disaster, long-distance calls often get through better than local ones.', 'Incluye a alguien fuera de la región: en catástrofes locales, las llamadas lejanas suelen pasar mejor que las locales.'],
-  addContact: ['Adicionar contacto', 'Ajouter un contact', 'Kontakt hinzufügen', 'Add contact', 'Añadir contacto'],
-  name: ['Nome', 'Nom', 'Name', 'Name', 'Nombre'],
-  relation: ['Relação', 'Lien', 'Beziehung', 'Relationship', 'Relación'],
-  relationPh: ['Ex.: irmã, vizinho, colega', 'Ex. : sœur, voisin, collègue', 'z. B. Schwester, Nachbar', 'e.g. sister, neighbour', 'Ej.: hermana, vecino, compañero'],
-  phone: ['Telefone', 'Téléphone', 'Telefon', 'Phone', 'Teléfono'],
-  outOfRegion: ['Fora da região', 'Hors région', 'Außerhalb der Region', 'Outside the region', 'Fuera de la región'],
-  noContacts: ['Ainda sem contactos. Adiciona pelo menos dois: um perto e um longe.', 'Aucun contact. Ajoutez-en au moins deux : un proche, un éloigné.', 'Noch keine Kontakte. Füge mindestens zwei hinzu: einen nahen und einen fernen.', 'No contacts yet. Add at least two: one nearby, one far away.', 'Aún no hay contactos. Añade al menos dos: uno cerca y otro lejos.'],
-  meetingTitle: ['Pontos de encontro', 'Points de rendez-vous', 'Treffpunkte', 'Meeting points', 'Puntos de encuentro'],
-  meetingIntro: ['Se a casa não for segura e a rede falhar, cada pessoa sabe para onde ir.', 'Si la maison n’est pas sûre et que le réseau tombe, chacun sait où aller.', 'Wenn das Haus nicht sicher ist und das Netz ausfällt, weiß jeder, wohin.', 'If home isn’t safe and the network fails, everyone knows where to go.', 'Si la casa no es segura y la red falla, cada persona sabe adónde ir.'],
-  meetHome: ['Perto de casa', 'Près de la maison', 'Nahe dem Haus', 'Near home', 'Cerca de casa'],
-  meetHomePh: ['Ex.: portão do vizinho do n.º 12', 'Ex. : portail du voisin au n° 12', 'z. B. Tor des Nachbarn Nr. 12', 'e.g. neighbour’s gate at no. 12', 'Ej.: puerta del vecino del n.º 12'],
-  meetArea: ['Fora do bairro', 'Hors du quartier', 'Außerhalb des Viertels', 'Outside the neighbourhood', 'Fuera del barrio'],
-  meetAreaPh: ['Ex.: igreja de Dudelange, entrada principal', 'Ex. : église de Dudelange, entrée principale', 'z. B. Kirche Düdelingen, Haupteingang', 'e.g. Dudelange church, main entrance', 'Ej.: iglesia de Dudelange, entrada principal'],
-  meetRegion: ['Fora da região', 'Hors de la région', 'Außerhalb der Region', 'Outside the region', 'Fuera de la región'],
-  meetRegionPh: ['Ex.: casa dos pais, morada completa', 'Ex. : chez les parents, adresse complète', 'z. B. bei den Eltern, volle Adresse', 'e.g. parents’ house, full address', 'Ej.: casa de los padres, dirección completa'],
-  openMap: ['Abrir no mapa', 'Ouvrir la carte', 'Auf Karte öffnen', 'Open in map', 'Abrir en el mapa'],
-  useMyLocation: ['Usar a minha posição', 'Utiliser ma position', 'Meinen Standort nutzen', 'Use my location', 'Usar mi ubicación'],
-  membersTitle: ['Fichas de emergência', 'Fiches d’urgence', 'Notfallkarten', 'Emergency cards', 'Fichas de emergencia'],
-  membersIntro: ['Uma ficha por pessoa da casa. Mostra-a aos socorristas em ecrã inteiro.', 'Une fiche par personne du foyer. Montrez-la aux secours en plein écran.', 'Eine Karte pro Person im Haushalt. Zeige sie Rettungskräften im Vollbild.', 'One card per household member. Show it full screen to responders.', 'Una ficha por persona de la casa. Muéstrala a los equipos de rescate a pantalla completa.'],
-  addMember: ['Adicionar pessoa', 'Ajouter une personne', 'Person hinzufügen', 'Add person', 'Añadir persona'],
-  birth: ['Data de nascimento', 'Date de naissance', 'Geburtsdatum', 'Date of birth', 'Fecha de nacimiento'],
-  blood: ['Grupo sanguíneo', 'Groupe sanguin', 'Blutgruppe', 'Blood type', 'Grupo sanguíneo'],
-  allergies: ['Alergias', 'Allergies', 'Allergien', 'Allergies', 'Alergias'],
-  meds: ['Medicação habitual', 'Traitement habituel', 'Dauermedikation', 'Regular medication', 'Medicación habitual'],
-  conditions: ['Condições médicas', 'Antécédents médicaux', 'Vorerkrankungen', 'Medical conditions', 'Enfermedades'],
-  doctor: ['Médico de família', 'Médecin traitant', 'Hausarzt', 'GP / doctor', 'Médico de cabecera'],
-  notes: ['Notas', 'Notes', 'Notizen', 'Notes', 'Notas'],
-  showCard: ['Mostrar ficha', 'Afficher la fiche', 'Karte zeigen', 'Show card', 'Mostrar ficha'],
-  iceHeading: ['Em caso de emergência', 'En cas d’urgence', 'Im Notfall', 'In case of emergency', 'En caso de emergencia'],
-  iceContacts: ['Contactar', 'Contacter', 'Kontaktieren', 'Contact', 'Contactar'],
-  noMembers: ['Sem fichas. Adiciona cada pessoa da casa — sobretudo quem tem alergias ou medicação.', 'Aucune fiche. Ajoutez chaque personne, surtout celles avec allergies ou traitement.', 'Keine Karten. Füge jede Person hinzu — vor allem mit Allergien oder Medikamenten.', 'No cards yet. Add everyone at home — especially anyone with allergies or medication.', 'Sin fichas. Añade a cada persona de la casa, sobre todo a quien tenga alergias o tome medicación.'],
-  shareplan: ['Partilhar plano por SMS', 'Partager le plan par SMS', 'Plan per SMS teilen', 'Share plan by SMS', 'Compartir plan por SMS'],
-  planText: ['Plano de emergência da família', 'Plan d’urgence familial', 'Familien-Notfallplan', 'Family emergency plan', 'Plan de emergencia familiar'],
-
-  // Guias
-  guidesTitle: ['Guias de emergência', 'Guides d’urgence', 'Notfall-Ratgeber', 'Emergency guides', 'Guías de emergencia'],
-  firstAid: ['Primeiros socorros', 'Premiers secours', 'Erste Hilfe', 'First aid', 'Primeros auxilios'],
-  practical: ['Guias práticos', 'Savoir-faire pratique', 'Praktisches Wissen', 'Practical skills', 'Guías prácticas'],
-  procedures: ['Situações e procedimentos', 'Situations et consignes', 'Lagen und Verhalten', 'Situations and what to do', 'Situaciones y qué hacer'],
-  guidesSearch: ['Procurar: queimadura, gás, sirene…', 'Chercher : brûlure, gaz, sirène…', 'Suchen: Verbrennung, Gas, Sirene…', 'Search: burn, gas, siren…', 'Buscar: quemadura, gas, sirena…'],
-  noResults: ['Nada encontrado para "{q}".', 'Rien trouvé pour « {q} ».', 'Nichts gefunden für „{q}“.', 'Nothing found for "{q}".', 'No se ha encontrado nada para «{q}».'],
-  guideDisclaimer: ['Estes guias não substituem formação nem os serviços de emergência. Em caso de dúvida, liga 112.', 'Ces guides ne remplacent ni une formation ni les secours. En cas de doute, appelez le 112.', 'Diese Ratgeber ersetzen weder Ausbildung noch Rettungsdienst. Im Zweifel 112 anrufen.', 'These guides don’t replace training or emergency services. If in doubt, call 112.', 'Estas guías no sustituyen la formación ni los servicios de emergencia. En caso de duda, llama al 112.'],
-  doNot: ['Não fazer', 'À éviter', 'Nicht tun', 'Don’t', 'No hacer'],
-  cprMetronome: ['Ritmo de compressões (110/min)', 'Rythme des compressions (110/min)', 'Drucktakt (110/min)', 'Compression rhythm (110/min)', 'Ritmo de compresiones (110/min)'],
-  start: ['Iniciar', 'Démarrer', 'Starten', 'Start', 'Iniciar'],
-  stop: ['Parar', 'Arrêter', 'Stoppen', 'Stop', 'Parar'],
-
-  // Ferramentas
-  toolsTitle: ['Ferramentas', 'Outils', 'Werkzeuge', 'Tools', 'Herramientas'],
-  torch: ['Lanterna', 'Lampe torche', 'Taschenlampe', 'Torch', 'Linterna'],
-  torchSub: ['Usa o flash da câmara', 'Utilise le flash de l’appareil photo', 'Nutzt den Kamerablitz', 'Uses the camera flash', 'Usa el flash de la cámara'],
-  torchOn: ['Ligar lanterna', 'Allumer', 'Einschalten', 'Turn on', 'Encender linterna'],
-  torchOff: ['Desligar lanterna', 'Éteindre', 'Ausschalten', 'Turn off', 'Apagar linterna'],
-  torchSearching: ['A procurar o flash…', 'Recherche du flash…', 'Suche Blitz…', 'Looking for the flash…', 'Buscando el flash…'],
-  torchUnsupported: ['Este dispositivo ou browser não deixa controlar o flash. Usa o ecrã branco.', 'Cet appareil ou navigateur ne permet pas de contrôler le flash. Utilisez l’écran blanc.', 'Gerät oder Browser erlauben keine Blitzsteuerung. Nutze den weißen Bildschirm.', 'This device or browser won’t allow flash control. Use the white screen instead.', 'Este dispositivo o navegador no permite controlar el flash. Usa la pantalla blanca.'],
-  torchDenied: ['Sem acesso à câmara. Autoriza nas definições do telemóvel para usar o flash.', 'Accès caméra refusé. Autorisez-le dans les réglages pour utiliser le flash.', 'Kein Kamerazugriff. In den Einstellungen erlauben, um den Blitz zu nutzen.', 'No camera access. Allow it in your phone settings to use the flash.', 'Sin acceso a la cámara. Permítelo en los ajustes del móvil para usar el flash.'],
-  screenLight: ['Ecrã branco', 'Écran blanc', 'Weißer Bildschirm', 'White screen', 'Pantalla blanca'],
-  screenLightSub: ['Luz suave, toca para sair', 'Lumière douce, touchez pour quitter', 'Sanftes Licht, tippen zum Beenden', 'Soft light, tap to exit', 'Luz suave, toca para salir'],
-  sosSignal: ['Sinal SOS', 'Signal SOS', 'SOS-Signal', 'SOS signal', 'Señal SOS'],
-  sosSignalSub: ['··· ––– ··· em luz e som', '··· ––– ··· en lumière et son', '··· ––– ··· mit Licht und Ton', '··· ––– ··· with light and sound', '··· ––– ··· con luz y sonido'],
-  whistle: ['Apito', 'Sifflet', 'Pfeife', 'Whistle', 'Silbato'],
-  whistleSub: ['Som agudo para te encontrarem', 'Son aigu pour être trouvé', 'Hoher Ton, damit man dich findet', 'High tone so people can find you', 'Sonido agudo para que te encuentren'],
-  withTorch: ['Usar também o flash', 'Utiliser aussi le flash', 'Auch Blitz nutzen', 'Also use the flash', 'Usar también el flash'],
-  tapToExit: ['Toca para sair', 'Touchez pour quitter', 'Tippen zum Beenden', 'Tap to exit', 'Toca para salir'],
-  gpsTitle: ['A minha posição', 'Ma position', 'Mein Standort', 'My location', 'Mi ubicación'],
-  gpsSub: ['Funciona sem Internet — o GPS fala com satélites', 'Fonctionne hors ligne — le GPS parle aux satellites', 'Funktioniert offline — GPS nutzt Satelliten', 'Works offline — GPS talks to satellites', 'Funciona sin Internet — el GPS habla con los satélites'],
-  getLocation: ['Obter posição', 'Obtenir la position', 'Standort ermitteln', 'Get location', 'Obtener ubicación'],
-  locating: ['A procurar satélites…', 'Recherche des satellites…', 'Suche Satelliten…', 'Finding satellites…', 'Buscando satélites…'],
-  accuracy: ['Precisão: ± {n} m', 'Précision : ± {n} m', 'Genauigkeit: ± {n} m', 'Accuracy: ± {n} m', 'Precisión: ± {n} m'],
-  altitude: ['Altitude: {n} m', 'Altitude : {n} m', 'Höhe: {n} m', 'Altitude: {n} m', 'Altitud: {n} m'],
-  gpsDenied: ['Sem permissão de localização. Ativa-a nas definições do telemóvel.', 'Localisation refusée. Activez-la dans les réglages.', 'Standort verweigert. In den Einstellungen aktivieren.', 'Location permission denied. Turn it on in phone settings.', 'Sin permiso de ubicación. Actívalo en los ajustes del móvil.'],
-  gpsFail: ['Não foi possível obter a posição. Vai para um sítio com céu aberto e tenta de novo.', 'Position introuvable. Allez à découvert et réessayez.', 'Standort nicht gefunden. Geh ins Freie und versuche es erneut.', 'Couldn’t get a position. Move somewhere with open sky and try again.', 'No se pudo obtener la ubicación. Ve a un lugar con cielo abierto e inténtalo de nuevo.'],
-  sendBySms: ['Enviar por SMS', 'Envoyer par SMS', 'Per SMS senden', 'Send by SMS', 'Enviar por SMS'],
-  smsLocation: ['Estou aqui: {c} (precisão ±{a} m) {url}', 'Je suis ici : {c} (précision ±{a} m) {url}', 'Ich bin hier: {c} (±{a} m) {url}', 'I am here: {c} (±{a} m) {url}', 'Estoy aquí: {c} (precisión ±{a} m) {url}'],
-  compass: ['Bússola', 'Boussole', 'Kompass', 'Compass', 'Brújula'],
-  compassStart: ['Ativar bússola', 'Activer la boussole', 'Kompass aktivieren', 'Turn on compass', 'Activar brújula'],
-  compassUnsupported: ['Sensor de orientação indisponível neste dispositivo ou browser.', 'Capteur d’orientation indisponible.', 'Orientierungssensor nicht verfügbar.', 'Orientation sensor not available on this device or browser.', 'Sensor de orientación no disponible en este dispositivo o navegador.'],
-  compassCalibrate: ['Se oscilar muito, faz um 8 no ar com o telemóvel.', 'Si l’aiguille oscille, dessinez un 8 avec le téléphone.', 'Wenn es stark schwankt, mit dem Handy eine 8 in die Luft zeichnen.', 'If it jumps around, wave the phone in a figure 8.', 'Si oscila mucho, dibuja un 8 en el aire con el móvil.'],
-  compassSensorsHelp: ['No Chrome: ⋮ → Definições → Definições de sites → Sensores de movimento → Permitir.', 'Dans Chrome : ⋮ → Paramètres → Paramètres des sites → Capteurs de mouvement → Autoriser.', 'In Chrome: ⋮ → Einstellungen → Website-Einstellungen → Bewegungssensoren → Zulassen.', 'In Chrome: ⋮ → Settings → Site settings → Motion sensors → Allow.', 'En Chrome: ⋮ → Configuración → Configuración de sitios → Sensores de movimiento → Permitir.'],
-  torchIOS: ['O iPhone não deixa as apps web ligar o flash. Usa o ecrã branco ou a lanterna do Centro de Controlo.', 'L’iPhone ne permet pas aux apps web d’allumer le flash. Utilisez l’écran blanc ou la lampe du Centre de contrôle.', 'Das iPhone erlaubt Web-Apps keinen Blitz. Nutze den weißen Bildschirm oder die Taschenlampe im Kontrollzentrum.', 'iPhone doesn’t let web apps use the flash. Use the white screen or the torch in Control Centre.', 'El iPhone no deja a las apps web usar el flash. Usa la pantalla blanca o la linterna del Centro de control.'],
-  iosSilent: ['Se não ouvires nada, desliga o modo silencioso do iPhone.', 'Si vous n’entendez rien, désactivez le mode silencieux de l’iPhone.', 'Hörst du nichts, schalte den Stummmodus des iPhones aus.', 'If you hear nothing, turn off the iPhone’s silent mode.', 'Si no oyes nada, desactiva el modo silencio del iPhone.'],
-  compassIOSHelp: ['No iPhone: Definições → Apps → Safari → Movimento e orientação → ativar.', 'Sur iPhone : Réglages → Apps → Safari → Mouvement et orientation → activer.', 'Auf dem iPhone: Einstellungen → Apps → Safari → Bewegung & Ausrichtung → aktivieren.', 'On iPhone: Settings → Apps → Safari → Motion & Orientation Access → on.', 'En iPhone: Ajustes → Apps → Safari → Movimiento y orientación → activar.'],
-  installIOS: ['No iPhone: abre no Safari, toca em Partilhar e depois em "Adicionar ao ecrã principal". Assim funciona sem Internet e os dados ficam guardados.', 'Sur iPhone : ouvrez dans Safari, touchez Partager puis « Sur l’écran d’accueil ». Ainsi elle marche hors ligne et garde vos données.', 'Auf dem iPhone: in Safari öffnen, Teilen antippen, dann „Zum Home-Bildschirm“. So läuft sie offline und behält deine Daten.', 'On iPhone: open in Safari, tap Share, then "Add to Home Screen". That way it works offline and keeps your data.', 'En iPhone: ábrela en Safari, toca Compartir y luego «Añadir a pantalla de inicio». Así funciona sin conexión y conserva tus datos.'],
-  installAndroid: ['No Android: no Chrome, toca em ⋮ e depois em "Instalar app" ou "Adicionar ao ecrã principal".', 'Sur Android : dans Chrome, touchez ⋮ puis « Installer l’application ».', 'Auf Android: in Chrome ⋮ antippen, dann „App installieren“.', 'On Android: in Chrome, tap ⋮ then "Install app" or "Add to Home screen".', 'En Android: en Chrome, toca ⋮ y luego «Instalar aplicación».'],
-  battery: ['Bateria', 'Batterie', 'Akku', 'Battery', 'Batería'],
-  batteryUnavailable: ['Leitura indisponível neste browser', 'Lecture indisponible dans ce navigateur', 'In diesem Browser nicht verfügbar', 'Reading unavailable in this browser', 'Lectura no disponible en este navegador'],
-  charging: ['a carregar', 'en charge', 'lädt', 'charging', 'cargando'],
-  batteryTips: ['Poupar bateria: modo de poupança máxima, brilho no mínimo, dados móveis desligados quando não precisas, e liga só a horas combinadas.', 'Économiser : mode économie maximale, luminosité minimale, données mobiles coupées, et appels à heures fixes.', 'Akku sparen: Maximaler Energiesparmodus, Helligkeit minimal, mobile Daten aus, nur zu festen Zeiten telefonieren.', 'Save battery: maximum power saving, minimum brightness, mobile data off when not needed, and call only at agreed times.', 'Ahorrar batería: modo de ahorro máximo, brillo al mínimo, datos móviles apagados cuando no los necesites, y llama solo a horas acordadas.'],
-
-  // Organic Maps
-  omTitle: ['Mapas offline', 'Cartes hors ligne', 'Offline-Karten', 'Offline maps', 'Mapas sin conexión'],
-  omIntro: ['A SOS 72H usa a app gratuita Organic Maps, que funciona sem Internet. Instala-a e descarrega já os mapas das tuas regiões, enquanto tens rede.', 'SOS 72H utilise l’app gratuite Organic Maps, qui fonctionne hors ligne. Installez-la et téléchargez dès maintenant les cartes de vos régions.', 'SOS 72H nutzt die kostenlose App Organic Maps, die offline funktioniert. Installiere sie und lade jetzt die Karten deiner Regionen herunter.', 'SOS 72H uses the free Organic Maps app, which works offline. Install it and download your regions’ maps now, while you have signal.', 'SOS 72H usa la app gratuita Organic Maps, que funciona sin Internet. Instálala y descarga ya los mapas de tus regiones mientras tienes cobertura.'],
-  omOpenApp: ['Abrir Organic Maps', 'Ouvrir Organic Maps', 'Organic Maps öffnen', 'Open Organic Maps', 'Abrir Organic Maps'],
-  omInstall: ['Instalar', 'Installer', 'Installieren', 'Install', 'Instalar'],
-  omInstallHint: ['Se a app não estiver instalada, abre-se a Play Store.', 'Si l’app n’est pas installée, le Play Store s’ouvre.', 'Ist die App nicht installiert, öffnet sich der Play Store.', 'If the app isn’t installed, the Play Store opens.', 'Si la app no está instalada, se abre Play Store.'],
-  omOpen: ['Organic Maps', 'Organic Maps', 'Organic Maps', 'Organic Maps', 'Organic Maps'],
-  omOther: ['Outra app', 'Autre app', 'Andere App', 'Other app', 'Otra app'],
-  omNearby: ['Procurar perto de mim', 'Chercher près de moi', 'In meiner Nähe suchen', 'Search near me', 'Buscar cerca de mí'],
-  omNearbyHelp: ['Abre a pesquisa no Organic Maps. Funciona offline se o mapa da zona estiver descarregado.', 'Ouvre la recherche dans Organic Maps. Hors ligne si la carte est téléchargée.', 'Öffnet die Suche in Organic Maps. Offline, wenn die Karte geladen ist.', 'Opens the search in Organic Maps. Works offline if that area’s map is downloaded.', 'Abre la búsqueda en Organic Maps. Funciona sin conexión si el mapa de la zona está descargado.'],
-  omAllPoints: ['Ver os pontos no Organic Maps', 'Voir les points dans Organic Maps', 'Punkte in Organic Maps zeigen', 'Show points in Organic Maps', 'Ver los puntos en Organic Maps'],
-  omExport: ['Guardar pontos para o Organic Maps (KML)', 'Enregistrer les points pour Organic Maps (KML)', 'Punkte für Organic Maps speichern (KML)', 'Save points for Organic Maps (KML)', 'Guardar puntos para Organic Maps (KML)'],
-  omExportHelp: ['Abre o ficheiro com o Organic Maps: os pontos ficam guardados como favoritos, disponíveis sem Internet.', 'Ouvrez le fichier avec Organic Maps : les points deviennent des favoris, disponibles hors ligne.', 'Öffne die Datei mit Organic Maps: Die Punkte werden Lesezeichen, offline verfügbar.', 'Open the file with Organic Maps: the points become bookmarks, available offline.', 'Abre el archivo con Organic Maps: los puntos quedan como favoritos, disponibles sin conexión.'],
-  omNoCoords: ['Nenhum ponto tem coordenadas. Toca em "Usar a minha posição" quando estiveres em cada local.', 'Aucun point n’a de coordonnées. Utilisez « Utiliser ma position » sur place.', 'Kein Punkt hat Koordinaten. Nutze vor Ort „Meinen Standort nutzen“.', 'No point has coordinates. Tap "Use my location" when you are at each place.', 'Ningún punto tiene coordenadas. Toca «Usar mi ubicación» cuando estés en cada sitio.'],
-  omHere: ['Estou aqui', 'Je suis ici', 'Ich bin hier', 'I am here', 'Estoy aquí'],
-  pickFromOm: ['Também podes escolher no Organic Maps: toque longo no sítio, toca nas coordenadas para as copiar e cola-as aqui.', 'Vous pouvez aussi choisir dans Organic Maps : appui long sur le lieu, touchez les coordonnées pour les copier, puis collez-les ici.', 'Du kannst auch in Organic Maps wählen: lange auf den Ort tippen, Koordinaten antippen zum Kopieren, hier einfügen.', 'You can also pick in Organic Maps: long-press the place, tap the coordinates to copy them, and paste them here.', 'También puedes elegir en Organic Maps: pulsación larga en el sitio, toca las coordenadas para copiarlas y pégalas aquí.'],
-  pickOnMap: ['Escolher no mapa', 'Choisir sur la carte', 'Auf Karte wählen', 'Pick on map', 'Elegir en el mapa'],
-  pickTitle: ['Escolhe o ponto no mapa', 'Choisissez le point sur la carte', 'Punkt auf der Karte wählen', 'Pick the point on the map', 'Elige el punto en el mapa'],
-  pickHelp: ['Arrasta o mapa até a mira ficar no sítio certo. Aproxima com dois dedos.', 'Déplacez la carte jusqu’à ce que la mire soit au bon endroit. Zoomez avec deux doigts.', 'Karte verschieben, bis das Fadenkreuz richtig sitzt. Mit zwei Fingern zoomen.', 'Drag the map until the crosshair is on the right spot. Pinch to zoom.', 'Arrastra el mapa hasta que la mira esté en el sitio correcto. Amplía con dos dedos.'],
-  pickUse: ['Usar este ponto', 'Utiliser ce point', 'Diesen Punkt nehmen', 'Use this point', 'Usar este punto'],
-  pickSearch: ['Procurar morada ou local', 'Chercher une adresse ou un lieu', 'Adresse oder Ort suchen', 'Search address or place', 'Buscar dirección o lugar'],
-  pickNoResult: ['Morada não encontrada. Tenta com a localidade.', 'Adresse introuvable. Essayez avec la localité.', 'Adresse nicht gefunden. Mit Ort versuchen.', 'Address not found. Try adding the town.', 'Dirección no encontrada. Prueba con la localidad.'],
-  pickOffline: ['Escolher no mapa precisa de Internet. Sem rede, usa "Usar a minha posição".', 'Choisir sur la carte nécessite Internet. Hors ligne, utilisez « Utiliser ma position ».', 'Kartenauswahl braucht Internet. Offline „Meinen Standort nutzen“.', 'Picking on the map needs internet. Offline, use "Use my location".', 'Elegir en el mapa necesita Internet. Sin conexión, usa «Usar mi ubicación».'],
-  pickLoadFail: ['Não foi possível carregar o mapa. Verifica a ligação à Internet.', 'Impossible de charger la carte. Vérifiez la connexion.', 'Karte konnte nicht geladen werden. Verbindung prüfen.', 'Couldn’t load the map. Check your internet connection.', 'No se pudo cargar el mapa. Comprueba la conexión.'],
-  // Alertas
-  alertsTitle: ['Alertas', 'Alertes', 'Warnungen', 'Alerts', 'Alertas'],
-  alertsCheckNow: ['Verificar agora', 'Vérifier maintenant', 'Jetzt prüfen', 'Check now', 'Comprobar ahora'],
-  alertsChecking: ['A verificar…', 'Vérification…', 'Prüfe…', 'Checking…', 'Comprobando…'],
-  alertsLastCheck: ['Última verificação: {t}', 'Dernière vérification : {t}', 'Zuletzt geprüft: {t}', 'Last checked: {t}', 'Última comprobación: {t}'],
-  alertsNever: ['Ainda não foi feita nenhuma verificação.', 'Aucune vérification pour l’instant.', 'Noch nicht geprüft.', 'Not checked yet.', 'Aún no se ha comprobado.'],
-  alertsServer: ['Dados recolhidos às {t}', 'Données collectées à {t}', 'Daten erfasst um {t}', 'Data collected at {t}', 'Datos recogidos a las {t}'],
-  alertsFailed: ['A última tentativa falhou ({t}). A mostrar a verificação anterior.', 'Dernier essai échoué ({t}). Affichage de la vérification précédente.', 'Letzter Versuch fehlgeschlagen ({t}). Vorherige Prüfung wird gezeigt.', 'Last attempt failed ({t}). Showing the previous check.', 'El último intento falló ({t}). Se muestra la comprobación anterior.'],
-  alertsOffline: ['Sem Internet: a mostrar a última verificação.', 'Hors ligne : affichage de la dernière vérification.', 'Offline: letzte Prüfung wird gezeigt.', 'Offline: showing the last check.', 'Sin conexión: se muestra la última comprobación.'],
-  alertsDisclaimer: ['Isto é um complemento aos avisos oficiais, não os substitui. Segue sempre o LU-Alert, FR-Alert, ES-Alert, os SMS da Proteção Civil e as indicações das autoridades.', 'Ceci complète les alertes officielles, sans les remplacer. Suivez toujours LU-Alert, FR-Alert, ES-Alert, les SMS de la Protection civile et les consignes des autorités.', 'Dies ergänzt die offiziellen Warnungen, ersetzt sie aber nicht. Folge immer LU-Alert, FR-Alert, ES-Alert, den SMS des Zivilschutzes und den Behörden.', 'This complements official warnings; it does not replace them. Always follow LU-Alert, FR-Alert, ES-Alert, Civil Protection SMS and the authorities.', 'Esto complementa los avisos oficiales, no los sustituye. Sigue siempre ES-Alert, LU-Alert, FR-Alert, los SMS de Protección Civil y las indicaciones de las autoridades.'],
-  alertsBackground: ['Só verifica com a app aberta. Receber alertas com a app fechada exige a versão APK e um servidor de notificações.', 'Vérifie uniquement quand l’app est ouverte. Les alertes app fermée nécessitent la version APK et un serveur de notifications.', 'Prüft nur bei geöffneter App. Warnungen bei geschlossener App brauchen die APK-Version und einen Benachrichtigungsserver.', 'Only checks while the app is open. Alerts with the app closed need the APK version and a push server.', 'Solo comprueba con la app abierta. Recibir alertas con la app cerrada requiere la versión APK y un servidor de notificaciones.'],
-  alertsWeather: ['Tempo', 'Météo', 'Wetter', 'Weather', 'Tiempo'],
-  alertsQuakes: ['Sismos (últimas 72 h)', 'Séismes (72 dernières h)', 'Erdbeben (letzte 72 Std.)', 'Earthquakes (last 72 h)', 'Terremotos (últimas 72 h)'],
-  alertsDisasters: ['Catástrofes e tsunamis', 'Catastrophes et tsunamis', 'Katastrophen und Tsunamis', 'Disasters and tsunamis', 'Catástrofes y tsunamis'],
-  alertsNoneWeather: ['Sem avisos meteorológicos ativos nas tuas regiões.', 'Aucune vigilance météo active dans vos régions.', 'Keine aktiven Wetterwarnungen in deinen Regionen.', 'No active weather warnings in your regions.', 'Sin avisos meteorológicos activos en tus regiones.'],
-  alertsNoneQuakes: ['Sem sismos relevantes perto das tuas regiões.', 'Aucun séisme notable près de vos régions.', 'Keine relevanten Beben in der Nähe.', 'No relevant earthquakes near your regions.', 'Sin terremotos relevantes cerca de tus regiones.'],
-  alertsNoneDisasters: ['Sem catástrofes relevantes ativas.', 'Aucune catastrophe notable en cours.', 'Keine relevanten Katastrophen aktiv.', 'No relevant active disasters.', 'Sin catástrofes relevantes activas.'],
-  alertsSummaryNone: ['Sem alertas ativos', 'Aucune alerte active', 'Keine aktiven Warnungen', 'No active alerts', 'Sin alertas activas'],
-  alertsSummary: ['{n} alerta(s) ativo(s)', '{n} alerte(s) active(s)', '{n} aktive Warnung(en)', '{n} active alert(s)', '{n} alerta(s) activa(s)'],
-  alertsZones: ['{n} zonas', '{n} zones', '{n} Gebiete', '{n} areas', '{n} zonas'],
-  alertsMoreZones: ['e mais {n}', 'et {n} autres', 'und {n} weitere', 'and {n} more', 'y {n} más'],
-  alertsUntil: ['até {t}', 'jusqu’à {t}', 'bis {t}', 'until {t}', 'hasta {t}'],
-  alertsKm: ['a {n} km', 'à {n} km', '{n} km entfernt', '{n} km away', 'a {n} km'],
-  alertsDepth: ['profundidade {n} km', 'profondeur {n} km', 'Tiefe {n} km', 'depth {n} km', 'profundidad {n} km'],
-  alertsTsunami: ['Possível tsunami', 'Tsunami possible', 'Tsunami möglich', 'Possible tsunami', 'Posible tsunami'],
-  alertsSource: ['Ver na fonte', 'Voir la source', 'Zur Quelle', 'View source', 'Ver en la fuente'],
-  alertsAuto: ['Verificar automaticamente (de 10 em 10 min)', 'Vérifier automatiquement (toutes les 10 min)', 'Automatisch prüfen (alle 10 Min.)', 'Check automatically (every 10 min)', 'Comprobar automáticamente (cada 10 min)'],
-  alertsNotify: ['Notificar alertas fortes (laranja e vermelho)', 'Notifier les alertes fortes (orange et rouge)', 'Starke Warnungen melden (orange und rot)', 'Notify strong alerts (orange and red)', 'Notificar alertas fuertes (naranja y rojo)'],
-  alertsNotifyDenied: ['As notificações estão bloqueadas. Ativa-as nas definições do browser para este site.', 'Notifications bloquées. Activez-les dans les réglages du navigateur.', 'Benachrichtigungen blockiert. In den Browser-Einstellungen erlauben.', 'Notifications are blocked. Allow them in the browser settings for this site.', 'Notificaciones bloqueadas. Actívalas en los ajustes del navegador.'],
-  alertsSources: ['Fontes', 'Sources', 'Quellen', 'Sources', 'Fuentes'],
-  alertsSourceFail: ['sem resposta', 'pas de réponse', 'keine Antwort', 'no response', 'sin respuesta'],
-  alertsNew: ['Novo alerta', 'Nouvelle alerte', 'Neue Warnung', 'New alert', 'Nueva alerta'],
-  alertsNotTranslated: ['Os textos dos alertas vêm das fontes e podem estar noutra língua.', 'Les textes viennent des sources et peuvent être dans une autre langue.', 'Die Texte stammen von den Quellen und können in einer anderen Sprache sein.', 'Alert texts come from the sources and may be in another language.', 'Los textos vienen de las fuentes y pueden estar en otro idioma.'],
-  // Cofre
-  vaultTitle: ['Cofre de documentos', 'Coffre à documents', 'Dokumententresor', 'Document vault', 'Caja fuerte de documentos'],
-  vaultIntro: ['Fotos dos teus documentos, cifradas neste telemóvel com o teu PIN. Ninguém as consegue ler sem ele — nem nós.', 'Photos de vos documents, chiffrées sur ce téléphone avec votre code. Illisibles sans lui.', 'Fotos deiner Dokumente, auf diesem Handy mit deiner PIN verschlüsselt. Ohne PIN unlesbar.', 'Photos of your documents, encrypted on this phone with your PIN. Unreadable without it — even by us.', 'Fotos de tus documentos, cifradas en este móvil con tu PIN. Nadie puede leerlas sin él, ni siquiera nosotros.'],
-  vaultCreate: ['Criar cofre', 'Créer le coffre', 'Tresor anlegen', 'Create vault', 'Crear caja fuerte'],
-  vaultPin: ['PIN ou palavra-passe', 'Code ou mot de passe', 'PIN oder Passwort', 'PIN or passphrase', 'PIN o contraseña'],
-  vaultPinHelp: ['Mínimo 6 caracteres. Quanto mais longo, mais difícil de adivinhar se alguém copiar o telemóvel.', 'Au moins 6 caractères. Plus il est long, plus il résiste si quelqu’un copie le téléphone.', 'Mindestens 6 Zeichen. Je länger, desto sicherer, falls jemand das Handy kopiert.', 'At least 6 characters. The longer it is, the harder to guess if someone copies the phone.', 'Mínimo 6 caracteres. Cuanto más largo, más difícil de adivinar si alguien copia el móvil.'],
-  vaultPinRepeat: ['Repetir PIN', 'Répéter le code', 'PIN wiederholen', 'Repeat PIN', 'Repetir PIN'],
-  vaultWarn: ['Se esqueceres o PIN, os documentos perdem-se. Não há recuperação.', 'Si vous oubliez le code, les documents sont perdus. Aucune récupération.', 'Wenn du die PIN vergisst, sind die Dokumente verloren. Keine Wiederherstellung.', 'If you forget the PIN, the documents are lost. There is no recovery.', 'Si olvidas el PIN, los documentos se pierden. No hay recuperación.'],
-  vaultUnlock: ['Desbloquear', 'Déverrouiller', 'Entsperren', 'Unlock', 'Desbloquear'],
-  vaultLock: ['Bloquear', 'Verrouiller', 'Sperren', 'Lock', 'Bloquear'],
-  vaultWrongPin: ['PIN errado.', 'Code incorrect.', 'Falsche PIN.', 'Wrong PIN.', 'PIN incorrecto.'],
-  vaultPinShort: ['Precisa de pelo menos 6 caracteres.', 'Au moins 6 caractères.', 'Mindestens 6 Zeichen.', 'At least 6 characters.', 'Necesita al menos 6 caracteres.'],
-  vaultTooBig: ['Ficheiro demasiado grande (máximo 15 MB).', 'Fichier trop volumineux (15 Mo max).', 'Datei zu groß (max. 15 MB).', 'File too large (15 MB max).', 'Archivo demasiado grande (máximo 15 MB).'],
-  vaultOpen: ['Abrir', 'Ouvrir', 'Öffnen', 'Open', 'Abrir'],
-  vaultWait: ['Aguarda {n} s antes de tentar de novo.', 'Patientez {n} s avant de réessayer.', 'Warte {n} s, bevor du es erneut versuchst.', 'Wait {n} s before trying again.', 'Espera {n} s antes de volver a intentarlo.'],
-  vaultPinMismatch: ['Os PIN não coincidem.', 'Les codes ne correspondent pas.', 'Die PINs stimmen nicht überein.', 'The PINs don’t match.', 'Los PIN no coinciden.'],
-  vaultAdd: ['Adicionar documento', 'Ajouter un document', 'Dokument hinzufügen', 'Add document', 'Añadir documento'],
-  vaultEmpty: ['Cofre vazio. Fotografa o cartão de cidadão, o cartão CNS, apólices de seguro e receitas.', 'Coffre vide. Photographiez carte d’identité, carte CNS, assurances et ordonnances.', 'Tresor leer. Fotografiere Ausweis, CNS-Karte, Versicherungen und Rezepte.', 'Vault is empty. Photograph your ID card, CNS card, insurance policies and prescriptions.', 'Caja fuerte vacía. Fotografía el DNI o la tarjeta de identidad, la tarjeta CNS, las pólizas de seguro y las recetas.'],
-  vaultDocName: ['Nome do documento', 'Nom du document', 'Dokumentname', 'Document name', 'Nombre del documento'],
-  vaultDocNamePh: ['Ex.: Cartão de cidadão — frente', 'Ex. : Carte d’identité — recto', 'z. B. Personalausweis — Vorderseite', 'e.g. ID card — front', 'Ej.: DNI — anverso'],
-  vaultChoose: ['Tirar foto ou escolher ficheiro', 'Prendre une photo ou choisir', 'Foto aufnehmen oder wählen', 'Take a photo or choose file', 'Hacer una foto o elegir archivo'],
-  vaultEncrypting: ['A cifrar…', 'Chiffrement…', 'Verschlüssele…', 'Encrypting…', 'Cifrando…'],
-  vaultAutoLock: ['Bloqueia sozinho após 5 minutos sem uso.', 'Se verrouille après 5 minutes d’inactivité.', 'Sperrt nach 5 Minuten Inaktivität.', 'Locks itself after 5 minutes of inactivity.', 'Se bloquea sola tras 5 minutos sin uso.'],
-  vaultUnsupported: ['Este browser não suporta cifra segura. Abre a app instalada ou num browser recente com HTTPS.', 'Ce navigateur ne prend pas en charge le chiffrement. Utilisez l’app installée ou HTTPS.', 'Dieser Browser unterstützt keine Verschlüsselung. Nutze die App oder HTTPS.', 'This browser doesn’t support secure encryption. Use the installed app or a recent browser over HTTPS.', 'Este navegador no admite cifrado seguro. Abre la app instalada o un navegador reciente con HTTPS.'],
-  vaultChecklist: ['O que ter em cópia', 'À avoir en copie', 'Was du als Kopie brauchst', 'What to keep copies of', 'Qué tener en copia'],
-  vaultDestroy: ['Apagar cofre', 'Supprimer le coffre', 'Tresor löschen', 'Delete vault', 'Eliminar caja fuerte'],
-  vaultDestroyConfirm: ['Apagar o cofre e todos os documentos? Não dá para desfazer.', 'Supprimer le coffre et tous les documents ? Irréversible.', 'Tresor und alle Dokumente löschen? Nicht umkehrbar.', 'Delete the vault and every document? This can’t be undone.', '¿Eliminar la caja fuerte y todos los documentos? No se puede deshacer.'],
-  vaultChangePin: ['Mudar PIN', 'Changer le code', 'PIN ändern', 'Change PIN', 'Cambiar PIN'],
-  vaultNewPin: ['Novo PIN', 'Nouveau code', 'Neue PIN', 'New PIN', 'PIN nuevo'],
-  vaultPinChanged: ['PIN alterado', 'Code modifié', 'PIN geändert', 'PIN changed', 'PIN cambiado'],
-  vaultCurrentPin: ['PIN atual', 'Code actuel', 'Aktuelle PIN', 'Current PIN', 'PIN actual'],
-
-  // Definições
-  regions: ['Regiões', 'Régions', 'Regionen', 'Regions', 'Regiones'],
-  regionsHelp: ['Escolhe onde vives ou passas tempo. Muda os números de emergência e os guias que aparecem.', 'Choisissez où vous vivez ou séjournez. Cela change les numéros et les guides affichés.', 'Wähle, wo du lebst oder dich aufhältst. Ändert Notrufnummern und Ratgeber.', 'Choose where you live or spend time. Changes the emergency numbers and guides shown.', 'Elige dónde vives o pasas tiempo. Cambia los números de emergencia y las guías que aparecen.'],
-  regionsMin: ['Escolhe pelo menos uma região.', 'Choisissez au moins une région.', 'Mindestens eine Region wählen.', 'Choose at least one region.', 'Elige al menos una región.'],
-  weatherMinTitle: ['Avisos de tempo: nível mínimo', 'Vigilance météo : niveau minimum', 'Wetterwarnungen: Mindeststufe', 'Weather warnings: minimum level', 'Avisos meteorológicos: nivel mínimo'],
-  weatherMinHelp: ['Escolhe a partir de que nível aparecem os avisos de cada país. Num país grande, o amarelo pode trazer muitos avisos.', 'Choisissez à partir de quel niveau les alertes de chaque pays s’affichent.', 'Wähle, ab welcher Stufe Warnungen für jedes Land erscheinen.', 'Choose from which level each country’s warnings appear. In a large country, yellow can bring many warnings.', 'Elige a partir de qué nivel aparecen los avisos de cada país. En un país grande, el amarillo puede traer muchos avisos.'],
-  lvlYellow: ['Amarelo', 'Jaune', 'Gelb', 'Yellow', 'Amarillo'],
-  lvlOrange: ['Laranja', 'Orange', 'Orange', 'Orange', 'Naranja'],
-  lvlRed: ['Vermelho', 'Rouge', 'Rot', 'Red', 'Rojo'],
-  alertsLevelsLink: ['Mudar o nível mínimo por país', 'Changer le niveau minimum par pays', 'Mindeststufe pro Land ändern', 'Change the minimum level per country', 'Cambiar el nivel mínimo por país'],
-  ctryLU: ['Luxemburgo', 'Luxembourg', 'Luxemburg', 'Luxembourg', 'Luxemburgo'],
-  ctryFR: ['França (Mosela)', 'France (Moselle)', 'Frankreich (Moselle)', 'France (Moselle)', 'Francia (Mosela)'],
-  ctryDE: ['Alemanha (Sarre, Trier)', 'Allemagne (Sarre, Trèves)', 'Deutschland (Saarland, Trier)', 'Germany (Saarland, Trier)', 'Alemania (Sarre, Tréveris)'],
-  ctryBE: ['Bélgica (prov. Luxemburgo)', 'Belgique (prov. Luxembourg)', 'Belgien (Prov. Luxemburg)', 'Belgium (Luxembourg prov.)', 'Bélgica (prov. Luxemburgo)'],
-  ctryPT: ['Portugal', 'Portugal', 'Portugal', 'Portugal', 'Portugal'],
-  ctryES: ['Espanha', 'Espagne', 'Spanien', 'Spain', 'España'],
-  language: ['Idioma', 'Langue', 'Sprache', 'Language', 'Idioma'],
-  theme: ['Aparência', 'Apparence', 'Darstellung', 'Appearance', 'Apariencia'],
-  themeAuto: ['Automático', 'Automatique', 'Automatisch', 'Automatic', 'Automático'],
-  themeLight: ['Claro', 'Clair', 'Hell', 'Light', 'Claro'],
-  themeDark: ['Escuro', 'Sombre', 'Dunkel', 'Dark', 'Oscuro'],
-  needsTitle: ['Necessidades diárias', 'Besoins quotidiens', 'Tagesbedarf', 'Daily needs', 'Necesidades diarias'],
-  waterPerPerson: ['Água por pessoa (L/dia)', 'Eau par personne (L/jour)', 'Wasser pro Person (L/Tag)', 'Water per person (L/day)', 'Agua por persona (L/día)'],
-  waterPerPersonHelp: ['3 L é a referência habitual: beber e cozinhar. Com calor, crianças pequenas ou doença, conta mais.', '3 L est la référence : boire et cuisiner. Prévoyez plus en cas de chaleur, d’enfants ou de maladie.', '3 L ist der übliche Richtwert: Trinken und Kochen. Bei Hitze, Kleinkindern oder Krankheit mehr.', '3 L is the usual reference: drinking and cooking. Plan more for heat, small children or illness.', '3 L es la referencia habitual: beber y cocinar. Con calor, niños pequeños o enfermedad, cuenta más.'],
-  waterPerPet: ['Água por animal (L/dia)', 'Eau par animal (L/jour)', 'Wasser pro Tier (L/Tag)', 'Water per pet (L/day)', 'Agua por animal (L/día)'],
-  kcalPerPerson: ['Energia por pessoa (kcal/dia)', 'Énergie par personne (kcal/jour)', 'Energie pro Person (kcal/Tag)', 'Energy per person (kcal/day)', 'Energía por persona (kcal/día)'],
-  goalHours: ['Objetivo de autonomia (horas)', 'Objectif d’autonomie (heures)', 'Autarkieziel (Stunden)', 'Self-sufficiency goal (hours)', 'Objetivo de autonomía (horas)'],
-  backupTitle: ['Cópia de segurança', 'Sauvegarde', 'Sicherung', 'Backup', 'Copia de seguridad'],
-  backupIntro: ['Tudo fica só neste telemóvel. Exporta uma cópia de vez em quando e guarda-a noutro sítio. O cofre não entra na cópia.', 'Tout reste sur ce téléphone. Exportez une copie de temps en temps. Le coffre n’est pas inclus.', 'Alles bleibt auf diesem Handy. Exportiere ab und zu eine Kopie. Der Tresor ist nicht enthalten.', 'Everything stays on this phone. Export a copy now and then and keep it elsewhere. The vault is not included.', 'Todo se queda solo en este móvil. Exporta una copia de vez en cuando y guárdala en otro sitio. La caja fuerte no se incluye.'],
-  exportData: ['Exportar cópia', 'Exporter', 'Exportieren', 'Export backup', 'Exportar copia'],
-  importData: ['Importar cópia', 'Importer', 'Importieren', 'Import backup', 'Importar copia'],
-  importConfirm: ['Substituir todos os dados atuais pela cópia importada?', 'Remplacer toutes les données par la sauvegarde ?', 'Alle aktuellen Daten durch die Sicherung ersetzen?', 'Replace all current data with the imported backup?', '¿Sustituir todos los datos actuales por la copia importada?'],
-  importOk: ['Cópia importada', 'Sauvegarde importée', 'Sicherung importiert', 'Backup imported', 'Copia importada'],
-  importFail: ['Ficheiro inválido. Escolhe um ficheiro exportado pela SOS 72H.', 'Fichier invalide. Choisissez une sauvegarde SOS 72H.', 'Ungültige Datei. Wähle eine SOS-72H-Sicherung.', 'Invalid file. Choose a file exported by SOS 72H.', 'Archivo no válido. Elige un archivo exportado por SOS 72H.'],
-  resetAll: ['Apagar todos os dados', 'Effacer toutes les données', 'Alle Daten löschen', 'Delete all data', 'Borrar todos los datos'],
-  resetAllConfirm: ['Apagar inventário, plano familiar e definições? O cofre mantém-se.', 'Effacer inventaire, plan familial et réglages ? Le coffre est conservé.', 'Inventar, Familienplan und Einstellungen löschen? Der Tresor bleibt.', 'Delete inventory, family plan and settings? The vault is kept.', '¿Borrar inventario, plan familiar y ajustes? La caja fuerte se mantiene.'],
-  aboutTitle: ['Sobre', 'À propos', 'Über', 'About', 'Acerca de'],
-  aboutText: ['Funciona sem Internet. Sem contas, sem publicidade, sem envio de dados.', 'Fonctionne hors ligne. Sans compte, sans pub, sans envoi de données.', 'Funktioniert offline. Kein Konto, keine Werbung, keine Datenübertragung.', 'Works offline. No accounts, no ads, no data sent anywhere.', 'Funciona sin Internet. Sin cuentas, sin publicidad, sin envío de datos.'],
-  install: ['Instalar no telemóvel', 'Installer sur le téléphone', 'Auf dem Handy installieren', 'Install on phone', 'Instalar en el móvil'],
-  updateReady: ['Nova versão disponível.', 'Nouvelle version disponible.', 'Neue Version verfügbar.', 'New version available.', 'Nueva versión disponible.'],
-  reload: ['Atualizar', 'Mettre à jour', 'Aktualisieren', 'Update', 'Actualizar'],
-};
-
-const UNITS = {
-  bottle: ['garrafas', 'bouteilles', 'Flaschen', 'bottles', 'botellas'],
-  jerrycan: ['garrafões', 'bidons', 'Kanister', 'jerrycans', 'garrafas'],
-  can: ['latas', 'boîtes de conserve', 'Dosen', 'cans', 'latas'],
-  jar: ['frascos', 'bocaux', 'Gläser', 'jars', 'tarros'],
-  pack: ['embalagens', 'emballages', 'Packungen', 'packs', 'envases'],
-  box: ['caixas', 'boîtes', 'Kartons', 'boxes', 'cajas'],
-  bag: ['sacos', 'sachets', 'Beutel', 'bags', 'bolsas'],
-  un: ['unidades', 'unités', 'Stück', 'units', 'unidades'],
-};
-const CATS = {
-  water: ['Água', 'Eau', 'Wasser', 'Water', 'Agua'],
-  food: ['Comida', 'Nourriture', 'Lebensmittel', 'Food', 'Comida'],
-  medical: ['Saúde', 'Santé', 'Gesundheit', 'Health', 'Salud'],
-  equipment: ['Equipamento', 'Équipement', 'Ausrüstung', 'Equipment', 'Equipo'],
-  hygiene: ['Higiene', 'Hygiène', 'Hygiene', 'Hygiene', 'Higiene'],
-  energy: ['Energia e luz', 'Énergie et lumière', 'Energie und Licht', 'Power and light', 'Energía y luz'],
-  documents: ['Documentos e dinheiro', 'Documents et argent', 'Dokumente und Geld', 'Documents and money', 'Documentos y dinero'],
-  other: ['Outros', 'Autres', 'Sonstiges', 'Other', 'Otros'],
-};
+let cur = null;   // dicionário da língua atual
+let pt = null;    // dicionário de referência
+let loaded = '';
 
 export function lang() { return store.get().settings.lang || 'pt'; }
 
+// Carrega a língua (e o português, como reserva) e aplica os textos aos conteúdos.
+export async function loadLang(l = lang()) {
+  if (!LANGS.includes(l)) l = 'pt';
+  if (loaded === l && cur) return;
+  pt = pt || (await import('./lang-pt.js')).default;
+  cur = l === 'pt' ? pt : (await import(`./lang-${l}.js`)).default;
+  loaded = l;
+  applyContent(cur, pt);
+}
+
 export function t(key, vars) {
-  const row = S[key];
-  let s = row ? (row[IDX[lang()]] ?? row[0]) : key;
+  let s = (cur && cur.ui[key]) ?? (pt && pt.ui[key]) ?? key;
   if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
   return s;
 }
-// Para conteúdos com [pt, fr, de, en, es] guardados fora deste ficheiro
-export function L(arr) { return Array.isArray(arr) ? (arr[IDX[lang()]] ?? arr[0]) : arr; }
-export function unitName(u) { return UNITS[u] ? L(UNITS[u]) : u; }
-export function catName(c) { return L(CATS[c] || CATS.other); }
-export const UNIT_KEYS = Object.keys(UNITS);
-export const CAT_KEYS = Object.keys(CATS);
+// Os conteúdos já vêm na língua atual; L() fica por compatibilidade.
+export const L = x => (Array.isArray(x) ? x[0] : x);
+export const unitName = u => (cur && cur.units[u]) || (pt && pt.units[u]) || u;
+export const catName = c => (cur && cur.cats[c]) || (pt && pt.cats[c]) || (pt && pt.cats.other) || c;
 
 const LOCALES = { pt: 'pt-PT', fr: 'fr-LU', de: 'de-LU', en: 'en-GB', es: 'es-ES' };
+export const locale = () => LOCALES[lang()] || 'pt-PT';
 export function fmtNum(n, max = 1) {
-  return new Intl.NumberFormat(LOCALES[lang()], { maximumFractionDigits: max }).format(n);
+  return new Intl.NumberFormat(locale(), { maximumFractionDigits: max }).format(n);
 }
 export function fmtDate(iso) {
   if (!iso) return '';
-  return new Intl.DateTimeFormat(LOCALES[lang()], { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso + 'T00:00:00'));
+  return new Intl.DateTimeFormat(locale(), { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso + 'T00:00:00'));
 }

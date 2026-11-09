@@ -1,13 +1,7 @@
 // Service worker: guarda a app inteira na instalação para funcionar sem Internet.
-// Ao publicar uma nova versão, muda VERSION — a app avisa e atualiza com um toque.
-const VERSION = 'sos72h-1.7.3';
-const FILES = [
-  './', './index.html', './manifest.webmanifest', './app.css',
-  './app.js', './store.js', './i18n.js', './ui.js', './content.js', './maps.js', './picker.js', './platform.js', './alerts.js',
-  './screen-home.js', './screen-kit.js', './screen-family.js', './screen-guides.js',
-  './screen-tools.js', './screen-vault.js', './screen-settings.js', './screen-alerts.js',
-  './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png',
-];
+// A versão e a lista de ficheiros são geradas em cada publicação (build.mjs): não é preciso mudar nada à mão.
+const VERSION = 'sos72h-dev'; // gerado pelo build.mjs
+const FILES = ['./', './index.html']; // a lista completa é gerada pelo build.mjs
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)));

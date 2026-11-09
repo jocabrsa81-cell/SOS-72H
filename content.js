@@ -1,83 +1,384 @@
-// Conteúdos fixos: números, lista do kit, guias e documentos. Cada texto: [pt, fr, de, en, es].
+// Estrutura dos conteúdos (sem textos). Os textos vêm de lang-xx.js e são aplicados por applyContent().
+// Quem importa NUMBERS, GUIDES, etc. recebe sempre a versão na língua atual (ligações "live" dos módulos ES).
 
-export const NUMBERS = [
-  { country: ['Luxemburgo', 'Luxembourg', 'Luxemburg', 'Luxembourg', 'Luxemburgo'], flag: 'LU', r: 'lu', items: [
-    { n: '112', l: ['Emergência: ambulância, bombeiros', 'Urgences : ambulance, pompiers', 'Notruf: Rettung, Feuerwehr', 'Emergency: ambulance, fire', 'Emergencia: ambulancia, bomberos'] },
-    { n: '113', l: ['Polícia', 'Police', 'Polizei', 'Police', 'Policía'] },
-    { n: '80025500', d: '8002 5500', l: ['Centro Antivenenos (24 h)', 'Centre Antipoisons (24 h)', 'Giftnotruf (24 Std.)', 'Poison centre (24 h)', 'Centro Antivenenos (24 h)'] },
-    { n: '454545', d: '45 45 45', l: ['SOS Détresse — apoio emocional', 'SOS Détresse — écoute', 'SOS Détresse — Seelsorge', 'SOS Détresse — emotional support', 'SOS Détresse — apoyo emocional'] },
-  ]},
-  { country: ['França', 'France', 'Frankreich', 'France', 'Francia'], flag: 'FR', r: 'lu', items: [
-    { n: '112', l: ['Emergência europeia', 'Urgence européenne', 'Europäischer Notruf', 'European emergency', 'Emergencia europea'] },
-    { n: '15', l: ['SAMU — urgência médica', 'SAMU — urgence médicale', 'SAMU — medizinischer Notfall', 'SAMU — medical emergency', 'SAMU — urgencia médica'] },
-    { n: '17', l: ['Polícia / Gendarmerie', 'Police / Gendarmerie', 'Polizei / Gendarmerie', 'Police / Gendarmerie', 'Policía / Gendarmerie'] },
-    { n: '18', l: ['Bombeiros', 'Pompiers', 'Feuerwehr', 'Fire brigade', 'Bomberos'] },
-    { n: '114', l: ['Emergência por SMS (surdos)', 'Urgence par SMS (sourds)', 'Notruf per SMS (Gehörlose)', 'Emergency by SMS (deaf)', 'Emergencia por SMS (personas sordas)'], sms: true },
-    { n: '0383225050', d: '03 83 22 50 50', l: ['Centro Antivenenos de Nancy', 'Centre antipoison de Nancy', 'Giftnotruf Nancy', 'Nancy poison centre', 'Centro Antivenenos de Nancy'] },
-  ]},
-  { country: ['Alemanha', 'Allemagne', 'Deutschland', 'Germany', 'Alemania'], flag: 'DE', r: 'lu', items: [
-    { n: '112', l: ['Bombeiros e ambulância', 'Pompiers et ambulance', 'Feuerwehr und Rettung', 'Fire and ambulance', 'Bomberos y ambulancia'] },
-    { n: '110', l: ['Polícia', 'Police', 'Polizei', 'Police', 'Policía'] },
-    { n: '0613119240', d: '06131 19240', l: ['Antivenenos Mainz (Sarre, Renânia)', 'Antipoison Mayence (Sarre, Rhénanie)', 'Giftnotruf Mainz (Saarland, RLP)', 'Mainz poison centre (Saarland, RLP)', 'Antivenenos Maguncia (Sarre, Renania)'] },
-  ]},
-  { country: ['Bélgica', 'Belgique', 'Belgien', 'Belgium', 'Bélgica'], flag: 'BE', r: 'lu', items: [
-    { n: '112', l: ['Bombeiros e ambulância', 'Pompiers et ambulance', 'Feuerwehr und Rettung', 'Fire and ambulance', 'Bomberos y ambulancia'] },
-    { n: '101', l: ['Polícia', 'Police', 'Polizei', 'Police', 'Policía'] },
-    { n: '070245245', d: '070 245 245', l: ['Centro Antivenenos', 'Centre Antipoisons', 'Giftnotruf', 'Poison centre', 'Centro Antivenenos'] },
-  ]},
-  { country: ['Portugal', 'Portugal', 'Portugal', 'Portugal', 'Portugal'], flag: 'PT', r: 'pt', items: [
-    { n: '112', l: ['Emergência: INEM, bombeiros, polícia', 'Urgences : INEM, pompiers, police', 'Notruf: INEM, Feuerwehr, Polizei', 'Emergency: INEM, fire, police', 'Emergencia: INEM, bomberos, policía'] },
-    { n: '808242424', d: '808 24 24 24', l: ['SNS 24 — aconselhamento de saúde (24 h)', 'SNS 24 — conseil santé (24 h)', 'SNS 24 — Gesundheitsberatung (24 Std.)', 'SNS 24 — health advice line (24 h)', 'SNS 24 — consejo sanitario (24 h)'] },
-    { n: '800250250', d: '800 250 250', l: ['Centro de Informação Antivenenos (24 h, grátis)', 'Centre antipoison (24 h, gratuit)', 'Giftnotruf (24 Std., kostenlos)', 'Poison centre (24 h, free)', 'Centro de Información Antivenenos (24 h, gratis)'] },
-    { n: '808200520', d: '808 200 520', l: ['SOS Ambiente e Território (GNR) — denúncias', 'SOS Environnement (GNR) — signalements', 'SOS Umwelt (GNR) — Meldungen', 'SOS Environment (GNR) — reports', 'SOS Ambiente y Territorio (GNR) — denuncias'] },
-    { n: '144', l: ['Linha de Emergência Social', 'Urgence sociale', 'Sozialer Notdienst', 'Social emergency line', 'Línea de Emergencia Social'] },
-    { n: '213544545', d: '21 354 45 45', l: ['SOS Voz Amiga — apoio emocional (16–24 h)', 'SOS Voz Amiga — écoute (16–24 h)', 'SOS Voz Amiga — Seelsorge (16–24 Uhr)', 'SOS Voz Amiga — emotional support (16–24 h)', 'SOS Voz Amiga — apoyo emocional (16–24 h)'] },
-  ]},
-  { country: ['Espanha', 'Espagne', 'Spanien', 'Spain', 'España'], flag: 'ES', r: 'pt', items: [
-    { n: '112', l: ['Emergência: ambulância, bombeiros, polícia', 'Urgences : ambulance, pompiers, police', 'Notruf: Rettung, Feuerwehr, Polizei', 'Emergency: ambulance, fire, police', 'Emergencia: ambulancia, bomberos, policía'] },
-    { n: '091', l: ['Policía Nacional (cidades)', 'Policía Nacional (villes)', 'Policía Nacional (Städte)', 'Policía Nacional (cities)', 'Policía Nacional (ciudades)'] },
-    { n: '062', l: ['Guardia Civil (estradas e zonas rurais)', 'Guardia Civil (routes, zones rurales)', 'Guardia Civil (Straßen, ländlich)', 'Guardia Civil (roads, rural areas)', 'Guardia Civil (carreteras y zonas rurales)'] },
-    { n: '915620420', d: '91 562 04 20', l: ['Informação Toxicológica (24 h)', 'Information toxicologique (24 h)', 'Giftinformation (24 Std.)', 'Poison information (24 h)', 'Información Toxicológica (24 h)'] },
-  ]},
-];
-
-// Pesquisas rápidas no Organic Maps: rótulo e termo de pesquisa por idioma.
-export const NEARBY = [
-  { icon: 'alert', l: ['Hospital', 'Hôpital', 'Krankenhaus', 'Hospital', 'Hospital'], q: ['hospital', 'hôpital', 'Krankenhaus', 'hospital', 'hospital'] },
-  { icon: 'kit', l: ['Farmácia', 'Pharmacie', 'Apotheke', 'Pharmacy', 'Farmacia'], q: ['farmácia', 'pharmacie', 'Apotheke', 'pharmacy', 'farmacia'] },
-  { icon: 'battery', l: ['Bombas de gasolina', 'Station-service', 'Tankstelle', 'Fuel station', 'Gasolinera'], q: ['bomba de gasolina', 'station-service', 'Tankstelle', 'fuel', 'gasolinera'] },
-  { icon: 'phone', l: ['Polícia', 'Police', 'Polizei', 'Police', 'Policía'], q: ['polícia', 'police', 'Polizei', 'police', 'policía'] },
-  { icon: 'water', l: ['Água potável', 'Eau potable', 'Trinkwasser', 'Drinking water', 'Agua potable'], q: ['água potável', 'eau potable', 'Trinkwasser', 'drinking water', 'agua potable'] },
-];
-
-export const REGIONS = {
-  lu: ['Luxemburgo e arredores (FR, DE, BE)', 'Luxembourg et alentours (FR, DE, BE)', 'Luxemburg und Umgebung (FR, DE, BE)', 'Luxembourg and surroundings (FR, DE, BE)', 'Luxemburgo y alrededores (FR, DE, BE)'],
-  pt: ['Portugal e Espanha', 'Portugal et Espagne', 'Portugal und Spanien', 'Portugal and Spain', 'Portugal y España'],
+const BASE = {
+ "numbers": [
+  {
+   "flag": "LU",
+   "r": "lu",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "113"
+    },
+    {
+     "n": "80025500",
+     "d": "8002 5500"
+    },
+    {
+     "n": "454545",
+     "d": "45 45 45"
+    }
+   ]
+  },
+  {
+   "flag": "FR",
+   "r": "lu",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "15"
+    },
+    {
+     "n": "17"
+    },
+    {
+     "n": "18"
+    },
+    {
+     "n": "114",
+     "sms": true
+    },
+    {
+     "n": "0383225050",
+     "d": "03 83 22 50 50"
+    }
+   ]
+  },
+  {
+   "flag": "DE",
+   "r": "lu",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "110"
+    },
+    {
+     "n": "0613119240",
+     "d": "06131 19240"
+    }
+   ]
+  },
+  {
+   "flag": "BE",
+   "r": "lu",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "101"
+    },
+    {
+     "n": "070245245",
+     "d": "070 245 245"
+    }
+   ]
+  },
+  {
+   "flag": "PT",
+   "r": "pt",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "808242424",
+     "d": "808 24 24 24"
+    },
+    {
+     "n": "800250250",
+     "d": "800 250 250"
+    },
+    {
+     "n": "808200520",
+     "d": "808 200 520"
+    },
+    {
+     "n": "144"
+    },
+    {
+     "n": "213544545",
+     "d": "21 354 45 45"
+    }
+   ]
+  },
+  {
+   "flag": "ES",
+   "r": "pt",
+   "items": [
+    {
+     "n": "112"
+    },
+    {
+     "n": "091"
+    },
+    {
+     "n": "062"
+    },
+    {
+     "n": "915620420",
+     "d": "91 562 04 20"
+    }
+   ]
+  }
+ ],
+ "nearby": [
+  {
+   "id": "hospital",
+   "icon": "alert"
+  },
+  {
+   "id": "pharmacy",
+   "icon": "kit"
+  },
+  {
+   "id": "fuel",
+   "icon": "battery"
+  },
+  {
+   "id": "police",
+   "icon": "phone"
+  },
+  {
+   "id": "water",
+   "icon": "water"
+  }
+ ],
+ "guides": [
+  {
+   "id": "bleeding",
+   "kind": "aid",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "recovery",
+   "kind": "aid",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "cpr",
+   "kind": "aid",
+   "icon": "alert",
+   "call": true,
+   "extra": "metronome"
+  },
+  {
+   "id": "choking",
+   "kind": "aid",
+   "icon": "alert"
+  },
+  {
+   "id": "burn",
+   "kind": "aid",
+   "icon": "alert"
+  },
+  {
+   "id": "hypothermia",
+   "kind": "aid",
+   "icon": "alert"
+  },
+  {
+   "id": "heatstroke",
+   "kind": "aid",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "fracture",
+   "kind": "aid",
+   "icon": "alert"
+  },
+  {
+   "id": "stroke",
+   "kind": "aid",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "poison",
+   "kind": "aid",
+   "icon": "alert",
+   "sr": {
+    "1": "lu",
+    "2": "pt"
+   }
+  },
+  {
+   "id": "sirens",
+   "kind": "proc",
+   "icon": "siren",
+   "r": "lu"
+  },
+  {
+   "id": "nuclear",
+   "kind": "proc",
+   "icon": "siren",
+   "r": "lu"
+  },
+  {
+   "id": "chemical",
+   "kind": "proc",
+   "icon": "siren"
+  },
+  {
+   "id": "fire",
+   "kind": "proc",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "gas",
+   "kind": "proc",
+   "icon": "alert"
+  },
+  {
+   "id": "blackout",
+   "kind": "proc",
+   "icon": "torch"
+  },
+  {
+   "id": "flood",
+   "kind": "proc",
+   "icon": "water",
+   "sr": {
+    "3": "lu",
+    "4": "pt"
+   }
+  },
+  {
+   "id": "storm",
+   "kind": "proc",
+   "icon": "alert"
+  },
+  {
+   "id": "heatwave",
+   "kind": "proc",
+   "icon": "alert"
+  },
+  {
+   "id": "evacuate",
+   "kind": "proc",
+   "icon": "pin"
+  },
+  {
+   "id": "nowater",
+   "kind": "proc",
+   "icon": "water"
+  },
+  {
+   "id": "alertspt",
+   "kind": "proc",
+   "icon": "siren",
+   "r": "pt"
+  },
+  {
+   "id": "wildfire",
+   "kind": "proc",
+   "icon": "alert",
+   "call": true
+  },
+  {
+   "id": "earthquake",
+   "kind": "proc",
+   "icon": "alert",
+   "r": "pt"
+  },
+  {
+   "id": "tsunami",
+   "kind": "proc",
+   "icon": "water",
+   "r": "pt"
+  },
+  {
+   "id": "campfire",
+   "kind": "skill",
+   "icon": "flame"
+  },
+  {
+   "id": "bowline",
+   "kind": "skill",
+   "icon": "knot"
+  },
+  {
+   "id": "reefknot",
+   "kind": "skill",
+   "icon": "knot"
+  },
+  {
+   "id": "clovehitch",
+   "kind": "skill",
+   "icon": "knot"
+  },
+  {
+   "id": "tautline",
+   "kind": "skill",
+   "icon": "knot"
+  },
+  {
+   "id": "purifywater",
+   "kind": "skill",
+   "icon": "water"
+  },
+  {
+   "id": "shelter",
+   "kind": "skill",
+   "icon": "tent"
+  },
+  {
+   "id": "rescuesignals",
+   "kind": "skill",
+   "icon": "sos"
+  },
+  {
+   "id": "navigate",
+   "kind": "skill",
+   "icon": "compass"
+  },
+  {
+   "id": "toilet",
+   "kind": "skill",
+   "icon": "trash"
+  },
+  {
+   "id": "shutoff",
+   "kind": "skill",
+   "icon": "tools"
+  },
+  {
+   "id": "chargephone",
+   "kind": "skill",
+   "icon": "battery"
+  }
+ ]
 };
 
-// Um passo pode ser [pt, fr, de, en, es] ou { r: 'pt', x: [...] } quando só vale para uma região.
-export const stepText = st => Array.isArray(st) ? st : st.x;
-export const stepRegion = st => Array.isArray(st) ? null : st.r;
-
-// q(p, d): quantidade recomendada para p pessoas e d dias.
-export const KIT = [
-  { id: 'water', cat: 'water', l: ['Água potável', 'Eau potable', 'Trinkwasser', 'Drinking water', 'Agua potable'], q: (p, d, s) => ({ n: Math.ceil(p * d * s.waterPerPerson + s.pets * d * s.waterPerPet), u: 'L' }) },
+const KIT_BASE = [
+  { id: 'water', cat: 'water', q: (p, d, s) => ({ n: Math.ceil(p * d * s.waterPerPerson + s.pets * d * s.waterPerPet), u: 'L' }) },
   { id: 'purify', cat: 'water', l: ['Pastilhas ou filtro para purificar água', 'Pastilles ou filtre de purification', 'Wasserentkeimungstabletten oder Filter', 'Water purification tablets or filter', 'Pastillas o filtro para potabilizar agua'] },
-  { id: 'food', cat: 'food', l: ['Comida que não precisa de frio nem de cozinhar', 'Nourriture sans frigo ni cuisson', 'Essen ohne Kühlung und Kochen', 'Food that needs no fridge or cooking', 'Comida que no necesite frío ni cocinarse'], q: (p, d, s) => ({ n: p * d * s.kcalPerPerson, u: 'kcal' }) },
+  { id: 'food', cat: 'food', q: (p, d, s) => ({ n: p * d * s.kcalPerPerson, u: 'kcal' }) },
   { id: 'opener', cat: 'food', l: ['Abre-latas manual', 'Ouvre-boîte manuel', 'Manueller Dosenöffner', 'Manual can opener', 'Abrelatas manual'] },
   { id: 'stove', cat: 'food', l: ['Fogareiro de campismo e gás (usar só ao ar livre)', 'Réchaud de camping et gaz (dehors uniquement)', 'Campingkocher mit Gas (nur im Freien)', 'Camping stove and gas (outdoors only)', 'Hornillo de camping y gas (usar solo al aire libre)'] },
   { id: 'firstaid', cat: 'medical', l: ['Estojo de primeiros socorros', 'Trousse de premiers secours', 'Erste-Hilfe-Set', 'First aid kit', 'Botiquín de primeros auxilios'] },
   { id: 'meds', cat: 'medical', l: ['Medicação habitual para 7 dias', 'Traitement habituel pour 7 jours', 'Dauermedikamente für 7 Tage', 'Regular medication for 7 days', 'Medicación habitual para 7 días'] },
   { id: 'iodine', cat: 'medical', l: ['Pastilhas de iodo (tomar só por ordem das autoridades)', 'Comprimés d’iode (uniquement sur ordre des autorités)', 'Jodtabletten (nur auf Anweisung der Behörden)', 'Iodine tablets (only when authorities say so)', 'Pastillas de yodo (tomar solo por orden de las autoridades)'] },
-  { id: 'masks', cat: 'medical', l: ['Máscaras FFP2', 'Masques FFP2', 'FFP2-Masken', 'FFP2 masks', 'Mascarillas FFP2'], q: (p, d) => ({ n: p * d, u: '' }) },
+  { id: 'masks', cat: 'medical', q: (p, d) => ({ n: p * d, u: '' }) },
   { id: 'radio', cat: 'energy', l: ['Rádio a pilhas ou a manivela', 'Radio à piles ou à manivelle', 'Batterie- oder Kurbelradio', 'Battery or wind-up radio', 'Radio de pilas o de manivela'] },
-  { id: 'torch', cat: 'energy', l: ['Lanterna com pilhas de reserva', 'Lampe avec piles de rechange', 'Taschenlampe mit Ersatzbatterien', 'Torch with spare batteries', 'Linterna con pilas de repuesto'], q: p => ({ n: p, u: '' }) },
+  { id: 'torch', cat: 'energy', q: p => ({ n: p, u: '' }) },
   { id: 'powerbank', cat: 'energy', l: ['Bateria externa carregada e cabos', 'Batterie externe chargée et câbles', 'Geladene Powerbank und Kabel', 'Charged power bank and cables', 'Batería externa cargada y cables'] },
   { id: 'lighter', cat: 'energy', l: ['Isqueiro e fósforos', 'Briquet et allumettes', 'Feuerzeug und Streichhölzer', 'Lighter and matches', 'Mechero y cerillas'] },
   { id: 'hygiene', cat: 'hygiene', l: ['Higiene: sabão, gel, escova de dentes', 'Hygiène : savon, gel, brosse à dents', 'Hygiene: Seife, Gel, Zahnbürste', 'Hygiene: soap, gel, toothbrush', 'Higiene: jabón, gel, cepillo de dientes'] },
   { id: 'toilet', cat: 'hygiene', l: ['Papel higiénico e sacos do lixo resistentes', 'Papier toilette et sacs poubelle solides', 'Toilettenpapier und feste Müllbeutel', 'Toilet paper and strong bin bags', 'Papel higiénico y bolsas de basura resistentes'] },
   { id: 'wipes', cat: 'hygiene', l: ['Toalhitas húmidas', 'Lingettes', 'Feuchttücher', 'Wet wipes', 'Toallitas húmedas'] },
-  { id: 'blanket', cat: 'equipment', l: ['Manta térmica de sobrevivência', 'Couverture de survie', 'Rettungsdecke', 'Emergency blanket', 'Manta térmica de supervivencia'], q: p => ({ n: p, u: '' }) },
+  { id: 'blanket', cat: 'equipment', q: p => ({ n: p, u: '' }) },
   { id: 'clothes', cat: 'equipment', l: ['Roupa quente, impermeável e calçado firme', 'Vêtements chauds, imperméable, chaussures solides', 'Warme Kleidung, Regenjacke, feste Schuhe', 'Warm clothes, rain jacket, sturdy shoes', 'Ropa de abrigo, impermeable y calzado firme'] },
   { id: 'whistle', cat: 'equipment', l: ['Apito', 'Sifflet', 'Trillerpfeife', 'Whistle', 'Silbato'] },
   { id: 'multitool', cat: 'equipment', l: ['Canivete multiusos e fita adesiva', 'Couteau multifonction et ruban adhésif', 'Multitool und Klebeband', 'Multitool and duct tape', 'Navaja multiusos y cinta adhesiva'] },
@@ -91,517 +392,81 @@ export const KIT = [
   { id: 'petsupplies', cat: 'other', l: ['Comida, trela e transportadora para animais (se aplicável)', 'Nourriture, laisse, caisse pour animaux (si besoin)', 'Futter, Leine, Box für Tiere (falls nötig)', 'Pet food, lead and carrier (if needed)', 'Comida, correa y transportín para animales (si procede)'] },
 ];
 
-export const DOC_CHECKLIST = [
-  ['Cartão de cidadão / passaporte de cada pessoa', 'Carte d’identité / passeport de chacun', 'Ausweis / Reisepass jeder Person', 'ID card / passport for everyone', 'DNI / pasaporte de cada persona'],
-  ['Cartão CNS, número de utente SNS e cartão europeu de seguro de doença', 'Carte CNS, numéro d’utilisateur SNS et carte européenne d’assurance maladie', 'CNS-Karte, SNS-Nummer und Europäische Krankenversicherungskarte', 'CNS card, SNS user number and European health insurance card', 'Tarjeta CNS, número de usuario del SNS y tarjeta sanitaria europea'],
-  ['Carta de condução e documento do carro', 'Permis de conduire et carte grise', 'Führerschein und Fahrzeugschein', 'Driving licence and vehicle registration', 'Permiso de conducir y documentación del coche'],
-  ['Apólices de seguro (casa, carro, vida)', 'Contrats d’assurance (habitation, auto, vie)', 'Versicherungspolicen (Haus, Auto, Leben)', 'Insurance policies (home, car, life)', 'Pólizas de seguro (hogar, coche, vida)'],
-  ['Receitas e relatórios médicos importantes', 'Ordonnances et comptes rendus médicaux', 'Rezepte und wichtige Arztberichte', 'Prescriptions and key medical reports', 'Recetas e informes médicos importantes'],
-  ['Contrato de arrendamento ou escritura', 'Bail ou acte de propriété', 'Mietvertrag oder Grundbuchauszug', 'Lease or property deed', 'Contrato de alquiler o escritura'],
-  ['Contactos do banco e da seguradora', 'Contacts banque et assurance', 'Kontakte von Bank und Versicherung', 'Bank and insurer contacts', 'Contactos del banco y de la aseguradora'],
-];
+// Fontes de cada guia (onde confirmar o conteúdo).
+const SRC = {
+  erc: { n: 'European Resuscitation Council — Guidelines 2021', u: 'https://cprguidelines.eu/' },
+  ifrc: { n: 'IFRC — International First Aid Guidelines 2020', u: 'https://www.ifrc.org/document/international-first-aid-resuscitation-and-education-guidelines' },
+  infocrise: { n: 'Gouvernement du Luxembourg — infocrise.lu', u: 'https://infocrise.public.lu/' },
+  anepc: { n: 'ANEPC — Proteção Civil (Portugal)', u: 'https://prociv.gov.pt/' },
+  ipma: { n: 'IPMA', u: 'https://www.ipma.pt/' },
+  gouvfr: { n: 'Gouvernement français — Risques', u: 'https://www.gouvernement.fr/risques' },
+  who: { n: 'OMS / WHO — Drinking-water', u: 'https://www.who.int/news-room/fact-sheets/detail/drinking-water' },
+  scouts: { n: 'Técnicas de escutismo / campismo (conhecimento comum)', u: '' },
+};
+const GUIDE_SRC = {
+  bleeding: ['ifrc'], recovery: ['erc', 'ifrc'], cpr: ['erc'], choking: ['erc'], burn: ['ifrc'], hypothermia: ['ifrc'],
+  heatstroke: ['ifrc'], fracture: ['ifrc'], stroke: ['ifrc'], poison: ['ifrc'],
+  sirens: ['infocrise', 'gouvfr'], nuclear: ['infocrise'], chemical: ['infocrise', 'gouvfr'], fire: ['gouvfr', 'anepc'],
+  gas: ['gouvfr'], blackout: ['infocrise', 'gouvfr'], flood: ['infocrise', 'ipma'], storm: ['infocrise', 'gouvfr'],
+  heatwave: ['infocrise', 'anepc'], evacuate: ['infocrise', 'anepc'], nowater: ['who'],
+  alertspt: ['anepc', 'ipma'], wildfire: ['anepc'], earthquake: ['anepc'], tsunami: ['anepc'],
+  campfire: ['anepc', 'scouts'], bowline: ['scouts'], reefknot: ['scouts'], clovehitch: ['scouts'], tautline: ['scouts'],
+  purifywater: ['who'], shelter: ['scouts'], rescuesignals: ['scouts'], navigate: ['scouts'], toilet: ['who'], shutoff: ['gouvfr'], chargephone: ['infocrise'],
+};
 
-const A = 'aid', P = 'proc';
-export const GUIDES = [
-  // ——— Primeiros socorros ———
-  { id: 'bleeding', kind: A, icon: 'alert', call: true,
-    t: ['Hemorragia grave', 'Hémorragie grave', 'Starke Blutung', 'Severe bleeding', 'Hemorragia grave'],
-    k: ['sangue ferida corte', 'sang plaie coupure', 'Blut Wunde Schnitt', 'blood wound cut', 'sangre herida corte'],
-    s: [
-      ['Protege-te: luvas ou um saco de plástico na mão.', 'Protégez-vous : gants ou sac plastique sur la main.', 'Schütze dich: Handschuhe oder eine Plastiktüte über der Hand.', 'Protect yourself: gloves or a plastic bag over your hand.', 'Protégete: guantes o una bolsa de plástico en la mano.'],
-      ['Carrega com força e sem parar sobre a ferida, com um pano limpo ou compressa.', 'Appuyez fort et sans relâcher sur la plaie avec un linge propre ou une compresse.', 'Drücke fest und ununterbrochen mit einem sauberen Tuch oder einer Kompresse auf die Wunde.', 'Press hard and without letting go on the wound with a clean cloth or dressing.', 'Aprieta con fuerza y sin parar sobre la herida, con un paño limpio o una gasa.'],
-      ['Liga 112 — ou pede a alguém que ligue — sem largar a pressão.', 'Appelez le 112 — ou faites appeler — sans relâcher.', 'Ruf 112 an — oder lass anrufen — ohne den Druck zu lösen.', 'Call 112 — or have someone call — without releasing pressure.', 'Llama al 112 — o pide a alguien que llame — sin soltar la presión.'],
-      ['Se o sangue passar, põe mais panos por cima. Não tires o primeiro.', 'Si le sang traverse, ajoutez des linges par-dessus. N’enlevez pas le premier.', 'Wenn Blut durchdringt, weitere Tücher darauflegen. Das erste nicht entfernen.', 'If blood soaks through, add more cloths on top. Don’t remove the first one.', 'Si la sangre traspasa, pon más paños encima. No quites el primero.'],
-      ['Deita a pessoa e mantém-na quente com uma manta.', 'Allongez la personne et couvrez-la.', 'Lege die Person hin und halte sie mit einer Decke warm.', 'Lay the person down and keep them warm with a blanket.', 'Tumba a la persona y mantenla abrigada con una manta.'],
-      ['Num braço ou perna, se a pressão não chegar e tiveres formação: garrote 5–7 cm acima da ferida. Anota a hora.', 'Sur un membre, si la compression ne suffit pas et si vous êtes formé : garrot 5–7 cm au-dessus. Notez l’heure.', 'An Arm oder Bein, wenn Druck nicht reicht und du geschult bist: Tourniquet 5–7 cm oberhalb. Uhrzeit notieren.', 'On an arm or leg, if pressure isn’t enough and you’re trained: tourniquet 5–7 cm above the wound. Note the time.', 'En un brazo o pierna, si la presión no basta y tienes formación: torniquete 5–7 cm por encima de la herida. Anota la hora.'],
-    ],
-    d: [
-      ['Retirar objetos espetados na ferida.', 'Retirer un objet planté dans la plaie.', 'Steckende Gegenstände entfernen.', 'Pull out objects stuck in the wound.', 'Sacar objetos clavados en la herida.'],
-      ['Levantar o pano para ver se parou.', 'Soulever le linge pour vérifier.', 'Das Tuch anheben, um nachzusehen.', 'Lift the cloth to check if it stopped.', 'Levantar el paño para ver si ha parado.'],
-    ] },
-  { id: 'recovery', kind: A, icon: 'alert', call: true,
-    t: ['Inconsciente, mas respira', 'Inconscient mais respire', 'Bewusstlos, atmet aber', 'Unconscious but breathing', 'Inconsciente, pero respira'],
-    k: ['desmaio pls posição lateral', 'évanouissement PLS', 'Ohnmacht stabile Seitenlage', 'faint recovery position', 'desmayo posición lateral de seguridad PLS'],
-    s: [
-      ['Fala alto e toca-lhe nos ombros. Se não reage, pede ajuda.', 'Parlez fort, touchez les épaules. Sans réaction, appelez à l’aide.', 'Laut ansprechen, an den Schultern rütteln. Keine Reaktion: Hilfe rufen.', 'Speak loudly and tap their shoulders. If no response, shout for help.', 'Háblale alto y tócale los hombros. Si no reacciona, pide ayuda.'],
-      ['Inclina a cabeça para trás e levanta o queixo.', 'Basculez la tête en arrière et levez le menton.', 'Kopf überstrecken, Kinn anheben.', 'Tilt the head back and lift the chin.', 'Inclina la cabeza hacia atrás y levanta la barbilla.'],
-      ['Vê, ouve e sente a respiração até 10 segundos.', 'Regardez, écoutez, sentez la respiration jusqu’à 10 secondes.', 'Bis zu 10 Sekunden sehen, hören, fühlen.', 'Look, listen and feel for breathing for up to 10 seconds.', 'Mira, escucha y siente la respiración hasta 10 segundos.'],
-      ['Se respira normalmente: posição lateral de segurança, de lado, com a boca virada para baixo.', 'Si elle respire normalement : PLS, sur le côté, bouche vers le bas.', 'Bei normaler Atmung: stabile Seitenlage, Mund nach unten.', 'If breathing normally: recovery position, on the side, mouth facing down.', 'Si respira con normalidad: posición lateral de seguridad, de lado, con la boca hacia abajo.'],
-      ['Liga 112 e volta a verificar a respiração a cada minuto.', 'Appelez le 112 et revérifiez la respiration chaque minute.', '112 anrufen und jede Minute die Atmung prüfen.', 'Call 112 and recheck breathing every minute.', 'Llama al 112 y vuelve a comprobar la respiración cada minuto.'],
-      ['Se deixar de respirar normalmente, começa a reanimação.', 'Si elle cesse de respirer normalement, commencez la réanimation.', 'Wenn die Atmung aussetzt: Wiederbelebung beginnen.', 'If they stop breathing normally, start CPR.', 'Si deja de respirar con normalidad, empieza la reanimación.'],
-    ],
-    d: [
-      ['Dar de beber ou de comer.', 'Donner à boire ou à manger.', 'Essen oder Trinken geben.', 'Give food or drink.', 'Darle de beber o de comer.'],
-      ['Deixar a pessoa sozinha.', 'Laisser la personne seule.', 'Die Person allein lassen.', 'Leave the person alone.', 'Dejar a la persona sola.'],
-    ] },
-  { id: 'cpr', kind: A, icon: 'alert', call: true, extra: 'metronome',
-    t: ['Não respira: reanimação', 'Ne respire pas : réanimation', 'Atmet nicht: Wiederbelebung', 'Not breathing: CPR', 'No respira: reanimación'],
-    k: ['rcp paragem cardíaca dae desfibrilhador massagem', 'RCP arrêt cardiaque DAE défibrillateur massage', 'Herzstillstand Reanimation AED Defibrillator Herzdruckmassage', 'cardiac arrest AED defibrillator compressions', 'RCP parada cardiaca DEA desfibrilador masaje'],
-    s: [
-      ['Liga 112 com o altifalante ligado. Pede a alguém que traga um desfibrilhador (DAE).', 'Appelez le 112 en haut-parleur. Faites chercher un défibrillateur (DAE).', '112 mit Lautsprecher anrufen. Jemanden einen Defibrillator (AED) holen lassen.', 'Call 112 on speaker. Send someone for a defibrillator (AED).', 'Llama al 112 con el altavoz activado. Pide a alguien que traiga un desfibrilador (DEA).'],
-      ['Mãos sobrepostas no centro do peito, braços esticados.', 'Mains l’une sur l’autre au centre de la poitrine, bras tendus.', 'Hände übereinander in die Brustmitte, Arme gestreckt.', 'Hands stacked in the centre of the chest, arms straight.', 'Manos una sobre otra en el centro del pecho, brazos estirados.'],
-      ['Comprime 5–6 cm, a 100–120 por minuto. Deixa o peito subir entre cada compressão.', 'Enfoncez de 5–6 cm, 100 à 120 fois par minute. Laissez remonter la poitrine.', '5–6 cm tief, 100–120 Mal pro Minute. Brustkorb dazwischen entlasten.', 'Push 5–6 cm deep, 100–120 times a minute. Let the chest rise between pushes.', 'Comprime 5–6 cm, a 100–120 por minuto. Deja que el pecho suba entre compresiones.'],
-      ['Se tiveres formação: 30 compressões, 2 insuflações. Se não, só compressões sem parar.', 'Si vous êtes formé : 30 compressions, 2 insufflations. Sinon, compressions seules.', 'Mit Ausbildung: 30 Kompressionen, 2 Beatmungen. Sonst nur drücken.', 'If trained: 30 compressions, 2 breaths. If not, compressions only, nonstop.', 'Si tienes formación: 30 compresiones, 2 insuflaciones. Si no, solo compresiones sin parar.'],
-      ['Quando o DAE chegar, liga-o e segue a voz. Ele decide se dá choque.', 'Dès que le DAE arrive, allumez-le et suivez la voix.', 'Sobald der AED da ist: einschalten und der Stimme folgen.', 'When the AED arrives, switch it on and follow the voice.', 'Cuando llegue el DEA, enciéndelo y sigue la voz. Él decide si da descarga.'],
-      ['Não pares até chegar ajuda ou a pessoa respirar normalmente. Troca com alguém a cada 2 minutos.', 'Ne vous arrêtez pas avant l’arrivée des secours. Relayez-vous toutes les 2 minutes.', 'Nicht aufhören, bis Hilfe kommt. Alle 2 Minuten abwechseln.', 'Don’t stop until help arrives or they breathe normally. Swap every 2 minutes.', 'No pares hasta que llegue ayuda o la persona respire con normalidad. Relévate con alguien cada 2 minutos.'],
-    ],
-    d: [
-      ['Ter medo de magoar: costelas partidas são preferíveis a não fazer nada.', 'Craindre de faire mal : mieux vaut une côte cassée que rien.', 'Angst haben, wehzutun: Rippenbrüche sind besser als nichts.', 'Be afraid of hurting them: broken ribs beat doing nothing.', 'Tener miedo de hacer daño: unas costillas rotas son mejor que no hacer nada.'],
-    ] },
-  { id: 'choking', kind: A, icon: 'alert',
-    t: ['Engasgamento', 'Étouffement', 'Ersticken', 'Choking', 'Atragantamiento'],
-    k: ['asfixia heimlich engasgar', 'Heimlich obstruction', 'Heimlich verschluckt', 'Heimlich obstruction', 'asfixia heimlich atragantarse'],
-    s: [
-      ['Se consegue tossir, incentiva-a a tossir com força.', 'Si elle peut tousser, encouragez-la à tousser fort.', 'Kann sie husten: zum kräftigen Husten ermutigen.', 'If they can cough, encourage them to cough hard.', 'Si puede toser, anímala a toser con fuerza.'],
-      ['Se não consegue tossir, falar ou respirar: inclina-a para a frente e dá 5 pancadas firmes entre as omoplatas.', 'Si elle ne peut ni tousser ni parler : penchez-la en avant, 5 claques entre les omoplates.', 'Kann sie nicht husten oder sprechen: nach vorn beugen, 5 kräftige Schläge zwischen die Schulterblätter.', 'If they can’t cough, speak or breathe: lean them forward, give 5 firm blows between the shoulder blades.', 'Si no puede toser, hablar ni respirar: inclínala hacia delante y dale 5 golpes firmes entre los omóplatos.'],
-      ['Depois, 5 compressões abdominais: punho acima do umbigo, puxa para dentro e para cima.', 'Puis 5 compressions abdominales : poing au-dessus du nombril, vers l’intérieur et le haut.', 'Dann 5 Oberbauchkompressionen: Faust über dem Nabel, nach innen und oben ziehen.', 'Then 5 abdominal thrusts: fist above the navel, pull in and up.', 'Después, 5 compresiones abdominales: puño encima del ombligo, tira hacia dentro y hacia arriba.'],
-      ['Alterna 5 e 5 até sair. Liga 112 se não resolver.', 'Alternez 5 et 5. Appelez le 112 si ça ne passe pas.', '5 und 5 abwechseln. 112 rufen, wenn es nicht hilft.', 'Alternate 5 and 5 until it clears. Call 112 if it doesn’t.', 'Alterna 5 y 5 hasta que salga. Llama al 112 si no se resuelve.'],
-      ['Se ficar inconsciente: 112 e reanimação.', 'Si elle perd connaissance : 112 et réanimation.', 'Wird sie bewusstlos: 112 und Wiederbelebung.', 'If they become unconscious: 112 and CPR.', 'Si pierde el conocimiento: 112 y reanimación.'],
-    ],
-    d: [
-      ['Compressões abdominais em bebés com menos de 1 ano — usa compressões no peito.', 'Compressions abdominales chez un bébé de moins d’1 an — compressions thoraciques.', 'Bauchkompressionen bei Babys unter 1 Jahr — Brustkompressionen nutzen.', 'Abdominal thrusts on babies under 1 — use chest thrusts.', 'Compresiones abdominales en bebés de menos de 1 año — usa compresiones en el pecho.'],
-      ['Tentar tirar o objeto às cegas com os dedos.', 'Chercher l’objet à l’aveugle avec les doigts.', 'Blind mit den Fingern nach dem Gegenstand greifen.', 'Sweep blindly with your fingers.', 'Intentar sacar el objeto a ciegas con los dedos.'],
-    ] },
-  { id: 'burn', kind: A, icon: 'alert',
-    t: ['Queimadura', 'Brûlure', 'Verbrennung', 'Burn', 'Quemadura'],
-    k: ['queimado fogo água quente', 'brûlé feu eau chaude', 'verbrannt Feuer heißes Wasser', 'burnt fire scald', 'quemado fuego agua caliente'],
-    s: [
-      ['Arrefece com água corrente fresca (não gelada) durante 20 minutos.', 'Refroidissez à l’eau courante fraîche (pas glacée) pendant 20 minutes.', '20 Minuten mit kühlem (nicht eiskaltem) fließendem Wasser kühlen.', 'Cool under fresh (not ice-cold) running water for 20 minutes.', 'Enfría con agua corriente fresca (no helada) durante 20 minutos.'],
-      ['Tira anéis, relógios e roupa que não esteja colada à pele.', 'Retirez bagues, montres et vêtements non collés.', 'Ringe, Uhren und nicht klebende Kleidung entfernen.', 'Remove rings, watches and clothing not stuck to the skin.', 'Quita anillos, relojes y la ropa que no esté pegada a la piel.'],
-      ['Cobre com película aderente ou pano limpo que não largue pelos.', 'Couvrez de film alimentaire ou d’un linge propre non pelucheux.', 'Mit Frischhaltefolie oder sauberem, fusselfreiem Tuch abdecken.', 'Cover with cling film or a clean, lint-free cloth.', 'Cubre con film transparente o un paño limpio que no suelte pelusa.'],
-      ['Liga 112 se for grande, na cara, mãos ou genitais, química, elétrica ou numa criança.', 'Appelez le 112 si elle est étendue, au visage, mains ou parties génitales, chimique, électrique ou chez un enfant.', '112 bei großer Fläche, Gesicht, Händen, Genitalien, Chemie, Strom oder bei Kindern.', 'Call 112 if large, on the face, hands or genitals, chemical, electrical, or on a child.', 'Llama al 112 si es extensa, en la cara, manos o genitales, química, eléctrica o en un niño.'],
-    ],
-    d: [
-      ['Gelo, manteiga, pasta de dentes ou cremes.', 'Glace, beurre, dentifrice ou crèmes.', 'Eis, Butter, Zahnpasta oder Cremes.', 'Ice, butter, toothpaste or creams.', 'Hielo, mantequilla, pasta de dientes o cremas.'],
-      ['Rebentar bolhas.', 'Percer les cloques.', 'Blasen öffnen.', 'Pop blisters.', 'Reventar ampollas.'],
-    ] },
-  { id: 'hypothermia', kind: A, icon: 'alert',
-    t: ['Hipotermia', 'Hypothermie', 'Unterkühlung', 'Hypothermia', 'Hipotermia'],
-    k: ['frio gelado tremer', 'froid tremblement', 'Kälte zittern', 'cold shivering', 'frío helado temblar'],
-    s: [
-      ['Leva a pessoa para um sítio abrigado do vento e da chuva.', 'Mettez la personne à l’abri du vent et de la pluie.', 'Person vor Wind und Regen schützen.', 'Get the person out of wind and rain.', 'Lleva a la persona a un sitio resguardado del viento y la lluvia.'],
-      ['Tira a roupa molhada e isola-a do chão. Cobre também a cabeça.', 'Retirez les vêtements mouillés, isolez du sol, couvrez la tête.', 'Nasse Kleidung ausziehen, vom Boden isolieren, Kopf bedecken.', 'Remove wet clothes, insulate from the ground, cover the head.', 'Quítale la ropa mojada y aíslala del suelo. Cúbrele también la cabeza.'],
-      ['Manta térmica com o lado dourado para fora? Não importa — o que conta é envolver bem.', 'Couverture de survie : le sens importe peu, l’essentiel est de bien envelopper.', 'Rettungsdecke: Seite egal — Hauptsache, gut einwickeln.', 'Emergency blanket: which side out matters little — wrap snugly.', 'Manta térmica: da igual qué cara quede fuera — lo importante es envolver bien.'],
-      ['Se estiver bem consciente, bebidas quentes e açucaradas.', 'Si elle est bien consciente : boissons chaudes et sucrées.', 'Bei vollem Bewusstsein: warme, gesüßte Getränke.', 'If fully alert, warm sweet drinks.', 'Si está bien consciente, bebidas calientes y azucaradas.'],
-      ['Liga 112 se estiver confusa, sonolenta ou deixar de tremer.', 'Appelez le 112 si elle est confuse, somnolente ou ne tremble plus.', '112 bei Verwirrung, Schläfrigkeit oder wenn das Zittern aufhört.', 'Call 112 if confused, drowsy, or shivering stops.', 'Llama al 112 si está confusa, somnolienta o deja de temblar.'],
-    ],
-    d: [
-      ['Esfregar braços e pernas.', 'Frictionner bras et jambes.', 'Arme und Beine reiben.', 'Rub arms and legs.', 'Frotar brazos y piernas.'],
-      ['Banho quente ou álcool.', 'Bain chaud ou alcool.', 'Heißes Bad oder Alkohol.', 'Hot bath or alcohol.', 'Baño caliente o alcohol.'],
-    ] },
-  { id: 'heatstroke', kind: A, icon: 'alert', call: true,
-    t: ['Golpe de calor', 'Coup de chaleur', 'Hitzschlag', 'Heatstroke', 'Golpe de calor'],
-    k: ['calor insolação canícula', 'chaleur insolation canicule', 'Hitze Sonnenstich', 'heat sunstroke heatwave', 'calor insolación ola de calor'],
-    s: [
-      ['Sinais: pele quente, confusão, dor de cabeça, náuseas, perda de consciência.', 'Signes : peau chaude, confusion, maux de tête, nausées, malaise.', 'Zeichen: heiße Haut, Verwirrung, Kopfschmerz, Übelkeit, Bewusstlosigkeit.', 'Signs: hot skin, confusion, headache, nausea, collapse.', 'Signos: piel caliente, confusión, dolor de cabeza, náuseas, pérdida de conocimiento.'],
-      ['Liga 112.', 'Appelez le 112.', '112 anrufen.', 'Call 112.', 'Llama al 112.'],
-      ['Leva para a sombra ou um sítio fresco e tira roupa a mais.', 'À l’ombre ou au frais, retirez les vêtements en trop.', 'In den Schatten bringen, überflüssige Kleidung ausziehen.', 'Move to shade or somewhere cool, remove extra clothing.', 'Llévala a la sombra o a un sitio fresco y quítale ropa de más.'],
-      ['Molha a pele e abana. Panos molhados no pescoço, axilas e virilhas.', 'Mouillez la peau et éventez. Linges humides au cou, aisselles, aine.', 'Haut befeuchten und Luft zufächeln. Nasse Tücher an Hals, Achseln, Leisten.', 'Wet the skin and fan. Wet cloths on neck, armpits and groin.', 'Moja la piel y abanica. Paños mojados en cuello, axilas e ingles.'],
-      ['Pequenos goles de água só se estiver bem consciente.', 'Petites gorgées d’eau seulement si elle est bien consciente.', 'Kleine Schlucke Wasser nur bei vollem Bewusstsein.', 'Small sips of water only if fully alert.', 'Pequeños sorbos de agua solo si está bien consciente.'],
-    ],
-    d: [
-      ['Dar paracetamol ou aspirina — não baixam a temperatura no golpe de calor.', 'Donner paracétamol ou aspirine — inefficaces ici.', 'Paracetamol oder Aspirin geben — hilft hier nicht.', 'Give paracetamol or aspirin — they don’t help with heatstroke.', 'Dar paracetamol o aspirina — no bajan la temperatura en el golpe de calor.'],
-    ] },
-  { id: 'fracture', kind: A, icon: 'alert',
-    t: ['Fratura ou entorse', 'Fracture ou entorse', 'Bruch oder Verstauchung', 'Fracture or sprain', 'Fractura o esguince'],
-    k: ['osso partido queda torção', 'os cassé chute', 'Knochenbruch Sturz', 'broken bone fall', 'hueso roto caída torcedura'],
-    s: [
-      ['Não mexas na pessoa, a não ser que esteja em perigo.', 'Ne déplacez pas la personne sauf danger.', 'Person nicht bewegen, außer bei Gefahr.', 'Don’t move the person unless they’re in danger.', 'No muevas a la persona, salvo que esté en peligro.'],
-      ['Imobiliza na posição em que está, com panos ou roupa enrolada.', 'Immobilisez dans la position trouvée avec des linges roulés.', 'In der vorgefundenen Lage mit gerollter Kleidung ruhigstellen.', 'Support it in the position found with rolled-up clothing.', 'Inmoviliza en la posición en que está, con paños o ropa enrollada.'],
-      ['Frio embrulhado num pano, 20 minutos, para a dor e o inchaço.', 'Froid enveloppé dans un linge, 20 minutes.', 'Kühlung in ein Tuch gewickelt, 20 Minuten.', 'Cold pack wrapped in cloth, 20 minutes.', 'Frío envuelto en un paño, 20 minutos, para el dolor y la hinchazón.'],
-      ['Se houver osso à vista, cobre a ferida sem a pressionar.', 'Si l’os est visible, couvrez sans appuyer.', 'Wenn Knochen sichtbar: abdecken, nicht drücken.', 'If bone is visible, cover the wound without pressing.', 'Si se ve el hueso, cubre la herida sin presionar.'],
-      ['Liga 112 se for aberta, na cabeça, pescoço ou costas, ou se a pessoa não sentir o membro.', 'Appelez le 112 si fracture ouverte, tête, cou ou dos, ou membre insensible.', '112 bei offenem Bruch, Kopf, Hals, Rücken oder Gefühlsverlust.', 'Call 112 if open, head, neck or back, or if they can’t feel the limb.', 'Llama al 112 si es abierta, en la cabeza, cuello o espalda, o si la persona no siente el miembro.'],
-    ],
-    d: [
-      ['Tentar endireitar o osso.', 'Essayer de réaligner l’os.', 'Den Knochen einrenken.', 'Try to straighten the bone.', 'Intentar enderezar el hueso.'],
-    ] },
-  { id: 'stroke', kind: A, icon: 'alert', call: true,
-    t: ['AVC', 'AVC', 'Schlaganfall', 'Stroke', 'Ictus'],
-    k: ['avc trombose cara braço fala', 'AVC visage bras parole', 'Schlaganfall Gesicht Arm Sprache', 'face arm speech FAST', 'ictus AVC infarto cerebral cara brazo habla'],
-    s: [
-      ['Cara: pede para sorrir. Um lado descai?', 'Visage : faites sourire. Un côté tombe ?', 'Gesicht: lächeln lassen. Hängt eine Seite?', 'Face: ask them to smile. Does one side droop?', 'Cara: pídele que sonría. ¿Se le cae un lado?'],
-      ['Braços: pede para levantar os dois. Um cai?', 'Bras : levez les deux. L’un retombe ?', 'Arme: beide heben lassen. Sinkt einer ab?', 'Arms: ask them to raise both. Does one drift down?', 'Brazos: pídele que levante los dos. ¿Uno cae?'],
-      ['Fala: pede para repetir uma frase. Está arrastada ou estranha?', 'Parole : faites répéter une phrase. Elle est confuse ?', 'Sprache: Satz nachsprechen lassen. Verwaschen?', 'Speech: ask them to repeat a phrase. Slurred or strange?', 'Habla: pídele que repita una frase. ¿Arrastra las palabras o suena rara?'],
-      ['Basta um sinal: liga 112 imediatamente e anota a hora em que começou.', 'Un seul signe suffit : 112 immédiatement, notez l’heure de début.', 'Ein Zeichen reicht: sofort 112, Uhrzeit des Beginns notieren.', 'One sign is enough: call 112 now and note when it started.', 'Basta un signo: llama al 112 de inmediato y anota la hora en que empezó.'],
-    ],
-    d: [
-      ['Dar comida, bebida ou medicamentos.', 'Donner à manger, à boire ou des médicaments.', 'Essen, Trinken oder Medikamente geben.', 'Give food, drink or medication.', 'Darle comida, bebida o medicamentos.'],
-      ['Esperar para ver se passa.', 'Attendre que ça passe.', 'Abwarten, ob es vorbeigeht.', 'Wait to see if it passes.', 'Esperar a ver si se pasa.'],
-    ] },
-  { id: 'poison', kind: A, icon: 'alert',
-    t: ['Intoxicação', 'Intoxication', 'Vergiftung', 'Poisoning', 'Intoxicación'],
-    k: ['veneno produto químico engoliu monóxido', 'poison produit chimique avalé monoxyde', 'Gift Chemikalie verschluckt Kohlenmonoxid', 'poison chemical swallowed carbon monoxide', 'veneno producto químico tragado monóxido'],
-    s: [
-      ['Se estiver inconsciente ou com dificuldade em respirar: 112.', 'Si inconscient ou difficultés respiratoires : 112.', 'Bei Bewusstlosigkeit oder Atemnot: 112.', 'If unconscious or struggling to breathe: 112.', 'Si está inconsciente o le cuesta respirar: 112.'],
-      { r: 'lu', x: ['Caso contrário, liga para o Centro Antivenenos: 8002 5500 (Luxemburgo) ou 03 83 22 50 50 (Nancy, França).', 'Sinon, appelez le Centre Antipoisons : 8002 5500 (Luxembourg) ou 03 83 22 50 50 (Nancy).', 'Sonst den Giftnotruf anrufen: 8002 5500 (Luxemburg) oder 03 83 22 50 50 (Nancy).', 'Otherwise call the Poison Centre: 8002 5500 (Luxembourg) or 03 83 22 50 50 (Nancy, France).', 'Si no, llama al Centro Antivenenos: 8002 5500 (Luxemburgo) o 03 83 22 50 50 (Nancy, Francia).'] },
-      { r: 'pt', x: ['Em Portugal: Centro de Informação Antivenenos, 800 250 250 (grátis, 24 h). Em Espanha: 91 562 04 20.', 'Au Portugal : centre antipoison, 800 250 250 (gratuit, 24 h). En Espagne : 91 562 04 20.', 'In Portugal: Giftnotruf 800 250 250 (kostenlos, 24 Std.). In Spanien: 91 562 04 20.', 'In Portugal: Poison Information Centre, 800 250 250 (free, 24 h). In Spain: 91 562 04 20.', 'En Portugal: Centro de Información Antivenenos, 800 250 250 (gratis, 24 h). En España: 91 562 04 20.'] },
-      ['Guarda a embalagem: vão perguntar o produto, a quantidade e a hora.', 'Gardez l’emballage : produit, quantité, heure.', 'Verpackung aufheben: Produkt, Menge, Uhrzeit.', 'Keep the packaging: they’ll ask what, how much, and when.', 'Guarda el envase: te preguntarán el producto, la cantidad y la hora.'],
-      ['Na pele ou nos olhos: lava com água corrente durante 15 minutos.', 'Sur la peau ou les yeux : rincez 15 minutes à l’eau courante.', 'Haut oder Augen: 15 Minuten mit fließendem Wasser spülen.', 'On skin or in eyes: rinse with running water for 15 minutes.', 'En la piel o los ojos: lava con agua corriente durante 15 minutos.'],
-      ['Gás ou fumos: sai para o ar livre, se for seguro.', 'Gaz ou fumées : sortez à l’air libre si c’est sûr.', 'Gas oder Rauch: ins Freie, wenn sicher.', 'Gas or fumes: get to fresh air if it’s safe.', 'Gas o humos: sal al aire libre, si es seguro.'],
-    ],
-    d: [
-      ['Provocar o vómito.', 'Faire vomir.', 'Erbrechen auslösen.', 'Induce vomiting.', 'Provocar el vómito.'],
-      ['Dar leite.', 'Donner du lait.', 'Milch geben.', 'Give milk.', 'Dar leche.'],
-    ] },
-
-  // ——— Situações ———
-  { id: 'sirens', kind: P, icon: 'siren', r: 'lu',
-    t: ['Sirenes e alertas (Luxemburgo, França)', 'Sirènes et alertes (Luxembourg, France)', 'Sirenen und Warnungen (Luxemburg, Frankreich)', 'Sirens and alerts (Luxembourg, France)', 'Sirenas y alertas (Luxemburgo, Francia)'],
-    k: ['lu-alert alarme aviso', 'LU-Alert alarme', 'LU-Alert Alarm Warnung', 'LU-Alert alarm warning', 'lu-alert alarma aviso'],
-    s: [
-      ['No Luxemburgo, os alertas chegam ao telemóvel pelo LU-Alert. Lê a mensagem até ao fim.', 'Au Luxembourg, les alertes arrivent sur le téléphone via LU-Alert. Lisez tout le message.', 'In Luxemburg kommen Warnungen per LU-Alert aufs Handy. Nachricht ganz lesen.', 'In Luxembourg, alerts reach your phone through LU-Alert. Read the whole message.', 'En Luxemburgo, las alertas llegan al móvil por LU-Alert. Lee el mensaje hasta el final.'],
-      ['Sirene fora do dia de teste: entra num edifício, fecha portas e janelas, desliga a ventilação.', 'Sirène hors jour de test : entrez dans un bâtiment, fermez portes et fenêtres, coupez la ventilation.', 'Sirene außerhalb des Testtags: ins Gebäude, Türen und Fenster schließen, Lüftung aus.', 'Siren outside test day: get inside, close doors and windows, turn off ventilation.', 'Sirena fuera del día de prueba: entra en un edificio, cierra puertas y ventanas, apaga la ventilación.'],
-      ['Ouve a rádio e consulta infocrise.lu para instruções.', 'Écoutez la radio et consultez infocrise.lu.', 'Radio hören und infocrise.lu prüfen.', 'Listen to the radio and check infocrise.lu.', 'Escucha la radio y consulta infocrise.lu para instrucciones.'],
-      ['Não vás buscar as crianças à escola: a escola protege-as.', 'N’allez pas chercher les enfants à l’école : l’école les protège.', 'Kinder nicht von der Schule holen: Die Schule schützt sie.', 'Don’t fetch children from school: the school will protect them.', 'No vayas a buscar a los niños al colegio: el colegio los protege.'],
-      ['Em França, o alerta é um som modulado de 1 min 41 s repetido 3 vezes. O fim do alerta é um som contínuo de 30 s. Teste: 1.ª quarta-feira do mês, ao meio-dia.', 'En France, l’alerte est un son modulé de 1 min 41 s répété 3 fois. Fin d’alerte : son continu de 30 s. Test : 1er mercredi du mois à midi.', 'In Frankreich: modulierter Ton, 1 Min. 41 s, dreimal. Entwarnung: Dauerton 30 s. Test: 1. Mittwoch im Monat, mittags.', 'In France, the alert is a 1 min 41 s rising-falling tone, three times. All-clear is a steady 30 s tone. Test: 1st Wednesday of the month, noon.', 'En Francia, la alerta es un sonido modulado de 1 min 41 s repetido 3 veces. El fin de la alerta es un sonido continuo de 30 s. Prueba: 1.er miércoles del mes, a mediodía.'],
-    ],
-    d: [
-      ['Sair para ver o que se passa.', 'Sortir pour voir.', 'Rausgehen, um nachzusehen.', 'Go outside to see what’s happening.', 'Salir a ver qué pasa.'],
-      ['Telefonar sem necessidade: a rede fica para os socorros.', 'Téléphoner sans nécessité : laissez le réseau aux secours.', 'Unnötig telefonieren: Netz für Rettungskräfte freihalten.', 'Make unnecessary calls: keep the network free.', 'Llamar sin necesidad: la red es para los servicios de emergencia.'],
-    ] },
-  { id: 'nuclear', kind: P, icon: 'siren', r: 'lu',
-    t: ['Acidente nuclear (Cattenom)', 'Accident nucléaire (Cattenom)', 'Atomunfall (Cattenom)', 'Nuclear accident (Cattenom)', 'Accidente nuclear (Cattenom)'],
-    k: ['radiação iodo central nuclear', 'radiation iode centrale', 'Strahlung Jod Kernkraftwerk', 'radiation iodine power plant', 'radiación yodo central nuclear'],
-    s: [
-      ['Fica dentro de casa. Fecha portas e janelas e desliga a ventilação e o ar condicionado.', 'Restez à l’intérieur. Fermez tout, coupez ventilation et climatisation.', 'Drinnen bleiben. Alles schließen, Lüftung und Klimaanlage aus.', 'Stay indoors. Close doors and windows, turn off ventilation and air conditioning.', 'Quédate en casa. Cierra puertas y ventanas y apaga la ventilación y el aire acondicionado.'],
-      ['Vai para uma divisão interior ou para a cave.', 'Allez dans une pièce centrale ou à la cave.', 'In einen Innenraum oder Keller gehen.', 'Go to an inner room or the basement.', 'Ve a una habitación interior o al sótano.'],
-      ['Se vieres de fora: tira a roupa de cima, mete-a num saco fechado e toma banho.', 'Si vous venez de dehors : retirez les vêtements du dessus, mettez-les dans un sac fermé, douchez-vous.', 'Wenn du von draußen kommst: Oberbekleidung in einen verschlossenen Beutel, duschen.', 'If you came in from outside: bag your outer clothes and shower.', 'Si vienes de fuera: quítate la ropa exterior, métela en una bolsa cerrada y dúchate.'],
-      ['Pastilhas de iodo: só quando o Ministério da Saúde (ou o prefeito, em França) mandar tomar.', 'Comprimés d’iode : uniquement sur ordre du ministère de la Santé (ou du préfet en France).', 'Jodtabletten: nur auf Anweisung des Gesundheitsministeriums (in Frankreich des Präfekten).', 'Iodine tablets: only when the Ministry of Health (or the prefect in France) says so.', 'Pastillas de yodo: solo cuando el Ministerio de Sanidad (o el prefecto, en Francia) ordene tomarlas.'],
-      ['Ouve a rádio e o LU-Alert. Só evacues se as autoridades mandarem.', 'Écoutez la radio et LU-Alert. N’évacuez que sur ordre.', 'Radio und LU-Alert verfolgen. Nur auf Anweisung evakuieren.', 'Follow the radio and LU-Alert. Evacuate only when told to.', 'Escucha la radio y LU-Alert. Evacúa solo si lo ordenan las autoridades.'],
-    ],
-    d: [
-      ['Fugir de carro por conta própria: na estrada estás mais exposto.', 'Fuir en voiture de votre propre chef : sur la route, on est plus exposé.', 'Auf eigene Faust mit dem Auto fliehen: Auf der Straße ist man stärker exponiert.', 'Flee by car on your own: you’re more exposed on the road.', 'Huir en coche por tu cuenta: en la carretera estás más expuesto.'],
-      ['Tomar iodo antes da ordem.', 'Prendre l’iode avant l’ordre.', 'Jod vor der Anweisung nehmen.', 'Take iodine before being told to.', 'Tomar yodo antes de la orden.'],
-    ] },
-  { id: 'chemical', kind: P, icon: 'siren',
-    t: ['Acidente químico', 'Accident chimique', 'Chemieunfall', 'Chemical accident', 'Accidente químico'],
-    k: ['nuvem tóxica fábrica fumo', 'nuage toxique usine', 'Giftwolke Fabrik', 'toxic cloud factory', 'nube tóxica fábrica humo'],
-    s: [
-      ['Entra no edifício mais próximo. Fecha portas e janelas e desliga a ventilação.', 'Entrez dans le bâtiment le plus proche. Fermez tout, coupez la ventilation.', 'Ins nächste Gebäude. Alles schließen, Lüftung aus.', 'Get into the nearest building. Close everything, turn off ventilation.', 'Entra en el edificio más cercano. Cierra puertas y ventanas y apaga la ventilación.'],
-      ['Tapa as frinchas das portas com toalhas molhadas.', 'Calfeutrez les portes avec des serviettes mouillées.', 'Türritzen mit nassen Handtüchern abdichten.', 'Seal door gaps with wet towels.', 'Tapa las rendijas de las puertas con toallas mojadas.'],
-      ['Sobe para um andar alto: muitos gases são mais pesados do que o ar.', 'Montez dans les étages : beaucoup de gaz sont plus lourds que l’air.', 'In ein oberes Stockwerk: Viele Gase sind schwerer als Luft.', 'Go upstairs: many gases are heavier than air.', 'Sube a un piso alto: muchos gases pesan más que el aire.'],
-      ['Ouve a rádio e o LU-Alert até ao fim do alerta.', 'Écoutez la radio et LU-Alert jusqu’à la fin de l’alerte.', 'Radio und LU-Alert bis zur Entwarnung verfolgen.', 'Follow the radio and LU-Alert until the all-clear.', 'Escucha la radio y LU-Alert hasta el fin de la alerta.'],
-    ],
-    d: [
-      ['Abrigar-te na cave.', 'Se réfugier à la cave.', 'Im Keller Schutz suchen.', 'Shelter in the basement.', 'Refugiarte en el sótano.'],
-    ] },
-  { id: 'fire', kind: P, icon: 'alert', call: true,
-    t: ['Incêndio em casa', 'Incendie à la maison', 'Brand in der Wohnung', 'Fire at home', 'Incendio en casa'],
-    k: ['fogo fumo chamas frigideira', 'feu fumée poêle', 'Feuer Rauch Pfanne', 'fire smoke pan', 'fuego humo llamas sartén'],
-    s: [
-      ['Avisa toda a gente e sai. Fecha as portas atrás de ti para travar o fumo.', 'Prévenez tout le monde et sortez. Fermez les portes derrière vous.', 'Alle warnen und raus. Türen hinter dir schließen.', 'Warn everyone and get out. Close doors behind you to slow the smoke.', 'Avisa a todos y sal. Cierra las puertas tras de ti para frenar el humo.'],
-      ['Com fumo, anda agachado: o ar respirável está junto ao chão.', 'Dans la fumée, baissez-vous : l’air respirable est près du sol.', 'Bei Rauch gebückt gehen: Atemluft ist unten.', 'In smoke, stay low: breathable air is near the floor.', 'Con humo, avanza agachado: el aire respirable está cerca del suelo.'],
-      ['Liga 112 já cá fora.', 'Appelez le 112 une fois dehors.', 'Draußen 112 anrufen.', 'Call 112 once outside.', 'Llama al 112 ya fuera.'],
-      ['Se ficares preso: fecha a porta, tapa as frinchas com panos molhados e faz sinais à janela.', 'Si vous êtes bloqué : fermez la porte, calfeutrez, signalez-vous à la fenêtre.', 'Eingeschlossen: Tür zu, Ritzen mit nassen Tüchern abdichten, am Fenster bemerkbar machen.', 'If trapped: close the door, seal gaps with wet cloths, signal from the window.', 'Si te quedas atrapado: cierra la puerta, tapa las rendijas con paños mojados y haz señales por la ventana.'],
-      ['Frigideira a arder: desliga o lume e tapa com uma tampa ou pano húmido.', 'Poêle en feu : coupez le feu, couvrez d’un couvercle ou linge humide.', 'Brennende Pfanne: Herd aus, Deckel oder feuchtes Tuch drauf.', 'Pan on fire: turn off the heat, cover with a lid or damp cloth.', 'Sartén ardiendo: apaga el fuego y tápala con una tapa o un paño húmedo.'],
-    ],
-    d: [
-      ['Usar o elevador.', 'Prendre l’ascenseur.', 'Den Aufzug benutzen.', 'Use the lift.', 'Usar el ascensor.'],
-      ['Voltar a entrar para buscar coisas.', 'Retourner chercher des affaires.', 'Zurückgehen, um Sachen zu holen.', 'Go back in for belongings.', 'Volver a entrar a buscar cosas.'],
-      ['Água em óleo a arder.', 'Jeter de l’eau sur de l’huile en feu.', 'Wasser auf brennendes Öl.', 'Water on burning oil.', 'Agua sobre aceite ardiendo.'],
-    ] },
-  { id: 'gas', kind: P, icon: 'alert',
-    t: ['Cheiro a gás', 'Odeur de gaz', 'Gasgeruch', 'Smell of gas', 'Olor a gas'],
-    k: ['fuga gás botija', 'fuite gaz', 'Gasleck', 'gas leak', 'fuga gas bombona'],
-    s: [
-      ['Não acendas luzes, não uses interruptores, nem isqueiros.', 'N’allumez rien, ne touchez pas aux interrupteurs, pas de flamme.', 'Kein Licht, keine Schalter, kein Feuer.', 'Don’t switch lights on or off, no flames.', 'No enciendas luces, no toques interruptores ni uses mecheros.'],
-      ['Abre portas e janelas.', 'Ouvrez portes et fenêtres.', 'Türen und Fenster öffnen.', 'Open doors and windows.', 'Abre puertas y ventanas.'],
-      ['Fecha a válvula do gás, se estiver à mão.', 'Fermez le robinet de gaz s’il est accessible.', 'Gashaupthahn schließen, wenn erreichbar.', 'Shut the gas valve if it’s within reach.', 'Cierra la llave del gas, si está a mano.'],
-      ['Sai do edifício e avisa os vizinhos sem tocar às campainhas — bate à porta.', 'Sortez et prévenez les voisins en frappant — pas de sonnette.', 'Gebäude verlassen, Nachbarn durch Klopfen warnen — nicht klingeln.', 'Leave and warn neighbours by knocking — don’t ring doorbells.', 'Sal del edificio y avisa a los vecinos sin tocar el timbre — llama a la puerta con la mano.'],
-      ['Liga 112 já cá fora.', 'Appelez le 112 dehors.', 'Draußen 112 anrufen.', 'Call 112 from outside.', 'Llama al 112 ya fuera.'],
-    ],
-    d: [
-      ['Usar o telemóvel dentro de casa.', 'Utiliser le téléphone à l’intérieur.', 'Im Haus telefonieren.', 'Use your phone indoors.', 'Usar el móvil dentro de casa.'],
-    ] },
-  { id: 'blackout', kind: P, icon: 'torch',
-    t: ['Falha de eletricidade', 'Panne d’électricité', 'Stromausfall', 'Power cut', 'Corte de luz'],
-    k: ['apagão luz corrente blackout', 'coupure courant blackout', 'Blackout Strom', 'blackout outage', 'apagón luz corriente'],
-    s: [
-      ['Vê se é só em tua casa (quadro elétrico) ou na rua toda.', 'Vérifiez si c’est chez vous (disjoncteur) ou tout le quartier.', 'Prüfen: nur bei dir (Sicherung) oder die ganze Straße?', 'Check whether it’s just you (fuse box) or the whole street.', 'Mira si es solo en tu casa (cuadro eléctrico) o en toda la calle.'],
-      ['Desliga aparelhos sensíveis e deixa uma luz ligada para saberes quando volta.', 'Débranchez les appareils sensibles, laissez une lampe allumée.', 'Empfindliche Geräte ausstecken, eine Lampe eingeschaltet lassen.', 'Unplug sensitive devices and leave one light switched on so you know when it’s back.', 'Desenchufa aparatos sensibles y deja una luz encendida para saber cuándo vuelve.'],
-      ['Mantém frigorífico e congelador fechados: o frigorífico aguenta cerca de 4 h, o congelador cheio 1 a 2 dias.', 'Gardez frigo et congélateur fermés : environ 4 h pour le frigo, 1 à 2 jours pour un congélateur plein.', 'Kühlschrank und Gefriertruhe zu lassen: Kühlschrank ca. 4 Std., volle Truhe 1–2 Tage.', 'Keep fridge and freezer shut: about 4 h for the fridge, 1–2 days for a full freezer.', 'Mantén nevera y congelador cerrados: la nevera aguanta unas 4 h, el congelador lleno 1 a 2 días.'],
-      ['Enche garrafas de água logo no início: as bombas de água podem parar.', 'Remplissez des bouteilles d’eau tout de suite : les pompes peuvent s’arrêter.', 'Sofort Wasser abfüllen: Pumpen können ausfallen.', 'Fill water bottles early: water pumps may stop.', 'Llena botellas de agua al principio: las bombas de agua pueden pararse.'],
-      ['Poupa a bateria do telemóvel e vê como estão os vizinhos idosos.', 'Économisez la batterie et prenez des nouvelles des voisins âgés.', 'Handyakku sparen und nach älteren Nachbarn sehen.', 'Save phone battery and check on elderly neighbours.', 'Ahorra batería del móvil y comprueba cómo están los vecinos mayores.'],
-    ],
-    d: [
-      ['Velas perto de cortinas ou sem vigilância.', 'Bougies près des rideaux ou sans surveillance.', 'Kerzen unbeaufsichtigt oder nahe Vorhängen.', 'Candles near curtains or unattended.', 'Velas cerca de cortinas o sin vigilancia.'],
-      ['Gerador ou fogareiro dentro de casa: monóxido de carbono mata.', 'Groupe électrogène ou réchaud à l’intérieur : le monoxyde tue.', 'Generator oder Kocher drinnen: Kohlenmonoxid tötet.', 'Generator or stove indoors: carbon monoxide kills.', 'Generador u hornillo dentro de casa: el monóxido de carbono mata.'],
-    ] },
-  { id: 'flood', kind: P, icon: 'water',
-    t: ['Cheias', 'Inondation', 'Hochwasser', 'Flood', 'Inundaciones'],
-    k: ['inundação chuva rio água', 'crue pluie rivière', 'Überschwemmung Regen Fluss', 'flooding rain river', 'inundación lluvia río agua riada'],
-    s: [
-      ['Leva documentos, medicação e objetos de valor para um andar alto.', 'Montez documents, médicaments et objets de valeur à l’étage.', 'Dokumente, Medikamente, Wertsachen nach oben bringen.', 'Move documents, medication and valuables upstairs.', 'Sube documentos, medicación y objetos de valor a un piso alto.'],
-      ['Desliga a eletricidade antes de a água chegar — só se estiveres em seco.', 'Coupez l’électricité avant l’arrivée de l’eau — seulement au sec.', 'Strom abschalten, bevor Wasser kommt — nur im Trockenen.', 'Switch off electricity before water arrives — only if you’re standing dry.', 'Corta la electricidad antes de que llegue el agua — solo si estás en seco.'],
-      ['Sobe, nunca desças à cave.', 'Montez, ne descendez jamais à la cave.', 'Nach oben, nie in den Keller.', 'Go up, never down to the basement.', 'Sube, nunca bajes al sótano.'],
-      { r: 'lu', x: ['Níveis dos rios: inondations.lu (Luxemburgo) e vigicrues.gouv.fr (França).', 'Niveaux des rivières : inondations.lu et vigicrues.gouv.fr.', 'Pegelstände: inondations.lu und vigicrues.gouv.fr.', 'River levels: inondations.lu (Luxembourg) and vigicrues.gouv.fr (France).', 'Nivel de los ríos: inondations.lu (Luxemburgo) y vigicrues.gouv.fr (Francia).'] },
-      { r: 'pt', x: ['Em Portugal: avisos do IPMA (ipma.pt) e da Proteção Civil (prociv.gov.pt).', 'Au Portugal : alertes de l’IPMA (ipma.pt) et de la Protection civile (prociv.gov.pt).', 'In Portugal: Warnungen von IPMA (ipma.pt) und Zivilschutz (prociv.gov.pt).', 'In Portugal: warnings from IPMA (ipma.pt) and Civil Protection (prociv.gov.pt).', 'En Portugal: avisos del IPMA (ipma.pt) y de Protección Civil (prociv.gov.pt).'] },
-      ['Depois: não bebas água da torneira até as autoridades dizerem que é segura.', 'Après : ne buvez pas l’eau du robinet avant le feu vert.', 'Danach: Leitungswasser erst nach Freigabe trinken.', 'Afterwards: don’t drink tap water until authorities say it’s safe.', 'Después: no bebas agua del grifo hasta que las autoridades digan que es segura.'],
-    ],
-    d: [
-      ['Atravessar água corrente a pé ou de carro: 15 cm derrubam uma pessoa, 30 cm arrastam um carro.', 'Traverser de l’eau courante à pied ou en voiture : 15 cm renversent une personne, 30 cm emportent une voiture.', 'Fließendes Wasser zu Fuß oder mit dem Auto queren: 15 cm werfen Menschen um, 30 cm reißen Autos mit.', 'Cross moving water on foot or by car: 15 cm knocks a person over, 30 cm carries a car away.', 'Cruzar agua en movimiento a pie o en coche: 15 cm tiran a una persona, 30 cm arrastran un coche.'],
-      ['Ir à garagem subterrânea buscar o carro.', 'Aller chercher la voiture au parking souterrain.', 'Das Auto aus der Tiefgarage holen.', 'Fetch the car from an underground garage.', 'Bajar al garaje subterráneo a por el coche.'],
-    ] },
-  { id: 'storm', kind: P, icon: 'alert',
-    t: ['Tempestade', 'Tempête', 'Sturm', 'Storm', 'Tormenta'],
-    k: ['vento trovoada tornado', 'vent orage', 'Wind Gewitter Unwetter', 'wind thunderstorm', 'viento tormenta tornado temporal'],
-    s: [
-      ['Arruma ou prende tudo o que está na varanda e no jardim.', 'Rangez ou attachez tout ce qui est sur le balcon et au jardin.', 'Alles auf Balkon und im Garten sichern.', 'Secure or bring in everything on the balcony and in the garden.', 'Recoge o sujeta todo lo que haya en el balcón y el jardín.'],
-      ['Fica em casa, longe das janelas.', 'Restez chez vous, loin des fenêtres.', 'Zu Hause bleiben, weg von Fenstern.', 'Stay home, away from windows.', 'Quédate en casa, lejos de las ventanas.'],
-      ['Evita florestas, árvores e conduzir.', 'Évitez forêts, arbres et la route.', 'Wälder, Bäume und Autofahren meiden.', 'Avoid forests, trees and driving.', 'Evita bosques, árboles y conducir.'],
-      ['Trovoada ao ar livre: agacha-te, pés juntos, longe de árvores isoladas.', 'Orage dehors : accroupissez-vous, pieds joints, loin des arbres isolés.', 'Gewitter im Freien: hinhocken, Füße zusammen, weg von einzelnen Bäumen.', 'Lightning outdoors: crouch, feet together, away from lone trees.', 'Tormenta eléctrica al aire libre: agáchate, pies juntos, lejos de árboles aislados.'],
-    ],
-    d: [
-      ['Aproximar-te de cabos elétricos caídos — fica a mais de 10 m.', 'S’approcher de câbles tombés — restez à plus de 10 m.', 'Heruntergefallenen Leitungen nähern — über 10 m Abstand.', 'Go near fallen power lines — stay more than 10 m away.', 'Acercarte a cables eléctricos caídos — quédate a más de 10 m.'],
-    ] },
-  { id: 'heatwave', kind: P, icon: 'alert',
-    t: ['Onda de calor', 'Canicule', 'Hitzewelle', 'Heatwave', 'Ola de calor'],
-    k: ['calor canícula temperatura', 'chaleur canicule', 'Hitze', 'heat', 'calor temperatura'],
-    s: [
-      ['Bebe água com regularidade, mesmo sem sede.', 'Buvez régulièrement, même sans soif.', 'Regelmäßig trinken, auch ohne Durst.', 'Drink regularly, even if you’re not thirsty.', 'Bebe agua con regularidad, aunque no tengas sed.'],
-      ['De dia, fecha estores e janelas. Abre à noite, quando estiver mais fresco.', 'Le jour, fermez volets et fenêtres. Ouvrez la nuit.', 'Tagsüber Rollläden und Fenster zu, nachts öffnen.', 'Close shutters and windows by day, open them at night.', 'De día, cierra persianas y ventanas. Ábrelas de noche, cuando refresque.'],
-      ['Evita esforços entre as 11 h e as 21 h — no trabalho físico, faz pausas à sombra.', 'Évitez les efforts entre 11 h et 21 h — pauses à l’ombre au travail.', 'Anstrengung zwischen 11 und 21 Uhr meiden — bei körperlicher Arbeit Pausen im Schatten.', 'Avoid exertion between 11:00 and 21:00 — in physical work, take breaks in the shade.', 'Evita esfuerzos entre las 11 h y las 21 h — en el trabajo físico, haz pausas a la sombra.'],
-      ['Liga aos familiares idosos todos os dias.', 'Appelez chaque jour les proches âgés.', 'Ältere Angehörige täglich anrufen.', 'Call elderly relatives every day.', 'Llama a tus familiares mayores todos los días.'],
-    ],
-    d: [
-      ['Deixar crianças ou animais no carro, nem por um minuto.', 'Laisser enfants ou animaux dans la voiture, même une minute.', 'Kinder oder Tiere im Auto lassen, auch nicht kurz.', 'Leave children or pets in the car, even for a minute.', 'Dejar niños o animales en el coche, ni un minuto.'],
-    ] },
-  { id: 'evacuate', kind: P, icon: 'pin',
-    t: ['Evacuação', 'Évacuation', 'Evakuierung', 'Evacuation', 'Evacuación'],
-    k: ['sair de casa fugir partir', 'quitter le domicile', 'Haus verlassen', 'leave home', 'salir de casa huir marcharse'],
-    s: [
-      ['Pega no kit, documentos, medicação, telemóvel e carregador.', 'Prenez le kit, documents, médicaments, téléphone et chargeur.', 'Notgepäck, Dokumente, Medikamente, Handy und Ladegerät nehmen.', 'Take the kit, documents, medication, phone and charger.', 'Coge el kit, documentos, medicación, móvil y cargador.'],
-      ['Se te disserem, fecha água, gás e eletricidade.', 'Si on vous le demande, coupez eau, gaz et électricité.', 'Wenn angewiesen: Wasser, Gas und Strom abstellen.', 'If instructed, shut off water, gas and electricity.', 'Si te lo indican, cierra agua, gas y electricidad.'],
-      ['Fecha a casa e deixa um bilhete a dizer para onde foste.', 'Fermez à clé et laissez un mot indiquant où vous allez.', 'Abschließen und eine Notiz hinterlassen, wohin du gehst.', 'Lock up and leave a note saying where you went.', 'Cierra la casa y deja una nota diciendo adónde has ido.'],
-      ['Segue os percursos indicados pelas autoridades, mesmo que conheças atalhos.', 'Suivez les itinéraires officiels, même si vous connaissez des raccourcis.', 'Den offiziellen Routen folgen, auch wenn du Abkürzungen kennst.', 'Follow official routes, even if you know shortcuts.', 'Sigue las rutas indicadas por las autoridades, aunque conozcas atajos.'],
-      ['Avisa o teu contacto fora da região de onde estás.', 'Prévenez votre contact hors région.', 'Deinen Kontakt außerhalb der Region informieren.', 'Tell your out-of-region contact where you are.', 'Avisa a tu contacto fuera de la región de dónde estás.'],
-    ],
-    d: [] },
-  { id: 'nowater', kind: P, icon: 'water',
-    t: ['Sem água da torneira', 'Pas d’eau du robinet', 'Kein Leitungswasser', 'No tap water', 'Sin agua del grifo'],
-    k: ['água contaminada ferver potável', 'eau contaminée bouillir', 'Wasser verunreinigt abkochen', 'contaminated boil water', 'agua contaminada hervir potable'],
-    s: [
-      ['Usa primeiro a água guardada, a mais antiga primeiro.', 'Utilisez d’abord l’eau stockée, la plus ancienne d’abord.', 'Zuerst den Vorrat nutzen, älteste zuerst.', 'Use stored water first, oldest first.', 'Usa primero el agua almacenada, la más antigua primero.'],
-      ['Se mandarem ferver: fervura forte durante pelo menos 1 minuto.', 'S’il faut faire bouillir : ébullition franche au moins 1 minute.', 'Wenn Abkochen angeordnet: mindestens 1 Minute sprudelnd kochen.', 'If told to boil: rolling boil for at least 1 minute.', 'Si mandan hervir: hervor fuerte durante al menos 1 minuto.'],
-      ['Pastilhas de purificação: segue a dose e o tempo de espera da embalagem.', 'Pastilles : respectez dose et temps d’attente indiqués.', 'Tabletten: Dosis und Wartezeit laut Packung.', 'Purification tablets: follow the dose and waiting time on the pack.', 'Pastillas potabilizadoras: sigue la dosis y el tiempo de espera del envase.'],
-      ['Água do autoclismo e da caldeira serve para lavar, não para beber.', 'L’eau de la chasse et du chauffe-eau sert à laver, pas à boire.', 'Wasser aus Spülkasten und Boiler zum Waschen, nicht zum Trinken.', 'Water from the cistern and boiler is for washing, not drinking.', 'El agua de la cisterna y del termo sirve para lavar, no para beber.'],
-    ],
-    d: [] },
-  { id: 'alertspt', kind: P, icon: 'siren', r: 'pt',
-    t: ['Avisos e alertas (Portugal, Espanha)', 'Alertes (Portugal, Espagne)', 'Warnungen (Portugal, Spanien)', 'Alerts (Portugal, Spain)', 'Avisos y alertas (Portugal, España)'],
-    k: ['sms proteção civil anepc ipma es-alert aviso', 'SMS protection civile IPMA ES-Alert', 'SMS Zivilschutz IPMA ES-Alert', 'SMS civil protection IPMA ES-Alert', 'sms protección civil anepc ipma es-alert aviso'],
-    s: [
-      ['Em Portugal, a Proteção Civil (ANEPC) envia avisos por SMS para os telemóveis na zona afetada. Lê a mensagem toda e segue o que diz.', 'Au Portugal, la Protection civile (ANEPC) envoie des alertes par SMS aux téléphones de la zone concernée. Lisez tout et suivez les consignes.', 'In Portugal schickt der Zivilschutz (ANEPC) Warnungen per SMS an Handys im betroffenen Gebiet. Ganz lesen und befolgen.', 'In Portugal, Civil Protection (ANEPC) sends SMS warnings to phones in the affected area. Read the whole message and follow it.', 'En Portugal, Protección Civil (ANEPC) envía avisos por SMS a los móviles de la zona afectada. Lee el mensaje entero y sigue lo que dice.'],
-      ['Avisos do IPMA: amarelo, laranja e vermelho. Com laranja ou vermelho, evita deslocações e prepara-te.', 'Vigilances de l’IPMA : jaune, orange, rouge. En orange ou rouge, évitez les déplacements.', 'IPMA-Warnstufen: gelb, orange, rot. Bei Orange oder Rot Fahrten vermeiden.', 'IPMA warnings: yellow, orange, red. On orange or red, avoid travel and get ready.', 'Avisos del IPMA: amarillo, naranja y rojo. Con naranja o rojo, evita desplazamientos y prepárate.'],
-      ['Em Espanha, os alertas chegam pelo ES-Alert: notificação com som forte, mesmo com o telemóvel em silêncio.', 'En Espagne, les alertes arrivent via ES-Alert : notification sonore forte, même en silencieux.', 'In Spanien kommen Warnungen per ES-Alert: lauter Ton, auch im Lautlosmodus.', 'In Spain, alerts come through ES-Alert: a loud notification, even on silent.', 'En España, las alertas llegan por ES-Alert: notificación con sonido fuerte, aunque el móvil esté en silencio.'],
-      ['Informação oficial: prociv.gov.pt e ipma.pt. Ouve a rádio (Antena 1).', 'Sources officielles : prociv.gov.pt et ipma.pt. Écoutez la radio (Antena 1).', 'Offizielle Infos: prociv.gov.pt und ipma.pt. Radio hören (Antena 1).', 'Official information: prociv.gov.pt and ipma.pt. Listen to the radio (Antena 1).', 'Información oficial: prociv.gov.pt e ipma.pt. Escucha la radio (Antena 1).'],
-    ],
-    d: [
-      ['Ligar 112 para pedir informações: deixa a linha livre para emergências.', 'Appeler le 112 pour des informations : laissez la ligne aux urgences.', '112 für Auskünfte anrufen: Leitung für Notfälle freihalten.', 'Call 112 for information: keep the line free for emergencies.', 'Llamar al 112 para pedir información: deja la línea libre para emergencias.'],
-      ['Partilhar mensagens sem fonte oficial.', 'Partager des messages sans source officielle.', 'Nachrichten ohne offizielle Quelle teilen.', 'Share messages without an official source.', 'Compartir mensajes sin fuente oficial.'],
-    ] },
-  { id: 'wildfire', kind: P, icon: 'alert', call: true,
-    t: ['Incêndio florestal', 'Feu de forêt', 'Waldbrand', 'Wildfire', 'Incendio forestal'],
-    k: ['fogo mato floresta incendio rural', 'incendie forêt', 'Feuer Wald Flächenbrand', 'forest fire bushfire', 'fuego monte bosque incendio rural'],
-    s: [
-      ['Se vires fumo ou chamas, liga 112 logo e diz o sítio exato.', 'Si vous voyez fumée ou flammes, appelez le 112 et donnez le lieu exact.', 'Rauch oder Flammen gesehen: sofort 112, genauen Ort nennen.', 'If you see smoke or flames, call 112 at once with the exact location.', 'Si ves humo o llamas, llama al 112 enseguida y di el lugar exacto.'],
-      ['Em casa: fecha janelas, portas e estores. Afasta da casa botijas de gás, lenha e móveis de jardim.', 'Chez vous : fermez fenêtres, portes, volets. Éloignez bouteilles de gaz, bois et meubles de jardin.', 'Zu Hause: Fenster, Türen, Rollläden zu. Gasflaschen, Holz und Gartenmöbel vom Haus weg.', 'At home: close windows, doors and shutters. Move gas bottles, firewood and garden furniture away from the house.', 'En casa: cierra ventanas, puertas y persianas. Aleja de la casa bombonas de gas, leña y muebles de jardín.'],
-      ['Enche baldes e recipientes com água e molha à volta da casa. Liga a mangueira, mas não a deixes a correr se faltar pressão.', 'Remplissez seaux et récipients, arrosez autour de la maison sans gaspiller la pression.', 'Eimer füllen, um das Haus herum nass machen, ohne den Wasserdruck zu verbrauchen.', 'Fill buckets and containers and wet the ground around the house, without draining the water pressure.', 'Llena cubos y recipientes de agua y moja alrededor de la casa, sin agotar la presión del agua.'],
-      ['Se mandarem sair, sai logo, pelo caminho indicado. Se já não der para sair em segurança, fica dentro de casa: protege mais do que a estrada.', 'Si l’on vous dit de partir, partez tout de suite par l’itinéraire indiqué. S’il est trop tard, restez dedans : la maison protège mieux que la route.', 'Bei Evakuierung sofort über die angegebene Route los. Ist es zu spät: drinnen bleiben, das Haus schützt besser als die Straße.', 'If told to leave, go at once by the route given. If it’s too late to leave safely, stay inside: a house protects better than the road.', 'Si mandan salir, sal enseguida por la ruta indicada. Si ya no puedes salir con seguridad, quédate dentro: la casa protege más que la carretera.'],
-      ['Contra o fumo: pano húmido na boca e nariz, roupa comprida de algodão, calçado fechado.', 'Contre la fumée : linge humide sur la bouche et le nez, vêtements longs en coton, chaussures fermées.', 'Gegen Rauch: feuchtes Tuch vor Mund und Nase, lange Baumwollkleidung, feste Schuhe.', 'Against smoke: damp cloth over mouth and nose, long cotton clothing, closed shoes.', 'Contra el humo: paño húmedo en boca y nariz, ropa larga de algodón, calzado cerrado.'],
-      ['Apanhado no carro: para num sítio sem vegetação, fecha janelas e ventilação, deixa as luzes ligadas e deita-te no chão do carro, tapado com uma manta.', 'Piégé en voiture : arrêtez-vous sans végétation, fermez vitres et ventilation, phares allumés, allongez-vous au sol sous une couverture.', 'Im Auto eingeschlossen: an vegetationsfreier Stelle halten, Fenster und Lüftung zu, Licht an, auf den Boden legen, mit Decke zudecken.', 'Trapped in the car: stop away from vegetation, close windows and vents, leave the lights on, lie on the floor under a blanket.', 'Atrapado en el coche: para en un sitio sin vegetación, cierra ventanillas y ventilación, deja las luces encendidas y túmbate en el suelo del coche, tapado con una manta.'],
-    ],
-    d: [
-      ['Conduzir através de fumo denso.', 'Traverser une fumée épaisse en voiture.', 'Durch dichten Rauch fahren.', 'Drive through thick smoke.', 'Conducir a través de humo denso.'],
-      ['Fugir encosta acima: o fogo sobe mais depressa do que tu.', 'Fuir en montant une pente : le feu monte plus vite que vous.', 'Bergauf fliehen: Feuer steigt schneller als du.', 'Run uphill: fire climbs faster than you.', 'Huir cuesta arriba: el fuego sube más rápido que tú.'],
-      ['Fazer queimadas ou fogueiras em dias de risco.', 'Faire des brûlages ou des feux les jours à risque.', 'An Risikotagen Feuer machen.', 'Burn or light fires on high-risk days.', 'Hacer quemas u hogueras en días de riesgo.'],
-    ] },
-  { id: 'earthquake', kind: P, icon: 'alert', r: 'pt',
-    t: ['Sismo', 'Séisme', 'Erdbeben', 'Earthquake', 'Terremoto'],
-    k: ['terramoto tremor terra baixar proteger aguardar', 'tremblement de terre', 'Beben', 'quake tremor', 'sismo terremoto temblor agáchate cúbrete agárrate'],
-    s: [
-      ['Baixar, proteger, aguardar: baixa-te, protege a cabeça e o pescoço debaixo de uma mesa resistente, agarra-te a ela e espera que pare.', 'Se baisser, se protéger, attendre : sous une table solide, protégez tête et nuque, tenez-vous-y jusqu’à la fin.', 'Hinknien, schützen, abwarten: unter einem stabilen Tisch Kopf und Nacken schützen, festhalten, bis es aufhört.', 'Drop, cover, hold on: get under a sturdy table, protect head and neck, hold on until it stops.', 'Agáchate, cúbrete y agárrate: bajo una mesa resistente, protege la cabeza y el cuello, agárrate a ella y espera a que pare.'],
-      ['Afasta-te de janelas, espelhos, estantes e candeeiros.', 'Éloignez-vous des fenêtres, miroirs, étagères et lustres.', 'Weg von Fenstern, Spiegeln, Regalen und Lampen.', 'Keep away from windows, mirrors, shelves and light fittings.', 'Aléjate de ventanas, espejos, estanterías y lámparas.'],
-      ['Na rua: vai para um espaço aberto, longe de prédios, postes e cabos.', 'Dehors : allez dans un espace dégagé, loin des bâtiments, poteaux et câbles.', 'Draußen: ins Freie, weg von Gebäuden, Masten und Leitungen.', 'Outdoors: move to open ground, away from buildings, poles and cables.', 'En la calle: ve a un espacio abierto, lejos de edificios, postes y cables.'],
-      ['A conduzir: para longe de pontes, viadutos e túneis e fica dentro do carro.', 'En voiture : arrêtez-vous loin des ponts, viaducs et tunnels, restez dans la voiture.', 'Im Auto: weg von Brücken, Viadukten, Tunneln anhalten und drinbleiben.', 'Driving: stop away from bridges, flyovers and tunnels and stay in the car.', 'Conduciendo: para lejos de puentes, viaductos y túneles y quédate en el coche.'],
-      ['Depois: conta com réplicas. Fecha o gás, sai com calçado, usa as escadas.', 'Après : attendez-vous à des répliques. Coupez le gaz, sortez chaussé, prenez l’escalier.', 'Danach: mit Nachbeben rechnen. Gas zu, mit Schuhen raus, Treppe nehmen.', 'Afterwards: expect aftershocks. Shut off the gas, wear shoes, use the stairs.', 'Después: cuenta con réplicas. Cierra el gas, sal calzado, usa las escaleras.'],
-      ['Na costa, depois de um sismo forte ou longo: sobe já para um sítio alto. Pode vir um tsunami.', 'Sur la côte, après un séisme fort ou long : montez en hauteur tout de suite. Un tsunami peut suivre.', 'An der Küste nach einem starken oder langen Beben: sofort auf eine Anhöhe. Ein Tsunami kann folgen.', 'On the coast, after a strong or long quake: get to high ground now. A tsunami may follow.', 'En la costa, tras un terremoto fuerte o largo: sube ya a un lugar alto. Puede llegar un tsunami.'],
-    ],
-    d: [
-      ['Correr para a rua durante o abalo.', 'Courir dehors pendant la secousse.', 'Während des Bebens hinausrennen.', 'Run outside while it’s shaking.', 'Salir corriendo a la calle durante la sacudida.'],
-      ['Usar o elevador.', 'Prendre l’ascenseur.', 'Den Aufzug benutzen.', 'Use the lift.', 'Usar el ascensor.'],
-      ['Acender fósforos ou isqueiros: pode haver fugas de gás.', 'Allumer une flamme : risque de fuite de gaz.', 'Feuer anzünden: Gaslecks möglich.', 'Strike a match or lighter: there may be gas leaks.', 'Encender cerillas o mecheros: puede haber fugas de gas.'],
-    ] },
-  { id: 'tsunami', kind: P, icon: 'water', r: 'pt',
-    t: ['Tsunami', 'Tsunami', 'Tsunami', 'Tsunami', 'Tsunami'],
-    k: ['maremoto onda mar praia costa', 'raz-de-marée vague mer plage', 'Flutwelle Meer Strand', 'tidal wave sea beach', 'maremoto ola mar playa costa'],
-    s: [
-      ['Sinais: sismo forte ou longo, o mar a recuar de repente, ou um ronco forte vindo do mar.', 'Signes : séisme fort ou long, la mer qui se retire soudain, ou un grondement venant du large.', 'Zeichen: starkes oder langes Beben, plötzlich zurückweichendes Meer, lautes Grollen vom Meer.', 'Signs: a strong or long earthquake, the sea suddenly pulling back, or a loud roar from the sea.', 'Signos: terremoto fuerte o largo, el mar que se retira de repente, o un rugido fuerte que viene del mar.'],
-      ['Não esperes por aviso oficial: sai da praia já, a pé, para um sítio alto ou para o interior.', 'N’attendez pas l’alerte officielle : quittez la plage à pied, vers les hauteurs ou l’intérieur.', 'Nicht auf offizielle Warnung warten: sofort zu Fuß weg vom Strand, nach oben oder ins Landesinnere.', 'Don’t wait for an official warning: leave the beach now, on foot, for high ground or inland.', 'No esperes al aviso oficial: sal de la playa ya, a pie, hacia un lugar alto o hacia el interior.'],
-      ['Se não houver tempo, sobe aos andares de cima de um edifício robusto.', 'Sans le temps de partir, montez aux étages supérieurs d’un bâtiment solide.', 'Keine Zeit: in die oberen Stockwerke eines stabilen Gebäudes.', 'If there’s no time, go to the upper floors of a sturdy building.', 'Si no hay tiempo, sube a los pisos altos de un edificio sólido.'],
-      ['Podem vir várias ondas durante horas. Só voltes quando as autoridades disserem.', 'Plusieurs vagues peuvent arriver pendant des heures. Ne revenez qu’avec le feu vert des autorités.', 'Mehrere Wellen über Stunden möglich. Erst nach Freigabe zurückkehren.', 'Several waves can come over hours. Return only when authorities say so.', 'Pueden llegar varias olas durante horas. Vuelve solo cuando lo digan las autoridades.'],
-    ],
-    d: [
-      ['Ir ver o mar.', 'Aller regarder la mer.', 'Zum Meer gehen, um zu schauen.', 'Go down to watch the sea.', 'Ir a mirar el mar.'],
-      ['Ir buscar o carro: a pé é mais rápido e não bloqueia as estradas.', 'Aller chercher la voiture : à pied, c’est plus rapide et ça ne bloque pas les routes.', 'Das Auto holen: zu Fuß ist schneller und blockiert keine Straßen.', 'Go back for the car: on foot is faster and keeps roads clear.', 'Ir a por el coche: a pie es más rápido y no bloquea las carreteras.'],
-    ] },
-  // ——— Guias práticos ———
-  { id: 'campfire', kind: 'skill', icon: 'flame',
-    t: ['Fazer uma fogueira em segurança', 'Faire un feu en sécurité', 'Sicher ein Feuer machen', 'Making a safe campfire', 'Hacer una hoguera con seguridad'],
-    k: ['fogo lume lenha acender isca', 'feu bois allumer', 'Feuer Holz anzünden Zunder', 'fire wood light tinder', 'fuego leña encender yesca'],
-    s: [
-      ['Confirma primeiro se é permitido. Em Portugal é proibido em espaços rurais no período crítico e em dias de risco; no Luxemburgo e em França, só em locais autorizados.', 'Vérifiez d’abord que c’est autorisé. Au Portugal, interdit en zone rurale en période critique et les jours à risque ; au Luxembourg et en France, seulement aux endroits autorisés.', 'Zuerst prüfen, ob es erlaubt ist. In Portugal in ländlichen Gebieten in der kritischen Zeit und an Risikotagen verboten; in Luxemburg und Frankreich nur an erlaubten Stellen.', 'First check it’s allowed. In Portugal it’s banned in rural areas during the critical period and on high-risk days; in Luxembourg and France, only in authorised places.', 'Comprueba primero que está permitido. En Portugal está prohibido en zonas rurales en el periodo crítico y en días de riesgo; en Luxemburgo y Francia, solo en lugares autorizados.'],
-      ['Escolhe um sítio abrigado do vento, longe de árvores, ramos baixos, mato seco e da tenda.', 'Choisissez un endroit abrité du vent, loin des arbres, branches basses, herbes sèches et de la tente.', 'Windgeschützte Stelle wählen, weg von Bäumen, tiefen Ästen, trockenem Gras und Zelt.', 'Pick a spot sheltered from wind, away from trees, low branches, dry brush and the tent.', 'Elige un sitio resguardado del viento, lejos de árboles, ramas bajas, matorral seco y la tienda.'],
-      ['Limpa um círculo de 3 m até à terra e rodeia o centro com pedras secas. Pedras de rio podem rebentar com o calor.', 'Dégagez un cercle de 3 m jusqu’à la terre et entourez le centre de pierres sèches. Les galets de rivière peuvent éclater.', 'Einen Kreis von 3 m bis auf die Erde freiräumen, Mitte mit trockenen Steinen einfassen. Flusssteine können platzen.', 'Clear a 3 m circle down to bare earth and ring the centre with dry stones. River stones can burst in the heat.', 'Despeja un círculo de 3 m hasta la tierra y rodea el centro con piedras secas. Las piedras de río pueden estallar.'],
-      ['Prepara três montes antes de acender: isca (papel, algodão, casca seca), gravetos finos como um lápis, e lenha grossa.', 'Préparez trois tas avant d’allumer : amadou (papier, coton, écorce sèche), brindilles fines comme un crayon, et bûches.', 'Vor dem Anzünden drei Haufen: Zunder (Papier, Watte, trockene Rinde), bleistiftdünne Zweige, dickes Holz.', 'Prepare three piles first: tinder (paper, cotton, dry bark), pencil-thin kindling, and thicker wood.', 'Prepara tres montones antes de encender: yesca (papel, algodón, corteza seca), ramitas finas como un lápiz y leña gruesa.'],
-      ['Acende a isca e junta os gravetos aos poucos, em forma de tenda, deixando passar ar. Só depois a lenha grossa.', 'Allumez l’amadou et ajoutez les brindilles peu à peu, en tipi, en laissant passer l’air. Puis les bûches.', 'Zunder anzünden, Zweige nach und nach zeltförmig darüber, mit Luft dazwischen. Erst dann dickes Holz.', 'Light the tinder and add kindling bit by bit in a teepee, leaving gaps for air. Only then the thicker wood.', 'Enciende la yesca y añade las ramitas poco a poco, en forma de tipi, dejando pasar el aire. Después la leña gruesa.'],
-      ['Tem sempre água e uma pá ao lado. Para apagar: água, mexe as brasas, mais água, até estar frio ao toque.', 'Gardez eau et pelle à côté. Pour éteindre : eau, remuer les braises, encore de l’eau, jusqu’à ce que ce soit froid au toucher.', 'Wasser und Schaufel bereithalten. Löschen: Wasser, Glut umrühren, wieder Wasser, bis es sich kalt anfühlt.', 'Keep water and a shovel beside you. To put out: water, stir the embers, more water, until it’s cold to the touch.', 'Ten siempre agua y una pala al lado. Para apagar: agua, remueve las brasas, más agua, hasta que esté frío al tacto.'],
-    ],
-    d: [
-      ['Deixar a fogueira sem vigilância, nem por pouco tempo.', 'Laisser le feu sans surveillance, même peu de temps.', 'Das Feuer unbeaufsichtigt lassen, auch nicht kurz.', 'Leave the fire unattended, even briefly.', 'Dejar la hoguera sin vigilancia, ni un momento.'],
-      ['Usar gasolina ou álcool para acender.', 'Utiliser essence ou alcool pour allumer.', 'Benzin oder Spiritus zum Anzünden nutzen.', 'Use petrol or alcohol to light it.', 'Usar gasolina o alcohol para encender.'],
-      ['Fazer lume dentro de casa, da tenda ou do carro.', 'Faire du feu dans la maison, la tente ou la voiture.', 'Feuer im Haus, Zelt oder Auto machen.', 'Light a fire inside a house, tent or car.', 'Hacer fuego dentro de casa, la tienda o el coche.'],
-    ] },
-  { id: 'bowline', kind: 'skill', icon: 'knot',
-    t: ['Nó: lais de guia (laçada fixa)', 'Nœud de chaise (boucle fixe)', 'Palstek (feste Schlaufe)', 'Knot: bowline (fixed loop)', 'Nudo: as de guía (lazo fijo)'],
-    k: ['nó corda laço resgate cintura', 'nœud corde boucle sauvetage', 'Knoten Seil Schlaufe Rettung', 'knot rope loop rescue', 'nudo cuerda lazo rescate'],
-    i: ['Serve para fazer uma laçada que não aperta nem escorrega: à volta da cintura, de uma árvore ou de uma argola.', 'Fait une boucle qui ne serre pas et ne glisse pas : autour de la taille, d’un arbre, d’un anneau.', 'Ergibt eine Schlaufe, die sich nicht zuzieht: um die Hüfte, einen Baum, einen Ring.', 'Makes a loop that won’t tighten or slip: around the waist, a tree or a ring.', 'Hace un lazo que no aprieta ni se corre: alrededor de la cintura, un árbol o una argolla.'],
-    s: [
-      ['Faz uma pequena volta no cabo, com a parte da ponta por cima. É a "toca".', 'Faites une petite boucle dans la corde, le brin libre par-dessus. C’est le « terrier ».', 'Eine kleine Öse ins Seil legen, das lose Ende oben. Das ist der „Bau“.', 'Make a small loop in the rope with the loose end on top. That’s the "rabbit hole".', 'Haz una pequeña vuelta en la cuerda, con el chicote por encima. Es la «madriguera».'],
-      ['O coelho sai da toca: passa a ponta por dentro da volta, de baixo para cima.', 'Le lapin sort du terrier : passez le brin dans la boucle, de dessous vers dessus.', 'Der Hase kommt aus dem Bau: Ende von unten durch die Öse.', 'The rabbit comes out of the hole: pass the end up through the loop from below.', 'El conejo sale de la madriguera: pasa el chicote por la vuelta, de abajo arriba.'],
-      ['Dá a volta à árvore: passa a ponta por trás da parte comprida do cabo.', 'Il fait le tour de l’arbre : passez le brin derrière la partie longue.', 'Er läuft um den Baum: Ende hinter dem langen Seilteil herumführen.', 'Around the tree: take the end behind the long part of the rope.', 'Da la vuelta al árbol: pasa el chicote por detrás de la parte larga.'],
-      ['Volta para a toca: mete a ponta de novo na volta, de cima para baixo, ao lado de si própria.', 'Il rentre au terrier : repassez le brin dans la boucle, de dessus vers dessous.', 'Zurück in den Bau: Ende von oben wieder durch die Öse.', 'Back down the hole: pass the end back down through the loop, beside itself.', 'Vuelve a la madriguera: mete el chicote otra vez en la vuelta, de arriba abajo.'],
-      ['Segura a ponta junto à laçada e puxa a parte comprida para apertar. Deixa sobrar pelo menos 10 cm de ponta.', 'Tenez le brin contre la boucle et tirez la partie longue. Laissez au moins 10 cm de brin.', 'Ende an der Schlaufe festhalten, langen Teil ziehen. Mindestens 10 cm Ende überstehen lassen.', 'Hold the end against the loop and pull the long part tight. Leave at least 10 cm of tail.', 'Sujeta el chicote junto al lazo y tira de la parte larga. Deja al menos 10 cm de chicote.'],
-    ],
-    d: [
-      ['Usar para escalar ou suspender uma pessoa sem formação.', 'S’en servir pour grimper ou suspendre une personne sans formation.', 'Ohne Ausbildung zum Klettern oder Abseilen von Personen nutzen.', 'Use it to climb or lower a person without training.', 'Usarlo para escalar o descolgar a una persona sin formación.'],
-    ] },
-  { id: 'reefknot', kind: 'skill', icon: 'knot',
-    t: ['Nó: nó direito', 'Nœud plat', 'Kreuzknoten', 'Knot: reef knot', 'Nudo: nudo llano'],
-    k: ['nó ligadura atar juntar pontas', 'nœud bandage attacher', 'Knoten Verband binden', 'knot bandage tie square', 'nudo venda atar'],
-    i: ['Serve para atar ligaduras e fechar embrulhos ou sacos.', 'Sert à nouer un bandage et fermer un paquet ou un sac.', 'Zum Verbinden von Verbänden und Verschnüren von Paketen oder Säcken.', 'For tying bandages and closing parcels or bags.', 'Sirve para atar vendas y cerrar paquetes o bolsas.'],
-    s: [
-      ['Direita sobre esquerda, e por baixo: cruza as pontas e dá um nó simples.', 'Droite sur gauche, et dessous : croisez et faites un nœud simple.', 'Rechts über links und darunter: kreuzen, einfacher Knoten.', 'Right over left and under: cross the ends and tie a simple knot.', 'Derecha sobre izquierda y por debajo: cruza los extremos y haz un nudo simple.'],
-      ['Esquerda sobre direita, e por baixo: segundo nó simples, ao contrário do primeiro.', 'Gauche sur droite, et dessous : deuxième nœud simple, inversé.', 'Links über rechts und darunter: zweiter Knoten, umgekehrt.', 'Left over right and under: a second simple knot, the opposite way.', 'Izquierda sobre derecha y por debajo: segundo nudo simple, al revés.'],
-      ['Confirma: cada ponta sai do mesmo lado que a sua parte. Se ficar torto, é um nó de avó — desfaz e repete.', 'Vérifiez : chaque brin ressort du même côté que sa partie. S’il est de travers, c’est un nœud de vache — refaites-le.', 'Prüfen: Jedes Ende liegt auf der Seite seines Seilteils. Ist er schief, ist es ein Altweiberknoten — neu binden.', 'Check: each end exits on the same side as its own part. If it sits crooked, it’s a granny knot — redo it.', 'Comprueba: cada chicote sale del mismo lado que su parte. Si queda torcido, es un nudo de abuela: rehazlo.'],
-    ],
-    d: [
-      ['Usar para unir duas cordas que vão aguentar peso: solta-se.', 'L’utiliser pour joindre deux cordes sous charge : il se défait.', 'Zum Verbinden von zwei belasteten Seilen nutzen: Er löst sich.', 'Use it to join two ropes that will carry weight: it comes undone.', 'Usarlo para unir dos cuerdas que soportarán peso: se suelta.'],
-    ] },
-  { id: 'clovehitch', kind: 'skill', icon: 'knot',
-    t: ['Nó: volta do fiel (prender a um poste)', 'Nœud de cabestan (attacher à un poteau)', 'Webeleinstek (an einem Pfosten)', 'Knot: clove hitch (tie to a post)', 'Nudo: ballestrinque (atar a un poste)'],
-    k: ['nó poste árvore prender corda', 'nœud poteau arbre attacher', 'Knoten Pfosten Baum befestigen', 'knot post tree attach', 'nudo poste árbol amarrar'],
-    i: ['Serve para prender rapidamente uma corda a um poste, árvore ou varão.', 'Pour attacher vite une corde à un poteau, un arbre ou une barre.', 'Um ein Seil schnell an Pfosten, Baum oder Stange zu befestigen.', 'For quickly tying a rope to a post, tree or rail.', 'Sirve para atar rápido una cuerda a un poste, árbol o barra.'],
-    s: [
-      ['Dá uma volta completa ao poste com a ponta.', 'Faites un tour complet du poteau avec le brin.', 'Mit dem Ende einmal ganz um den Pfosten.', 'Wrap the end once all the way round the post.', 'Da una vuelta completa al poste con el chicote.'],
-      ['Cruza por cima da primeira volta e dá uma segunda volta.', 'Croisez par-dessus le premier tour et faites un second tour.', 'Über die erste Windung kreuzen, zweite Windung legen.', 'Cross over the first turn and make a second turn.', 'Cruza por encima de la primera vuelta y da una segunda.'],
-      ['Passa a ponta por baixo da segunda volta, entre ela e o poste, e aperta puxando as duas pontas.', 'Passez le brin sous le second tour, contre le poteau, et serrez en tirant les deux brins.', 'Ende unter der zweiten Windung durchstecken und an beiden Enden festziehen.', 'Tuck the end under the second turn, against the post, and pull both ends tight.', 'Pasa el chicote por debajo de la segunda vuelta, contra el poste, y aprieta tirando de ambos extremos.'],
-      ['Para segurar melhor, acaba com dois cotes (dois nós simples à volta do cabo).', 'Pour plus de tenue, finissez par deux demi-clés.', 'Für mehr Halt mit zwei halben Schlägen sichern.', 'For a firmer hold, finish with two half hitches.', 'Para que aguante mejor, remata con dos medios cotes.'],
-    ],
-    d: [
-      ['Confiar nele sozinho quando o poste roda ou a carga puxa aos esticões.', 'S’y fier seul si le poteau tourne ou si la charge tire par à-coups.', 'Sich allein darauf verlassen, wenn der Pfosten dreht oder ruckartig gezogen wird.', 'Rely on it alone if the post turns or the load jerks.', 'Fiarse solo de él si el poste gira o la carga da tirones.'],
-    ] },
-  { id: 'tautline', kind: 'skill', icon: 'knot',
-    t: ['Nó: volta de tensão (ajustável)', 'Nœud tendeur (réglable)', 'Spannstek (verstellbar)', 'Knot: taut-line hitch (adjustable)', 'Nudo: nudo tensor (ajustable)'],
-    k: ['nó esticar lona tenda estaca', 'nœud tendre bâche tente piquet', 'Knoten spannen Plane Zelt Hering', 'knot tighten tarp tent stake', 'nudo tensar lona tienda estaca'],
-    i: ['Serve para esticar a corda de uma lona ou tenda e ajustá-la depois, só deslizando o nó.', 'Pour tendre la corde d’une bâche ou d’une tente et la régler en faisant glisser le nœud.', 'Zum Spannen von Plane oder Zelt; nachspannen durch Verschieben des Knotens.', 'For tensioning a tarp or tent line and adjusting it later by sliding the knot.', 'Sirve para tensar la cuerda de una lona o tienda y ajustarla deslizando el nudo.'],
-    s: [
-      ['Passa a corda à volta da estaca ou do ramo e traz a ponta de volta para junto da corda esticada.', 'Passez la corde autour du piquet et ramenez le brin vers la partie tendue.', 'Seil um Hering oder Ast legen und das Ende zurück zum gespannten Teil führen.', 'Pass the rope round the stake or branch and bring the end back alongside the taut part.', 'Pasa la cuerda alrededor de la estaca o rama y lleva el chicote junto a la parte tensa.'],
-      ['Dá duas voltas com a ponta à volta da corda esticada, por dentro do laço (do lado da estaca).', 'Faites deux tours autour de la partie tendue, à l’intérieur de la boucle (côté piquet).', 'Zwei Windungen um den gespannten Teil, innerhalb der Schlaufe (Seite Hering).', 'Wrap the end twice round the taut line, inside the loop (towards the stake).', 'Da dos vueltas con el chicote alrededor de la parte tensa, por dentro del lazo (lado de la estaca).'],
-      ['Dá uma terceira volta por fora do laço, mais longe da estaca, e passa a ponta por baixo de si própria.', 'Faites un troisième tour à l’extérieur de la boucle, plus loin du piquet, et glissez le brin sous lui-même.', 'Dritte Windung außerhalb der Schlaufe, weiter vom Hering, Ende unter sich selbst durchstecken.', 'Make a third turn outside the loop, further from the stake, and tuck the end under itself.', 'Da una tercera vuelta por fuera del lazo, más lejos de la estaca, y pasa el chicote por debajo de sí mismo.'],
-      ['Aperta bem. Para esticar ou folgar, desliza o nó ao longo da corda.', 'Serrez. Pour tendre ou détendre, faites glisser le nœud.', 'Festziehen. Zum Spannen oder Lockern den Knoten verschieben.', 'Pull it snug. To tighten or loosen, slide the knot along the line.', 'Aprieta bien. Para tensar o aflojar, desliza el nudo por la cuerda.'],
-    ],
-    d: [] },
-  { id: 'purifywater', kind: 'skill', icon: 'water',
-    t: ['Tornar a água potável', 'Rendre l’eau potable', 'Wasser trinkbar machen', 'Making water safe to drink', 'Potabilizar el agua'],
-    k: ['água purificar ferver lixívia filtrar', 'eau purifier bouillir javel filtrer', 'Wasser entkeimen abkochen Chlor filtern', 'water purify boil bleach filter', 'agua purificar hervir lejía filtrar'],
-    s: [
-      ['Se estiver turva, deixa assentar e passa-a por um pano limpo ou filtro de café.', 'Si elle est trouble, laissez reposer puis filtrez avec un linge propre ou un filtre à café.', 'Trübes Wasser absetzen lassen, dann durch ein sauberes Tuch oder Kaffeefilter gießen.', 'If it’s cloudy, let it settle and pour it through a clean cloth or coffee filter.', 'Si está turbia, déjala reposar y pásala por un paño limpio o un filtro de café.'],
-      ['Ferver é o mais seguro: fervura forte durante pelo menos 1 minuto. Deixa arrefecer tapada.', 'Faire bouillir est le plus sûr : ébullition franche au moins 1 minute. Laissez refroidir couvert.', 'Abkochen ist am sichersten: mindestens 1 Minute sprudelnd kochen. Abgedeckt abkühlen lassen.', 'Boiling is safest: a rolling boil for at least 1 minute. Let it cool covered.', 'Hervir es lo más seguro: hervor fuerte al menos 1 minuto. Deja enfriar tapada.'],
-      ['Sem lume: lixívia sem perfume (5–6 %), 2 gotas por litro. Mexe e espera 30 minutos. Deve cheirar ligeiramente a cloro.', 'Sans feu : eau de Javel sans parfum (5–6 %), 2 gouttes par litre. Mélangez, attendez 30 minutes. Légère odeur de chlore.', 'Ohne Feuer: parfümfreie Bleiche (5–6 %), 2 Tropfen pro Liter. Umrühren, 30 Minuten warten. Leichter Chlorgeruch.', 'Without fire: unscented bleach (5–6%), 2 drops per litre. Stir and wait 30 minutes. It should smell slightly of chlorine.', 'Sin fuego: lejía sin perfume (5–6 %), 2 gotas por litro. Remueve y espera 30 minutos. Debe oler ligeramente a cloro.'],
-      ['Pastilhas de purificação: segue a dose e o tempo de espera da embalagem.', 'Pastilles : respectez dose et temps d’attente.', 'Tabletten: Dosis und Wartezeit laut Packung.', 'Purification tablets: follow the dose and waiting time on the pack.', 'Pastillas: sigue la dosis y el tiempo de espera del envase.'],
-      ['Último recurso, com sol: garrafa de plástico transparente até 2 L, cheia de água limpa, ao sol direto durante 6 horas.', 'En dernier recours, au soleil : bouteille plastique transparente de 2 L max, eau claire, 6 heures en plein soleil.', 'Notlösung bei Sonne: klare Plastikflasche bis 2 L, klares Wasser, 6 Stunden in direkter Sonne.', 'Last resort, with sun: a clear plastic bottle up to 2 L of clear water, 6 hours in direct sunlight.', 'Último recurso, con sol: botella de plástico transparente de hasta 2 L con agua clara, 6 horas al sol directo.'],
-    ],
-    d: [
-      ['Confiar na fervura para água de cheias ou com cheiro a combustível: ferver não tira químicos.', 'Compter sur l’ébullition pour de l’eau de crue ou sentant le carburant : elle n’enlève pas les produits chimiques.', 'Bei Hochwasser oder Treibstoffgeruch auf Abkochen vertrauen: Chemikalien bleiben.', 'Rely on boiling for floodwater or water smelling of fuel: boiling doesn’t remove chemicals.', 'Fiarte de hervir agua de riada o con olor a combustible: hervir no quita químicos.'],
-      ['Usar lixívia com perfume ou com detergente.', 'Utiliser une javel parfumée ou avec détergent.', 'Bleiche mit Duft oder Reiniger verwenden.', 'Use scented bleach or bleach with detergent.', 'Usar lejía perfumada o con detergente.'],
-    ] },
-  { id: 'shelter', kind: 'skill', icon: 'tent',
-    t: ['Abrigo improvisado', 'Abri de fortune', 'Notunterkunft bauen', 'Improvised shelter', 'Refugio improvisado'],
-    k: ['abrigo lona frio dormir fora', 'abri bâche froid dormir dehors', 'Unterschlupf Plane Kälte draußen schlafen', 'shelter tarp cold sleep outside', 'refugio lona frío dormir fuera'],
-    s: [
-      ['A prioridade é sair do vento e da chuva e isolar-te do chão: perdes mais calor para o chão do que para o ar.', 'Priorité : sortir du vent et de la pluie et s’isoler du sol, qui fait perdre plus de chaleur que l’air.', 'Vorrang: weg von Wind und Regen und vom Boden isolieren — der Boden entzieht mehr Wärme als die Luft.', 'Priority: get out of wind and rain and insulate yourself from the ground — it draws more heat than the air.', 'La prioridad es salir del viento y la lluvia y aislarte del suelo: pierdes más calor por el suelo que por el aire.'],
-      ['Escolhe um sítio plano, sem árvores mortas ou ramos partidos por cima, e fora de leitos de ribeiras.', 'Choisissez un endroit plat, sans arbre mort ni branche cassée au-dessus, hors des lits de ruisseaux.', 'Ebene Stelle ohne tote Bäume oder lose Äste darüber, nicht in Bachbetten.', 'Pick flat ground with no dead trees or broken branches overhead, away from stream beds.', 'Elige un sitio llano, sin árboles muertos ni ramas rotas encima, fuera de cauces de arroyos.'],
-      ['Estica uma corda entre duas árvores (volta de tensão) e põe a lona ou plástico por cima, com o lado baixo virado para o vento.', 'Tendez une corde entre deux arbres (nœud tendeur) et posez la bâche dessus, côté bas face au vent.', 'Seil zwischen zwei Bäume spannen (Spannstek), Plane darüber, niedrige Seite zum Wind.', 'Run a line between two trees (taut-line hitch) and drape the tarp over it, low side facing the wind.', 'Tensa una cuerda entre dos árboles (nudo tensor) y pon la lona encima, con el lado bajo hacia el viento.'],
-      ['Isola o chão com pelo menos 10 cm de ramos, folhas secas, cartão ou a mochila.', 'Isolez le sol avec au moins 10 cm de branches, feuilles sèches, carton ou le sac.', 'Boden mit mindestens 10 cm Zweigen, trockenem Laub, Karton oder Rucksack isolieren.', 'Insulate the ground with at least 10 cm of branches, dry leaves, cardboard or your pack.', 'Aísla el suelo con al menos 10 cm de ramas, hojas secas, cartón o la mochila.'],
-      ['Usa a manta térmica por dentro, junto ao corpo, e roupa seca. Tapa a cabeça.', 'Mettez la couverture de survie à l’intérieur, près du corps, et des vêtements secs. Couvrez la tête.', 'Rettungsdecke innen am Körper, trockene Kleidung, Kopf bedecken.', 'Use the emergency blanket inside, close to your body, with dry clothes. Cover your head.', 'Usa la manta térmica por dentro, junto al cuerpo, y ropa seca. Cúbrete la cabeza.'],
-    ],
-    d: [
-      ['Abrigar-te debaixo de uma árvore isolada em trovoada.', 'S’abriter sous un arbre isolé pendant un orage.', 'Bei Gewitter unter einem einzelnen Baum Schutz suchen.', 'Shelter under a lone tree in a thunderstorm.', 'Refugiarte bajo un árbol aislado en una tormenta.'],
-      ['Acender lume ou fogareiro dentro do abrigo.', 'Allumer un feu ou un réchaud dans l’abri.', 'Feuer oder Kocher im Unterschlupf anzünden.', 'Light a fire or stove inside the shelter.', 'Encender fuego u hornillo dentro del refugio.'],
-    ] },
-  { id: 'rescuesignals', kind: 'skill', icon: 'sos',
-    t: ['Sinais para o resgate', 'Signaux pour les secours', 'Signale für Rettungskräfte', 'Signalling for rescue', 'Señales para el rescate'],
-    k: ['sinal resgate helicóptero espelho sos apito', 'signal secours hélicoptère miroir sifflet', 'Signal Rettung Hubschrauber Spiegel Pfeife', 'signal rescue helicopter mirror whistle', 'señal rescate helicóptero espejo silbato'],
-    s: [
-      ['Três de qualquer coisa é pedido de ajuda: 3 apitos, 3 flashes, 3 fogueiras em triângulo. Repete com pausas.', 'Trois de n’importe quoi = appel à l’aide : 3 coups de sifflet, 3 flashs, 3 feux en triangle. Répétez avec des pauses.', 'Drei von allem bedeutet Hilfe: 3 Pfiffe, 3 Blitze, 3 Feuer im Dreieck. Mit Pausen wiederholen.', 'Three of anything means help: 3 whistle blasts, 3 flashes, 3 fires in a triangle. Repeat with pauses.', 'Tres de cualquier cosa es petición de ayuda: 3 pitidos, 3 destellos, 3 hogueras en triángulo. Repite con pausas.'],
-      ['Usa o Sinal SOS e o Apito em Ferramentas: poupam a voz e ouvem-se mais longe.', 'Utilisez Signal SOS et Sifflet dans Outils : ils portent plus loin que la voix.', 'SOS-Signal und Pfeife unter Werkzeuge nutzen: tragen weiter als die Stimme.', 'Use SOS signal and Whistle in Tools: they carry further than your voice.', 'Usa Señal SOS y Silbato en Herramientas: llegan más lejos que la voz.'],
-      ['De dia, reflete o sol com um espelho ou o ecrã do telemóvel na direção de aviões ou helicópteros.', 'De jour, renvoyez le soleil avec un miroir ou l’écran du téléphone vers les avions ou hélicoptères.', 'Tagsüber mit Spiegel oder Handydisplay die Sonne Richtung Flugzeug oder Hubschrauber spiegeln.', 'By day, flash sunlight with a mirror or your phone screen towards planes or helicopters.', 'De día, refleja el sol con un espejo o la pantalla del móvil hacia aviones o helicópteros.'],
-      ['Escreve SOS em grande no chão, com pedras, ramos ou roupa de cor contrastante, num espaço aberto.', 'Écrivez SOS en grand au sol avec pierres, branches ou vêtements contrastés, à découvert.', 'SOS groß auf den Boden legen — Steine, Äste, farbige Kleidung — auf freier Fläche.', 'Write a large SOS on the ground with stones, branches or bright clothing, in the open.', 'Escribe SOS en grande en el suelo con piedras, ramas o ropa de color, en un claro.'],
-      ['Para o helicóptero: os dois braços para cima em Y quer dizer "preciso de ajuda". Um braço para cima e outro para baixo quer dizer "não preciso".', 'Pour l’hélicoptère : les deux bras levés en Y = « besoin d’aide ». Un bras en haut, un en bas = « pas besoin ».', 'Für den Hubschrauber: beide Arme hoch als Y = „brauche Hilfe“. Ein Arm hoch, einer runter = „keine Hilfe nötig“.', 'For a helicopter: both arms up in a Y means "need help". One arm up, one down means "no help needed".', 'Para el helicóptero: los dos brazos arriba en Y significa «necesito ayuda». Un brazo arriba y otro abajo, «no necesito».'],
-    ],
-    d: [
-      ['Afastar-te do sítio onde estás, se alguém sabe que estás lá.', 'Quitter l’endroit où vous êtes si quelqu’un sait que vous y êtes.', 'Den Ort verlassen, wenn jemand weiß, dass du dort bist.', 'Move away from where you are, if someone knows you’re there.', 'Alejarte del sitio donde estás si alguien sabe que estás allí.'],
-    ] },
-  { id: 'navigate', kind: 'skill', icon: 'compass',
-    t: ['Orientar-se sem bússola', 'S’orienter sans boussole', 'Orientierung ohne Kompass', 'Finding direction without a compass', 'Orientarse sin brújula'],
-    k: ['norte sul sol estrela polar relógio', 'nord sud soleil étoile polaire montre', 'Norden Süden Sonne Polarstern Uhr', 'north south sun pole star watch', 'norte sur sol estrella polar reloj'],
-    s: [
-      ['O sol nasce a leste e põe-se a oeste. A meio do dia está a sul (aqui, no hemisfério norte).', 'Le soleil se lève à l’est et se couche à l’ouest. Au milieu de la journée, il est au sud (hémisphère nord).', 'Die Sonne geht im Osten auf und im Westen unter. Mittags steht sie im Süden (Nordhalbkugel).', 'The sun rises in the east and sets in the west. Around midday it’s due south (northern hemisphere).', 'El sol sale por el este y se pone por el oeste. A mediodía está al sur (hemisferio norte).'],
-      ['Relógio de ponteiros: aponta o ponteiro das horas para o sol. O sul fica a meio caminho entre esse ponteiro e o 12 (no horário de verão, o 1).', 'Montre à aiguilles : pointez la petite aiguille vers le soleil. Le sud est à mi-chemin entre elle et le 12 (le 1 en heure d’été).', 'Zeigeruhr: Stundenzeiger auf die Sonne. Süden liegt mittig zwischen Zeiger und 12 (Sommerzeit: 1).', 'Analogue watch: point the hour hand at the sun. South is halfway between it and 12 (1 in summer time).', 'Reloj de agujas: apunta la aguja horaria al sol. El sur queda a medio camino entre ella y las 12 (la 1 en horario de verano).'],
-      ['De noite: encontra a Ursa Maior. Prolonga cinco vezes a distância entre as duas estrelas da ponta e chegas à Estrela Polar, que marca o norte.', 'La nuit : trouvez la Grande Ourse. Prolongez cinq fois l’écart entre ses deux dernières étoiles : l’Étoile polaire indique le nord.', 'Nachts: Großen Wagen suchen. Den Abstand der hinteren zwei Sterne fünfmal verlängern: Der Polarstern zeigt Norden.', 'At night: find the Plough (Big Dipper). Extend the line between its two end stars five times to reach the Pole Star, which marks north.', 'De noche: busca la Osa Mayor. Prolonga cinco veces la distancia entre sus dos estrellas del extremo y llegas a la Estrella Polar, que marca el norte.'],
-      ['O GPS do telemóvel funciona sem rede: usa "A minha posição" em Ferramentas e o Organic Maps com o mapa descarregado.', 'Le GPS du téléphone marche sans réseau : « Ma position » dans Outils et Organic Maps avec la carte téléchargée.', 'Das Handy-GPS funktioniert ohne Netz: „Mein Standort“ unter Werkzeuge und Organic Maps mit geladener Karte.', 'Phone GPS works without signal: use "My location" in Tools and Organic Maps with the map downloaded.', 'El GPS del móvil funciona sin cobertura: usa «Mi ubicación» en Herramientas y Organic Maps con el mapa descargado.'],
-    ],
-    d: [
-      ['Confiar no musgo das árvores para achar o norte: é pouco fiável.', 'Se fier à la mousse des arbres pour trouver le nord : peu fiable.', 'Sich am Moos der Bäume orientieren: unzuverlässig.', 'Trust moss on trees to find north: it’s unreliable.', 'Fiarte del musgo de los árboles para hallar el norte: es poco fiable.'],
-    ] },
-  { id: 'toilet', kind: 'skill', icon: 'trash',
-    t: ['Sanita de emergência', 'Toilettes de secours', 'Notfall-Toilette', 'Emergency toilet', 'Inodoro de emergencia'],
-    k: ['sanita casa de banho sem água balde', 'toilettes WC sans eau seau', 'Toilette WC ohne Wasser Eimer', 'toilet without water bucket', 'inodoro váter sin agua cubo'],
-    s: [
-      ['Sem água para o autoclismo: forra a sanita (vazia) ou um balde com tampa com dois sacos do lixo resistentes.', 'Sans eau pour la chasse : garnissez la cuvette (vidée) ou un seau à couvercle de deux sacs poubelle solides.', 'Ohne Spülwasser: Toilette (leer) oder Eimer mit Deckel mit zwei festen Müllbeuteln auslegen.', 'No water to flush: line the (empty) toilet bowl or a lidded bucket with two strong bin bags.', 'Sin agua para la cisterna: forra el inodoro (vacío) o un cubo con tapa con dos bolsas de basura resistentes.'],
-      ['Depois de cada uso, cobre com areia de gato, serradura ou terra seca. Reduz o cheiro e os germes.', 'Après chaque usage, couvrez de litière, sciure ou terre sèche. Moins d’odeur et de germes.', 'Nach jeder Benutzung mit Katzenstreu, Sägemehl oder trockener Erde bedecken. Weniger Geruch und Keime.', 'After each use, cover with cat litter, sawdust or dry soil. It cuts smell and germs.', 'Después de cada uso, cubre con arena de gato, serrín o tierra seca. Reduce olor y gérmenes.'],
-      ['Fecha bem o saco a meio, guarda-o num sítio fresco e tapado, longe da água e da comida.', 'Fermez bien le sac à moitié plein, rangez-le au frais et couvert, loin de l’eau et de la nourriture.', 'Beutel halbvoll fest verschließen, kühl und abgedeckt lagern, weg von Wasser und Essen.', 'Seal the bag when half full and store it somewhere cool and covered, away from water and food.', 'Cierra bien la bolsa a media carga y guárdala en un sitio fresco y tapado, lejos del agua y la comida.'],
-      ['Lava as mãos sempre a seguir, ou usa gel desinfetante.', 'Lavez-vous toujours les mains ensuite, ou utilisez du gel.', 'Danach immer Hände waschen oder Desinfektionsgel nutzen.', 'Always wash your hands afterwards, or use hand gel.', 'Lávate siempre las manos después, o usa gel desinfectante.'],
-    ],
-    d: [
-      ['Usar a sanita normalmente quando não há água: entope e transborda.', 'Utiliser les toilettes normalement sans eau : elles se bouchent et débordent.', 'Die Toilette ohne Wasser normal benutzen: Sie verstopft und läuft über.', 'Use the toilet normally with no water: it clogs and overflows.', 'Usar el inodoro con normalidad sin agua: se atasca y rebosa.'],
-    ] },
-  { id: 'shutoff', kind: 'skill', icon: 'tools',
-    t: ['Cortar água, gás e eletricidade', 'Couper eau, gaz et électricité', 'Wasser, Gas und Strom abstellen', 'Shutting off water, gas and power', 'Cortar agua, gas y electricidad'],
-    k: ['válvula contador quadro elétrico torneira gás', 'vanne compteur tableau électrique robinet gaz', 'Haupthahn Zähler Sicherungskasten Gashahn', 'valve meter fuse box gas tap', 'llave contador cuadro eléctrico gas'],
-    s: [
-      ['Descobre já, com calma, onde estão: válvula da água (junto ao contador ou na cave), torneira do gás e quadro elétrico.', 'Repérez dès maintenant : vanne d’eau (près du compteur ou à la cave), robinet de gaz et tableau électrique.', 'Jetzt in Ruhe suchen: Wasserhaupthahn (am Zähler oder im Keller), Gashahn und Sicherungskasten.', 'Find them now, calmly: the water valve (by the meter or in the basement), the gas tap and the fuse box.', 'Localiza ya, con calma: llave del agua (junto al contador o en el sótano), llave del gas y cuadro eléctrico.'],
-      ['Eletricidade: desliga o interruptor geral do quadro.', 'Électricité : abaissez l’interrupteur général du tableau.', 'Strom: Hauptschalter im Sicherungskasten aus.', 'Power: switch off the main switch on the fuse box.', 'Electricidad: baja el interruptor general del cuadro.'],
-      ['Água: roda a válvula no sentido dos ponteiros do relógio até parar.', 'Eau : tournez la vanne dans le sens des aiguilles d’une montre jusqu’en butée.', 'Wasser: Hahn im Uhrzeigersinn bis zum Anschlag drehen.', 'Water: turn the valve clockwise until it stops.', 'Agua: gira la llave en el sentido de las agujas del reloj hasta el tope.'],
-      ['Gás: a manivela atravessada em relação ao tubo quer dizer fechado. Na botija, fecha a válvula de cima.', 'Gaz : la manette en travers du tuyau = fermé. Sur la bouteille, fermez le robinet du haut.', 'Gas: Griff quer zum Rohr = zu. An der Flasche das obere Ventil schließen.', 'Gas: the handle across the pipe means closed. On a bottle, close the valve on top.', 'Gas: la manilla atravesada respecto al tubo significa cerrado. En la bombona, cierra la llave de arriba.'],
-      ['Põe etiquetas e mostra a todos em casa. Treina uma vez, para não seres apanhado de surpresa.', 'Étiquetez et montrez à tout le foyer. Entraînez-vous une fois.', 'Beschriften und allen im Haushalt zeigen. Einmal üben.', 'Label them and show everyone at home. Practise once so it’s not a surprise.', 'Pon etiquetas y enséñalo a todos en casa. Practica una vez para que no te pille por sorpresa.'],
-      ['Voltar a abrir o gás depois de uma fuga ou sismo: chama um técnico se tiveres dúvidas.', 'Rouvrir le gaz après une fuite ou un séisme : appelez un technicien en cas de doute.', 'Gas nach Leck oder Beben wieder öffnen: im Zweifel Fachkraft rufen.', 'Turning gas back on after a leak or quake: call a technician if in doubt.', 'Volver a abrir el gas tras una fuga o terremoto: llama a un técnico si tienes dudas.'],
-    ],
-    d: [
-      ['Mexer no quadro elétrico com as mãos ou os pés molhados.', 'Toucher au tableau avec les mains ou les pieds mouillés.', 'Den Sicherungskasten mit nassen Händen oder Füßen anfassen.', 'Touch the fuse box with wet hands or feet.', 'Tocar el cuadro eléctrico con las manos o los pies mojados.'],
-    ] },
-  { id: 'chargephone', kind: 'skill', icon: 'battery',
-    t: ['Carregar o telemóvel sem eletricidade', 'Recharger le téléphone sans électricité', 'Handy ohne Strom laden', 'Charging your phone without power', 'Cargar el móvil sin electricidad'],
-    k: ['bateria carregar powerbank carro solar', 'batterie recharger voiture solaire', 'Akku laden Powerbank Auto Solar', 'battery charge power bank car solar', 'batería cargar powerbank coche solar'],
-    s: [
-      ['Bateria externa: mantém-na carregada e volta a carregá-la de 3 em 3 meses, mesmo sem uso.', 'Batterie externe : gardez-la chargée et rechargez-la tous les 3 mois, même sans usage.', 'Powerbank geladen halten und alle 3 Monate nachladen, auch unbenutzt.', 'Power bank: keep it charged and top it up every 3 months, even if unused.', 'Batería externa: mantenla cargada y recárgala cada 3 meses, aunque no la uses.'],
-      ['Carro: carregador USB na tomada do isqueiro, com o motor ligado e ao ar livre.', 'Voiture : chargeur USB sur l’allume-cigare, moteur allumé et à l’extérieur.', 'Auto: USB-Ladegerät im Zigarettenanzünder, Motor an, im Freien.', 'Car: a USB charger in the 12 V socket, engine running, outdoors.', 'Coche: cargador USB en el mechero, con el motor encendido y al aire libre.'],
-      ['Painel solar portátil: ao sol direto, sem vidro no meio. Carrega primeiro a bateria externa, depois o telemóvel.', 'Panneau solaire portable : en plein soleil, sans vitre. Chargez d’abord la batterie externe.', 'Tragbares Solarpanel: direkte Sonne, kein Glas dazwischen. Erst die Powerbank laden.', 'Portable solar panel: direct sun, no glass in between. Charge the power bank first, then the phone.', 'Panel solar portátil: al sol directo, sin cristal en medio. Carga primero la batería externa.'],
-      ['Rádio de manivela com saída USB: dá para emergências curtas.', 'Radio à manivelle avec USB : pour de courtes urgences.', 'Kurbelradio mit USB: für kurze Notfälle.', 'Wind-up radio with USB output: good for short emergencies.', 'Radio de manivela con USB: sirve para emergencias cortas.'],
-      ['Poupa: modo de poupança máxima, brilho mínimo, modo de avião quando não precisas. Liga só a horas combinadas.', 'Économisez : économie maximale, luminosité minimale, mode avion. Appelez à heures fixes.', 'Sparen: maximaler Sparmodus, minimale Helligkeit, Flugmodus. Nur zu festen Zeiten telefonieren.', 'Save: maximum power saving, lowest brightness, airplane mode when idle. Call only at agreed times.', 'Ahorra: modo de ahorro máximo, brillo mínimo, modo avión cuando no lo necesites. Llama solo a horas acordadas.'],
-    ],
-    d: [
-      ['Deixar o carro a trabalhar numa garagem fechada: o monóxido de carbono mata.', 'Laisser tourner la voiture dans un garage fermé : le monoxyde tue.', 'Das Auto in einer geschlossenen Garage laufen lassen: Kohlenmonoxid tötet.', 'Run the car in a closed garage: carbon monoxide kills.', 'Dejar el coche en marcha en un garaje cerrado: el monóxido de carbono mata.'],
-    ] },
+// Artigos prontos para o inventário. kcal e volumes são valores típicos de rótulo (aproximados).
+const PRESETS_BASE = [
+  { id: 'w15', cat: 'water', unit: 'bottle', content: 1.5, cu: 'L' },
+  { id: 'w05', cat: 'water', unit: 'bottle', content: 0.5, cu: 'L' },
+  { id: 'w6x15', cat: 'water', unit: 'pack', content: 9, cu: 'L' },
+  { id: 'w5', cat: 'water', unit: 'jerrycan', content: 5, cu: 'L' },
+  { id: 'pasta', cat: 'food', unit: 'pack', content: 500, cu: 'g', kcal: 1780 },
+  { id: 'rice', cat: 'food', unit: 'pack', content: 1, cu: 'kg', kcal: 3500 },
+  { id: 'oats', cat: 'food', unit: 'pack', content: 500, cu: 'g', kcal: 1850 },
+  { id: 'tuna', cat: 'food', unit: 'can', content: 120, cu: 'g', kcal: 220 },
+  { id: 'sardines', cat: 'food', unit: 'can', content: 120, cu: 'g', kcal: 240 },
+  { id: 'chickpeas', cat: 'food', unit: 'can', content: 400, cu: 'g', kcal: 300 },
+  { id: 'beans', cat: 'food', unit: 'can', content: 400, cu: 'g', kcal: 280 },
+  { id: 'fruitcan', cat: 'food', unit: 'can', content: 420, cu: 'g', kcal: 300 },
+  { id: 'crackers', cat: 'food', unit: 'pack', content: 200, cu: 'g', kcal: 900 },
+  { id: 'bar', cat: 'food', unit: 'un', content: 25, cu: 'g', kcal: 100 },
+  { id: 'nuts', cat: 'food', unit: 'bag', content: 200, cu: 'g', kcal: 1200 },
+  { id: 'pb', cat: 'food', unit: 'jar', content: 350, cu: 'g', kcal: 2100 },
+  { id: 'honey', cat: 'food', unit: 'jar', content: 500, cu: 'g', kcal: 1520 },
+  { id: 'choc', cat: 'food', unit: 'un', content: 100, cu: 'g', kcal: 540 },
+  { id: 'milk', cat: 'food', unit: 'box', content: 1, cu: 'L', kcal: 470 },
+  { id: 'soup', cat: 'food', unit: 'bag', kcal: 90 },
+  { id: 'batteries', cat: 'energy', unit: 'pack' },
+  { id: 'gas', cat: 'energy', unit: 'un' },
+  { id: 'tp', cat: 'hygiene', unit: 'un' },
+  { id: 'firstaid', cat: 'medical', unit: 'un' },
 ];
+export let PRESETS = [];
+
+export let NUMBERS = [], NEARBY = [], REGIONS = {}, KIT = [], DOC_CHECKLIST = [], GUIDES = [];
+
+// Um passo pode ser texto ou { r: 'pt', x: texto } quando só vale para uma região.
+export const stepText = st => (typeof st === 'string' ? st : st.x);
+export const stepRegion = st => (typeof st === 'string' ? null : st.r);
+
+// Aplica os textos da língua atual (d), com o português como reserva para o que faltar.
+export function applyContent(d, pt) {
+  const g = (sec, key) => (d[sec] && d[sec][key] !== undefined ? d[sec][key] : pt[sec][key]);
+  REGIONS = { ...pt.regions, ...d.regions };
+  DOC_CHECKLIST = (d.docs && d.docs.length === pt.docs.length) ? d.docs : pt.docs;
+  NUMBERS = BASE.numbers.map(c => {
+    const tx = g('numbers', c.flag);
+    return { flag: c.flag, r: c.r, country: tx.country, items: c.items.map(i => ({ ...i, l: (tx.items && tx.items[i.n]) || pt.numbers[c.flag].items[i.n] })) };
+  });
+  NEARBY = BASE.nearby.map(n => ({ ...n, ...g('nearby', n.id) }));
+  KIT = KIT_BASE.map(k => ({ ...k, l: g('kit', k.id) }));
+  PRESETS = PRESETS_BASE.map(p => ({ ...p, name: g('presets', p.id) }));
+  GUIDES = BASE.guides.map(b => {
+    let tx = d.guides && d.guides[b.id];
+    const ref = pt.guides[b.id];
+    // Se a tradução tiver um número de passos diferente, usa o português (evita passos trocados).
+    if (!tx || tx.s.length !== ref.s.length || (tx.d || []).length !== (ref.d || []).length) tx = ref;
+    const s = tx.s.map((x, i) => (b.sr && b.sr[i] ? { r: b.sr[i], x } : x));
+    return { ...b, t: tx.t, k: tx.k, i: tx.i, s, d: tx.d || [], src: (GUIDE_SRC[b.id] || []).map(k => SRC[k]) };
+  });
+}

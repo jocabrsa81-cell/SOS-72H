@@ -1,9 +1,10 @@
 import { store, autonomy, daysUntil, regions } from './store.js';
 import { t, L, fmtNum } from './i18n.js';
-import { h, icon, sheet, telHref, fill, add } from './ui.js';
+import { h, icon, sheet, telHref, fill, add, toast } from './ui.js';
 import { NUMBERS, KIT } from './content.js';
 import { isIOS, isStandalone } from './platform.js';
 import { lastResult, topLevel, when, countAlerts } from './alerts.js';
+import { needsBackupReminder, daysSinceBackup, exportBackup, snoozeBackup } from './backup.js';
 
 const HINT_KEY = 'sos72h.iosHintClosed';
 const hintClosed = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return true; } };
@@ -103,7 +104,7 @@ export function render(root) {
     const nAlerts = ar ? countAlerts(ar.items || []) : 0;
     const alertCard = h('a.alert-card.lvl-' + (nAlerts ? topLevel(ar.items) : 'none'), { href: '#/alerts' },
       icon('siren', 22),
-      h('div', h('b', !ar ? t('alertsTitle') : nAlerts ? t('alertsSummary', { n: nAlerts }) : t('alertsSummaryNone')),
+      h('div', h('b', !ar ? t('alertsTitle') : nAlerts ? t('alertsSummary', { n: nAlerts }) : t('alertsSummaryNone'), ' ', h('span.badge.info', t('extraBadge'))),
         h('span.muted', ar ? t('alertsLastCheck', { t: when(ar.checked) }) : t('alertsNever'))),
       icon('chevron', 20));
 
@@ -118,11 +119,17 @@ export function render(root) {
       isIOS && !isStandalone() && !hintClosed() ? h('div.notice.install-hint', icon('download', 18), h('span', t('installIOS')),
         h('button.icon-btn', { type: 'button', 'aria-label': t('close'), onclick: e => { try { localStorage.setItem(HINT_KEY, '1'); } catch (er) {} e.currentTarget.parentNode.remove(); } }, '×')) : null,
       isFirstMonday() && regions().includes('lu') ? h('p.notice', icon('siren', 18), t('sirenTestToday')) : null,
+      h('a.now-button', { href: '#/now' }, icon('siren', 30), h('span', h('b', t('nowButton')), h('small', t('nowButtonSub'))), icon('chevron', 22)),
       h('section.sos',
         h('a.sos-call', { href: 'tel:112' }, icon('phone', 28), h('span', h('b', t('call112')), h('small', t('call112Sub')))),
         h('button.sos-more', { type: 'button', onclick: numbersSheet }, t('otherNumbers'))),
-      alertCard,
+      needsBackupReminder() ? h('div.notice.warn.backup-hint', icon('download', 18),
+        h('div', h('b', daysSinceBackup() === null ? t('backupNever') : t('backupDaysAgo', { n: daysSinceBackup() })), h('p', t('backupReminder')),
+          h('div.inline-actions',
+            h('button.btn.small.primary', { type: 'button', onclick: async () => { if (await exportBackup()) toast(t('backupDone')); } }, t('exportData')),
+            h('button.btn.small.ghost', { type: 'button', onclick: () => snoozeBackup(7) }, t('backupLater'))))) : null,
       gauge,
+      alertCard,
       attention,
       kitRow,
       h('nav.quick',

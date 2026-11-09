@@ -2,6 +2,7 @@
 // A chave só existe em memória enquanto o cofre está aberto.
 import { t, L, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, fill, add } from './ui.js';
+import { saveFile } from './maps.js';
 import { DOC_CHECKLIST } from './content.js';
 
 export function title() { return null; }
@@ -39,6 +40,42 @@ const putDoc = doc => tx('readwrite', st => { st.put(doc); });
 const putMany = docs => tx('readwrite', st => { docs.forEach(d => st.put(d)); });
 const delDoc = id => tx('readwrite', st => { st.delete(id); });
 const clearDocs = () => tx('readwrite', st => { st.clear(); });
+
+// ——— Cópia do cofre ———
+// O ficheiro leva os documentos tal como estão guardados: cifrados. Sem o PIN ninguém os lê.
+// Serve para não perder os documentos se o telemóvel se perder ou avariar.
+const bufToB64 = buf => {
+  const u = new Uint8Array(buf); let s = '';
+  for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+  return btoa(s);
+};
+const b64ToBuf = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)).buffer;
+
+async function exportVault() {
+  const m = localStorage.getItem(META);
+  if (!m) return;
+  const docs = (await allDocs()).map(d => ({ ...d, nameCt: bufToB64(d.nameCt), ct: bufToB64(d.ct) }));
+  const text = JSON.stringify({ app: 'sos72h-vault', v: 1, exported: new Date().toISOString(), meta: JSON.parse(m), docs });
+  await saveFile(text, `sos72h-cofre-${new Date().toISOString().slice(0, 10)}.json`, 'application/json');
+  toast(t('vaultExported'));
+}
+
+function importVault(redraw) {
+  const inp = h('input', { type: 'file', accept: 'application/json,.json' });
+  inp.addEventListener('change', async () => {
+    const f = inp.files[0]; if (!f) return;
+    try {
+      const d = JSON.parse(await f.text());
+      if (d.app !== 'sos72h-vault' || !d.meta || !Array.isArray(d.docs)) throw new Error('invalid');
+      if (localStorage.getItem(META) && !(await confirmBox(t('vaultImportConfirm'), t('vaultImport'), true))) return;
+      const docs = d.docs.map(x => ({ ...x, nameCt: b64ToBuf(x.nameCt), ct: b64ToBuf(x.ct) }));
+      await clearDocs(); await putMany(docs);
+      localStorage.setItem(META, JSON.stringify(d.meta));
+      lock(); toast(t('vaultImported')); redraw();
+    } catch (e) { toast(t('importFail')); }
+  });
+  inp.click();
+}
 
 // ——— Cripto ———
 async function deriveKey(pin, salt) {
@@ -132,7 +169,8 @@ function createForm(redraw) {
     field(t('vaultPin'), p1, t('vaultPinHelp')),
     field(t('vaultPinRepeat'), p2),
     h('p.notice.warn', icon('alert', 18), t('vaultWarn')),
-    err, btn);
+    err, btn,
+    h('button.btn.ghost.block', { type: 'button', onclick: () => importVault(redraw) }, icon('upload', 18), t('vaultImport')));
 }
 
 function unlockForm(redraw) {
@@ -155,6 +193,7 @@ function unlockForm(redraw) {
   } },
     h('div.vault-lock', icon('lock', 40)),
     field(t('vaultPin'), p), err, btn,
+    h('button.btn.ghost.block', { type: 'button', onclick: exportVault }, icon('download', 18), t('vaultExport')),
     h('button.btn.ghost.danger.block', { type: 'button', onclick: async () => {
       if (await confirmBox(t('vaultDestroyConfirm'), t('vaultDestroy'))) { await clearDocs(); localStorage.removeItem(META); lock(); redraw(); }
     } }, t('vaultDestroy')));
@@ -180,7 +219,9 @@ async function docsView(redraw) {
         )))
       : emptyState(t('vaultEmpty')),
     h('div.inline-actions.vault-admin',
-      h('button.btn.small.ghost', { type: 'button', onclick: () => changePin(redraw) }, t('vaultChangePin'))));
+      h('button.btn.small.ghost', { type: 'button', onclick: exportVault }, icon('download', 16), t('vaultExport')),
+      h('button.btn.small.ghost', { type: 'button', onclick: () => changePin(redraw) }, t('vaultChangePin'))),
+    h('small.help', t('vaultExportHelp')));
 }
 
 function addDoc(redraw) {

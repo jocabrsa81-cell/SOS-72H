@@ -207,6 +207,42 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .inv-meta span:first-child { color: var(--ink); font-weight: 600; }
 .inv-actions { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 4px; }
 
+.backup-hint b { display: block; }
+.backup-hint p { font-weight: 500; margin: 2px 0 8px; }
+.prot { display: grid; gap: 6px; font-size: 14px; }
+.prot p { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.sources { display: grid; gap: 6px; font-size: 13.5px; }
+.sources h2 { font-size: 15px; }
+.sources ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+.sources a { color: var(--info); }
+
+/* ——— Estou em emergência ——— */
+.now-button { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 16px 18px; min-height: 76px;
+  background: var(--signal); color: var(--signal-ink); border-radius: var(--radius-l); text-decoration: none; }
+.now-button b { display: block; font-size: 21px; font-weight: 850; letter-spacing: -.02em; }
+.now-button small { display: block; font-size: 13.5px; font-weight: 600; opacity: .85; }
+.now-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.now-action { display: grid; justify-items: center; align-content: center; gap: 6px; padding: 12px 6px; min-height: 84px; text-align: center; font-size: 13px; font-weight: 700; line-height: 1.25;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink); cursor: pointer; }
+.now-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.now-tile { display: flex; align-items: center; min-height: 64px; padding: 12px 14px; border-radius: var(--radius); text-decoration: none; font-weight: 750; font-size: 15.5px; line-height: 1.25;
+  background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--line); }
+.now-tile.tone-red { border-left-color: var(--danger); }
+.now-tile.tone-orange { border-left-color: #E0700A; }
+.now-tile.tone-yellow { border-left-color: var(--signal); }
+.now-tile:active, .now-action:active { background: var(--sunk); }
+
+/* ——— Artigos prontos ——— */
+.presets { display: grid; gap: 14px; }
+.preset-group { display: grid; gap: 8px; }
+.preset-group h3 { font-size: 15px; }
+.preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.preset { display: grid; gap: 2px; text-align: left; padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); cursor: pointer; min-height: 60px; }
+.preset b { font-size: 14px; line-height: 1.25; }
+.preset small { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.preset:active { background: var(--sunk); }
+
 /* ——— Formulários ——— */
 .form { display: grid; gap: 14px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-l); padding: 18px 16px; }

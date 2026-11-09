@@ -87,6 +87,7 @@ export function render(root) {
 
   add(root,
     h('p.notice.warn', icon('alert', 18), h('span', t('alertsDisclaimer'))),
+    h('p.muted', h('span.badge.info', t('extraBadge')), ' ', t('alertsExtraNote')),
     h('div.inline-actions', btn),
     box,
     h('section.block',

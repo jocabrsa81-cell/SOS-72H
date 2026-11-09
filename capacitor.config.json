@@ -1,7 +1,7 @@
 {
   "appId": "lu.sos72h.app",
   "appName": "SOS 72H",
-  "webDir": "www",
+  "webDir": "_site",
   "android": {
     "allowMixedContent": false
   }

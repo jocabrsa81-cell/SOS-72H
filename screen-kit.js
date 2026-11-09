@@ -1,7 +1,7 @@
 import { store, daysUntil, toLitres } from './store.js';
 import { t, L, catName, unitName, UNIT_KEYS, CAT_KEYS, fmtNum, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, fill, add } from './ui.js';
-import { KIT } from './content.js';
+import { KIT, PRESETS } from './content.js';
 
 export function title() { return null; }
 
@@ -73,12 +73,12 @@ function inventory(root) {
     fill(root, 
       h('div.inv-head',
         h('p.muted', s.inventory.length ? t(s.inventory.length === 1 ? 'invSummary1' : 'invSummary', { n: s.inventory.length, l: fmtNum(totalL, 1), k: fmtNum(totalK, 0) }) : ''),
-        h('button.btn.primary', { type: 'button', onclick: () => itemForm() }, icon('plus', 18), t('addItem'))),
+        h('button.btn.primary', { type: 'button', onclick: () => addChooser() }, icon('plus', 18), t('addItem'))),
       s.inventory.length > 0 ? h('div.chips', { role: 'group' },
         ['all', ...CAT_KEYS.filter(c => used.has(c))].map(c =>
           h('button.chip', { type: 'button', 'aria-pressed': String(filter === c), onclick: () => { filter = c; draw(); } }, c === 'all' ? t('filterAll') : catName(c)))) : null,
       s.inventory.length === 0
-        ? emptyState(t('invEmpty'), h('button.btn.primary', { type: 'button', onclick: () => itemForm({ category: 'water', unit: 'bottle', contentUnit: 'L', content: 1.5 }) }, icon('plus', 18), t('addItem')))
+        ? emptyState(t('invEmpty'), h('button.btn.primary', { type: 'button', onclick: () => addChooser() }, icon('plus', 18), t('addItem')))
         : h('ul.inv', sorted.map(it => {
             const d = daysUntil(it.expiry);
             const badge = d === null ? null
@@ -92,6 +92,7 @@ function inventory(root) {
                 it.kcal ? h('span', fmtNum(it.qty * it.kcal, 0) + ' kcal') : null,
                 it.location ? h('span', it.location) : null),
               h('div.inv-actions',
+                h('button.btn.small.ghost', { type: 'button', onclick: () => addQty(it.id, 1) }, t('addOne')),
                 h('button.btn.small.ghost', { type: 'button', disabled: it.qty <= 0, onclick: () => useOne(it.id) }, t('useOne')),
                 h('button.btn.small.ghost', { type: 'button', onclick: () => itemForm(it) }, icon('edit', 16), t('edit')),
                 h('button.btn.small.ghost', { type: 'button', onclick: () => remove(it) }, icon('trash', 16), t('delete'))));
@@ -99,6 +100,36 @@ function inventory(root) {
   };
   draw();
   return store.subscribe(draw);
+}
+
+function addQty(id, n) {
+  store.update(s => {
+    const it = s.inventory.find(i => i.id === id);
+    if (it) it.qty = Math.round((it.qty + n) * 100) / 100;
+  });
+}
+
+// Escolher um artigo pronto (ou escrever um novo).
+function addChooser() {
+  const fmtPreset = p => [p.content ? `${fmtNum(p.content, 2)} ${p.cu}` : '', p.kcal ? `≈ ${fmtNum(p.kcal, 0)} kcal` : ''].filter(Boolean).join(' · ');
+  const pick = p => {
+    sh.close();
+    const base = { name: p.name, category: p.cat, unit: p.unit, qty: 1, content: p.content || null, contentUnit: p.cu || '', kcal: p.kcal || null, presetId: p.id };
+    const same = store.get().inventory.find(i => i.presetId === p.id || i.name === p.name);
+    if (!same) return itemForm(base, true);
+    const ask = sheet(t('alreadyHave'), h('div.row-actions',
+      h('button.btn.ghost', { type: 'button', onclick: () => { ask.close(); itemForm(base, true); } }, t('addSeparate')),
+      h('button.btn.primary', { type: 'button', onclick: () => { ask.close(); addQty(same.id, 1); toast(`${same.name}: +1`); } }, t('addToExisting'))));
+  };
+  const groups = CAT_KEYS.map(c => [c, PRESETS.filter(p => p.cat === c)]).filter(([, l]) => l.length);
+  const body = h('div.presets',
+    h('p.muted', t('presetsHelp')),
+    groups.map(([c, list]) => h('section.preset-group',
+      h('h3', catName(c)),
+      h('div.preset-grid', list.map(p => h('button.preset', { type: 'button', onclick: () => pick(p) },
+        h('b', p.name), h('small', fmtPreset(p))))))),
+    h('button.btn.ghost.block', { type: 'button', onclick: () => { sh.close(); itemForm(); } }, icon('edit', 18), t('customItem')));
+  const sh = sheet(t('presetsTitle'), body, { wide: true });
 }
 
 function useOne(id) {
@@ -114,7 +145,7 @@ function remove(it) {
   toast(t('deleted') + ': ' + it.name, { label: t('cancel'), fn: () => store.update(s => { s.inventory.splice(Math.max(0, idx), 0, it); }) });
 }
 
-function itemForm(existing) {
+function itemForm(existing, fromPreset = false) {
   const it = { category: 'water', unit: 'bottle', qty: 1, contentUnit: 'L', ...existing };
   const isEdit = !!existing && !!existing.id;
   const opt = (v, label, sel) => h('option', { value: v, selected: v === sel }, label);
@@ -168,6 +199,7 @@ function itemForm(existing) {
       content: c && c > 0 ? c : null, contentUnit: c && c > 0 ? cunit.value : '',
       kcal: k && k > 0 && cat.value !== 'water' ? Math.round(k) : null,
       expiry: expiry.value || '', location: loc.value.trim(),
+      ...(it.presetId ? { presetId: it.presetId } : {}),
     };
     store.update(s => {
       if (isEdit) { const i = s.inventory.findIndex(x => x.id === existing.id); if (i >= 0) s.inventory[i] = { ...s.inventory[i], ...data }; }
@@ -183,6 +215,7 @@ function itemForm(existing) {
       h('div.join', Object.assign(content, { id: 'cnt' }), cunit))),
     kcalBox,
     h('div.grid2', field(t('expiry') + ' (' + t('optional') + ')', expiry), field(t('location') + ' (' + t('optional') + ')', loc)),
+    fromPreset ? h('p.notice.warn', icon('alert', 16), h('span', t('approxNote'))) : null,
     total, err,
     h('div.row-actions',
       h('button.btn.ghost', { type: 'button', onclick: () => sh.close() }, t('cancel')),
@@ -190,5 +223,6 @@ function itemForm(existing) {
 
   refresh();
   const sh = sheet(isEdit ? t('editItem') : t('addItem'), form);
-  if (!isEdit) setTimeout(() => name.focus(), 50);
+  if (!isEdit) setTimeout(() => (fromPreset ? qty : name).focus(), 50);
+  if (fromPreset) setTimeout(() => qty.select(), 60);
 }

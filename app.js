@@ -1,6 +1,6 @@
 // Arranque e navegação entre ecrãs (hash: #/kit, #/guides/cpr, ...).
 import { store } from './store.js';
-import { t, lang } from './i18n.js';
+import { t, lang, loadLang } from './i18n.js';
 import { h, icon, toast, fill, add } from './ui.js';
 import * as home from './screen-home.js';
 import * as kit from './screen-kit.js';
@@ -10,6 +10,7 @@ import * as tools from './screen-tools.js';
 import * as vault from './screen-vault.js';
 import * as settings from './screen-settings.js';
 import * as alertsScreen from './screen-alerts.js';
+import * as now from './screen-now.js';
 import { startPolling, notify } from './alerts.js';
 
 const ROUTES = {
@@ -21,6 +22,7 @@ const ROUTES = {
   docs: { mod: vault, tab: null, title: 'vaultTitle', back: true },
   settings: { mod: settings, tab: null, title: 'settings', back: true },
   alerts: { mod: alertsScreen, tab: null, title: 'alertsTitle', back: true },
+  now: { mod: now, tab: null, title: 'nowTitle', back: true },
 };
 const TABS = [
   ['home', 'home', 'navHome'], ['kit', 'kit', 'navKit'], ['family', 'family', 'navFamily'],
@@ -91,13 +93,15 @@ function netState() {
 // Idioma e tema mudam tudo — redesenha o ecrã atual mantendo a posição.
 let lastLang = lang(), lastTheme = store.get().settings.theme;
 store.subscribe(s => {
-  if (s.settings.lang !== lastLang) { lastLang = s.settings.lang; applyLang(); netState(); render(true); }
+  if (s.settings.lang !== lastLang) { lastLang = s.settings.lang; loadLang(lastLang).then(() => { applyLang(); netState(); render(true); }); }
   if (s.settings.theme !== lastTheme) { lastTheme = s.settings.theme; applyTheme(); }
 });
 
 window.addEventListener('hashchange', () => render());
 window.addEventListener('online', netState);
 window.addEventListener('offline', netState);
+// Carrega a língua antes do primeiro desenho.
+await loadLang();
 applyLang(); applyTheme(); netState(); render();
 
 // Funcionamento offline

@@ -1,0 +1,38 @@
+# Publica a SOS 72H no GitHub Pages: verifica as traduções, monta a app e recolhe os alertas.
+# Corre a cada envio para main e de 15 em 15 minutos (alertas). Em Settings → Pages → Source: "GitHub Actions".
+name: Publicar app e alertas
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verificar traduções e montar a app
+        run: node build.mjs
+      - name: Recolher alertas
+        run: node fetch-alerts.mjs _site/alerts.json
+        continue-on-error: true
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

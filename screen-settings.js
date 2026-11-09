@@ -1,4 +1,6 @@
 import { store } from './store.js';
+import { VERSION } from './version.js';
+import { exportBackup, isProtected, protectStorage, daysSinceBackup } from './backup.js';
 import { t, L, LANGS, LANG_NAMES } from './i18n.js';
 import { REGIONS } from './content.js';
 import { isIOS, isStandalone } from './platform.js';
@@ -7,7 +9,6 @@ import { h, icon, toast, confirmBox, field, fill, add } from './ui.js';
 
 export function title() { return null; }
 
-const VERSION = '1.7.3';
 
 // Nível mínimo dos avisos de tempo, por país das regiões escolhidas.
 function weatherMin() {
@@ -76,17 +77,19 @@ export function render(root) {
     } catch (e) { toast(t('importFail')); }
   });
 
-  const exportData = async () => {
-    const text = store.exportJSON();
-    const fname = `sos72h-${new Date().toISOString().slice(0, 10)}.json`;
-    const file = new File([text], fname, { type: 'application/json' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'SOS 72H' }); return; } catch (e) { if (e.name === 'AbortError') return; }
-    }
-    const a = h('a', { href: URL.createObjectURL(file), download: fname });
-    document.body.append(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  const exportData = async () => { if (await exportBackup()) { toast(t('backupDone')); drawProt(); } };
+
+  // Estado: armazenamento protegido e data da última cópia
+  const prot = h('div.prot');
+  const drawProt = async () => {
+    const p = await isProtected();
+    const d = daysSinceBackup();
+    fill(prot,
+      h('p', icon(p ? 'check' : 'alert', 16), ' ', p ? t('storageProtected') : p === false ? t('storageNotProtected') : t('storageUnknown'),
+        p === false ? h('button.btn.small.ghost', { type: 'button', onclick: async () => { await protectStorage(); drawProt(); } }, t('storageProtect')) : null),
+      h('p', icon(d !== null && d < 30 ? 'check' : 'alert', 16), ' ', d === null ? t('backupNever') : t('backupDaysAgo', { n: d })));
   };
+  drawProt();
 
   const install = window.__installPrompt
     ? h('button.btn.primary.block', { type: 'button', onclick: async () => { const p = window.__installPrompt; window.__installPrompt = null; p.prompt(); await p.userChoice; } }, icon('download', 18), t('install'))
@@ -111,6 +114,7 @@ export function render(root) {
     h('section.block',
       h('h2.block-title', t('backupTitle')),
       h('p.muted', t('backupIntro')),
+      prot,
       h('div.inline-actions',
         h('button.btn.ghost', { type: 'button', onclick: exportData }, icon('download', 18), t('exportData')),
         h('button.btn.ghost', { type: 'button', onclick: () => fileIn.click() }, icon('upload', 18), t('importData'))),
