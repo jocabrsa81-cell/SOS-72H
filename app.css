@@ -210,7 +210,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .backup-hint b { display: block; }
 .backup-hint p { font-weight: 500; margin: 2px 0 8px; }
 .prot { display: grid; gap: 6px; font-size: 14px; }
-.prot p { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.prot p { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 4px 8px; }
+.prot p .ico { margin-top: 2px; }
+.prot p .btn { grid-column: 2; justify-self: start; }
 
 .sources { display: grid; gap: 6px; font-size: 13.5px; }
 .sources h2 { font-size: 15px; }

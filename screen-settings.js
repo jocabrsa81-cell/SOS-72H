@@ -85,9 +85,9 @@ export function render(root) {
     const p = await isProtected();
     const d = daysSinceBackup();
     fill(prot,
-      h('p', icon(p ? 'check' : 'alert', 16), ' ', p ? t('storageProtected') : p === false ? t('storageNotProtected') : t('storageUnknown'),
+      h('p', icon(p ? 'check' : 'alert', 16), h('span', p ? t('storageProtected') : p === false ? t('storageNotProtected') : t('storageUnknown')),
         p === false ? h('button.btn.small.ghost', { type: 'button', onclick: async () => { await protectStorage(); drawProt(); } }, t('storageProtect')) : null),
-      h('p', icon(d !== null && d < 30 ? 'check' : 'alert', 16), ' ', d === null ? t('backupNever') : t('backupDaysAgo', { n: d })));
+      h('p', icon(d !== null && d < 30 ? 'check' : 'alert', 16), h('span', d === null ? t('backupNever') : t('backupDaysAgo', { n: d }))));
   };
   drawProt();
 
