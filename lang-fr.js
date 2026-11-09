@@ -352,7 +352,22 @@ export default {
   "printWallet": "Carte pour le portefeuille (à découper)",
   "kitAuto": "calculé à partir de l’inventaire",
   "kitHave": "{have} / {need}",
-  "kitInInventory": "dans l’inventaire : {n}"
+  "kitInInventory": "dans l’inventaire : {n}",
+  "phoneTitle": "Préparez votre téléphone",
+  "phoneSub": "Fonctions d’urgence du téléphone : elles marchent écran verrouillé et app fermée.",
+  "phoneProgress": "{done} sur {total} faits",
+  "phoneSearchTip": "Menu introuvable ? Ouvrez Paramètres et cherchez « urgence ». Les noms changent selon la marque.",
+  "phoneDone": "Fait",
+  "phoneShowIOS": "Voir les étapes pour iPhone",
+  "phoneShowAndroid": "Voir les étapes pour Android",
+  "phoneOtherHint": "Utile pour aider un proche qui a un autre téléphone.",
+  "icsExport": "Dates de péremption dans l’agenda",
+  "icsHelp": "Crée des rappels dans l’agenda 30 jours avant chaque date. Le téléphone vous prévient même app fermée.",
+  "icsAndroidNote": "Sur Android, ouvrez le fichier avec l’agenda de la marque. Google Agenda sur mobile n’importe pas de fichiers : importez-le sur calendar.google.com depuis un ordinateur.",
+  "icsNone": "Aucun article n’a de date de péremption.",
+  "icsSummary": "SOS 72H : dates de péremption proches",
+  "icsLine": "{name} — expire le {d}",
+  "icsDone": "Fichier d’agenda créé"
  },
  "units": {
   "bottle": "bouteilles",
@@ -1058,5 +1073,95 @@ export default {
   "gas": "Cartouche de gaz de camping",
   "tp": "Rouleau de papier toilette",
   "firstaid": "Trousse de premiers secours"
+ },
+ "phone": {
+  "medical": {
+   "t": "Infos médicales sur l’écran verrouillé",
+   "why": "Les secours voient groupe sanguin, allergies et traitement sans déverrouiller.",
+   "ios": [
+    "Ouvrez l’app Santé, touchez votre photo puis Fiche médicale → Modifier.",
+    "Remplissez groupe sanguin, allergies et traitements.",
+    "Activez « Afficher en mode verrouillé » et « Partager lors d’un appel d’urgence »."
+   ],
+   "android": [
+    "Ouvrez Paramètres → Sécurité et urgences → Informations médicales.",
+    "Remplissez groupe sanguin, allergies et traitements.",
+    "Vérifiez : sur l’écran verrouillé, touchez Urgence — les infos doivent apparaître."
+   ]
+  },
+  "contacts": {
+   "t": "Contacts d’urgence",
+   "why": "Ils reçoivent un message avec votre position quand vous utilisez le SOS.",
+   "ios": [
+    "Dans Santé → Fiche médicale → Modifier, descendez à Contacts d’urgence.",
+    "Ajoutez au moins deux personnes : une proche, une hors région."
+   ],
+   "android": [
+    "Ouvrez Paramètres → Sécurité et urgences → Contacts d’urgence.",
+    "Ajoutez au moins deux personnes : une proche, une hors région."
+   ]
+  },
+  "sos": {
+   "t": "SOS avec le bouton latéral",
+   "why": "Appelle le 112 et prévient vos contacts avec le seul bouton, sans déverrouiller.",
+   "ios": [
+    "Ouvrez Réglages → Appel d’urgence.",
+    "Activez « Appeler en appuyant 5 fois » et/ou « Appeler en maintenant ».",
+    "Ne testez pas : l’appel part vraiment vers le 112."
+   ],
+   "android": [
+    "Ouvrez Paramètres → Sécurité et urgences → SOS d’urgence.",
+    "Activez « Appuyer 5 fois sur le bouton latéral » (le nom varie selon la marque).",
+    "Ne testez pas : l’appel part vraiment vers le 112."
+   ]
+  },
+  "alerts": {
+   "t": "Alertes d’urgence du gouvernement",
+   "why": "C’est par là qu’arrivent LU-Alert, FR-Alert et ES-Alert — même sans Internet.",
+   "ios": [
+    "Ouvrez Réglages → Notifications et descendez tout en bas.",
+    "Sous Alertes gouvernementales, activez toutes les alertes d’urgence."
+   ],
+   "android": [
+    "Ouvrez Paramètres → Sécurité et urgences → Alertes d’urgence sans fil.",
+    "Activez tous les types d’alerte et le son."
+   ]
+  },
+  "location": {
+   "t": "Partage de position avec la famille",
+   "why": "Si le réseau revient un instant, la famille voit où vous êtes.",
+   "ios": [
+    "Ouvrez l’app Localiser → Personnes → Partager ma position.",
+    "Choisissez les membres de la famille."
+   ],
+   "android": [
+    "Ouvrez Google Maps → votre photo → Partage de position.",
+    "Choisissez la famille et « Jusqu’à désactivation »."
+   ]
+  },
+  "battery": {
+   "t": "Économie de batterie",
+   "why": "Sans courant, la batterie vous relie au monde. Sachez où activer le mode le plus fort.",
+   "ios": [
+    "Ouvrez Réglages → Batterie → Mode économie d’énergie.",
+    "Ajoutez-le au Centre de contrôle pour l’activer d’un geste."
+   ],
+   "android": [
+    "Ouvrez Paramètres → Batterie.",
+    "Cherchez le mode le plus fort (économie extrême, ultra… selon la marque)."
+   ]
+  },
+  "maps": {
+   "t": "Cartes hors ligne",
+   "why": "Avec la carte téléchargée, le GPS vous guide sans réseau.",
+   "ios": [
+    "Installez Organic Maps (Outils → Cartes hors ligne).",
+    "Téléchargez vos régions en Wi-Fi."
+   ],
+   "android": [
+    "Installez Organic Maps (Outils → Cartes hors ligne).",
+    "Téléchargez vos régions en Wi-Fi."
+   ]
+  }
  }
 };

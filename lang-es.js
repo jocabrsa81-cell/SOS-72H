@@ -352,7 +352,22 @@ export default {
   "printWallet": "Tarjeta para la cartera (recortar)",
   "kitAuto": "calculado a partir del inventario",
   "kitHave": "{have} / {need}",
-  "kitInInventory": "en el inventario: {n}"
+  "kitInInventory": "en el inventario: {n}",
+  "phoneTitle": "Prepara tu móvil",
+  "phoneSub": "Funciones de emergencia del propio móvil: funcionan con la pantalla bloqueada y la app cerrada.",
+  "phoneProgress": "{done} de {total} hechos",
+  "phoneSearchTip": "¿No encuentras el menú? Abre Ajustes y busca «emergencia». Los nombres cambian según la marca.",
+  "phoneDone": "Hecho",
+  "phoneShowIOS": "Ver pasos para iPhone",
+  "phoneShowAndroid": "Ver pasos para Android",
+  "phoneOtherHint": "Útil para ayudar a alguien de la familia con otro móvil.",
+  "icsExport": "Caducidades en el calendario",
+  "icsHelp": "Crea recordatorios en el calendario 30 días antes de cada caducidad. El móvil avisa aunque la app esté cerrada.",
+  "icsAndroidNote": "En Android, ábrelo con el calendario de la marca. Google Calendar en el móvil no importa archivos: impórtalo en calendar.google.com desde un ordenador.",
+  "icsNone": "Ningún artículo tiene fecha de caducidad.",
+  "icsSummary": "SOS 72H: caducidades próximas",
+  "icsLine": "{name} — caduca el {d}",
+  "icsDone": "Archivo de calendario creado"
  },
  "units": {
   "bottle": "botellas",
@@ -1058,5 +1073,95 @@ export default {
   "gas": "Cartucho de gas de camping",
   "tp": "Rollo de papel higiénico",
   "firstaid": "Botiquín de primeros auxilios"
+ },
+ "phone": {
+  "medical": {
+   "t": "Información médica en la pantalla bloqueada",
+   "why": "Quien te atienda ve tu grupo sanguíneo, alergias y medicación sin desbloquear el móvil.",
+   "ios": [
+    "Abre la app Salud, toca tu foto y luego Ficha médica → Editar.",
+    "Rellena grupo sanguíneo, alergias y medicación.",
+    "Activa «Mostrar en pantalla bloqueada» y «Compartir durante llamada de emergencia»."
+   ],
+   "android": [
+    "Abre Ajustes → Seguridad y emergencia → Información médica.",
+    "Rellena grupo sanguíneo, alergias y medicación.",
+    "Comprueba: en la pantalla bloqueada, toca Emergencia — la información debe aparecer."
+   ]
+  },
+  "contacts": {
+   "t": "Contactos de emergencia",
+   "why": "Reciben un mensaje con tu ubicación cuando usas el SOS y aparecen en la pantalla bloqueada.",
+   "ios": [
+    "En Salud → Ficha médica → Editar, baja hasta Contactos de emergencia.",
+    "Añade al menos dos personas: una cerca y otra fuera de la región."
+   ],
+   "android": [
+    "Abre Ajustes → Seguridad y emergencia → Contactos de emergencia.",
+    "Añade al menos dos personas: una cerca y otra fuera de la región."
+   ]
+  },
+  "sos": {
+   "t": "SOS con el botón lateral",
+   "why": "Llama al 112 y avisa a tus contactos solo con el botón, sin desbloquear.",
+   "ios": [
+    "Abre Ajustes → Emergencia SOS.",
+    "Activa «Llamar con 5 pulsaciones» y/o «Llamar manteniendo pulsado».",
+    "No lo pruebes: la llamada va de verdad al 112."
+   ],
+   "android": [
+    "Abre Ajustes → Seguridad y emergencia → Emergencia SOS.",
+    "Activa «Pulsar el botón lateral 5 veces» (el nombre cambia según la marca).",
+    "No lo pruebes: la llamada va de verdad al 112."
+   ]
+  },
+  "alerts": {
+   "t": "Alertas de emergencia del gobierno",
+   "why": "Así llegan ES-Alert, LU-Alert y FR-Alert, incluso sin Internet.",
+   "ios": [
+    "Abre Ajustes → Notificaciones y baja hasta el final.",
+    "En Alertas del gobierno, activa todas las alertas de emergencia."
+   ],
+   "android": [
+    "Abre Ajustes → Seguridad y emergencia → Alertas de emergencia inalámbricas.",
+    "Activa todos los tipos de alerta y el sonido."
+   ]
+  },
+  "location": {
+   "t": "Compartir ubicación con la familia",
+   "why": "Si la red vuelve un momento, la familia ve dónde estás sin llamar.",
+   "ios": [
+    "Abre la app Buscar → Personas → Compartir mi ubicación.",
+    "Elige a los miembros de la familia."
+   ],
+   "android": [
+    "Abre Google Maps → tu foto → Compartir ubicación.",
+    "Elige a la familia y «Hasta que lo desactives»."
+   ]
+  },
+  "battery": {
+   "t": "Ahorro de batería",
+   "why": "Sin electricidad, la batería es tu conexión. Sabe ya dónde se activa el modo más fuerte.",
+   "ios": [
+    "Abre Ajustes → Batería → Modo de bajo consumo.",
+    "Añádelo al Centro de control para activarlo con un toque."
+   ],
+   "android": [
+    "Abre Ajustes → Batería.",
+    "Busca el modo más fuerte (Extremo, Ultra… según la marca)."
+   ]
+  },
+  "maps": {
+   "t": "Mapas sin conexión",
+   "why": "Con el mapa descargado, el GPS te guía sin cobertura.",
+   "ios": [
+    "Instala Organic Maps (Herramientas → Mapas sin conexión).",
+    "Descarga tus regiones con Wi-Fi."
+   ],
+   "android": [
+    "Instala Organic Maps (Herramientas → Mapas sin conexión).",
+    "Descarga tus regiones con Wi-Fi."
+   ]
+  }
  }
 };

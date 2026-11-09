@@ -23,6 +23,7 @@ const DEFAULTS = () => ({
   contacts: [],       // { id, name, relation, phone, far }
   meeting: { home: '', area: '', region: '' },
   members: [],        // { id, name, birth, blood, allergies, meds, conditions, doctor, notes }
+  phone: {},          // passos de "Prepara o teu telemóvel" já feitos { id: true }
 });
 
 function guessLang() {
@@ -38,6 +39,7 @@ function merge(base, data) {
   out.meeting = { ...base.meeting, ...(data.meeting || {}) };
   for (const k of ['inventory', 'contacts', 'members']) if (!Array.isArray(out[k])) out[k] = [];
   if (typeof out.kit !== 'object' || out.kit === null) out.kit = {};
+  if (typeof out.phone !== 'object' || out.phone === null) out.phone = {};
   return out;
 }
 

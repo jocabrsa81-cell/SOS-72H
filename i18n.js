@@ -24,6 +24,15 @@ export async function loadLang(l = lang()) {
   applyContent(cur, pt);
 }
 
+// Secção inteira de textos (ex.: 'phone'), com o português como reserva por entrada.
+export function section(name) {
+  const base = (pt && pt[name]) || {};
+  const own = (cur && cur[name]) || {};
+  const out = {};
+  for (const k of Object.keys(base)) out[k] = own[k] || base[k];
+  return out;
+}
+
 export function t(key, vars) {
   let s = (cur && cur.ui[key]) ?? (pt && pt.ui[key]) ?? key;
   if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);

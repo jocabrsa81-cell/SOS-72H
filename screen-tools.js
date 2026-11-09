@@ -3,6 +3,8 @@ import { h, icon, toast, fill, add } from './ui.js';
 import { omPoint, omSearch, omOpenApp, omStore, launch, geoHref } from './maps.js';
 import { isIOS, smsHref, audioContext } from './platform.js';
 import { savePosition } from './alerts.js';
+import { phoneProgress } from './screen-phone.js';
+const phoneLabel = () => { const p = phoneProgress(); return t('phoneProgress', p); };
 import { NEARBY } from './content.js';
 
 let lastFix = null; // última posição GPS, para centrar as pesquisas
@@ -286,6 +288,7 @@ export function render(root) {
   });
 
   add(root, 
+    h('a.print-link', { href: '#/phone' }, icon('screen', 22), h('span', h('b', t('phoneTitle')), h('small', phoneLabel())), icon('chevron', 20)),
     h('section.tool-grid',
       h('div.tool-card.torch-card', torchBtn, h('small.muted', isIOS ? t('torchIOS') : t('torchSub')), torchDiag),
       h('button.tool-card', { type: 'button', onclick: () => overlay('white', h('div')) }, icon('screen', 28), h('b', t('screenLight')), h('small.muted', t('screenLightSub'))),

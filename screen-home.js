@@ -135,7 +135,7 @@ export function render(root) {
       h('nav.quick',
         h('a.quick-item', { href: '#/docs' }, icon('lock'), h('span', t('documents'))),
         h('a.quick-item', { href: '#/family/cards' }, icon('card'), h('span', t('membersTitle'))),
-        h('a.quick-item', { href: '#/tools' }, icon('torch'), h('span', t('torch')))),
+        h('a.quick-item', { href: '#/phone' }, icon('screen'), h('span', t('phoneTitle')))),
       regions().includes('lu') ? h('p.foot', icon('siren', 16), t('sirenTest')) : null);
   };
   draw();

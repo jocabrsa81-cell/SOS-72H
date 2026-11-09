@@ -2,6 +2,8 @@ import { store, daysUntil, toLitres, kitAuto } from './store.js';
 import { t, L, catName, unitName, UNIT_KEYS, CAT_KEYS, fmtNum, fmtDate } from './i18n.js';
 import { h, icon, sheet, toast, confirmBox, field, emptyState, fill, add } from './ui.js';
 import { KIT, PRESETS } from './content.js';
+import { exportExpiries } from './calendar.js';
+import { isAndroid } from './platform.js';
 
 export function title() { return null; }
 
@@ -92,6 +94,11 @@ function inventory(root) {
       h('div.inv-head',
         h('p.muted', s.inventory.length ? t(s.inventory.length === 1 ? 'invSummary1' : 'invSummary', { n: s.inventory.length, l: fmtNum(totalL, 1), k: fmtNum(totalK, 0) }) : ''),
         h('button.btn.primary', { type: 'button', onclick: () => addChooser() }, icon('plus', 18), t('addItem'))),
+      s.inventory.some(i => i.expiry) ? h('details.ics-box',
+        h('summary', icon('download', 16), ' ', t('icsExport')),
+        h('p.muted', t('icsHelp')),
+        isAndroid ? h('p.muted', t('icsAndroidNote')) : null,
+        h('button.btn.small.ghost', { type: 'button', onclick: async () => { toast((await exportExpiries()) ? t('icsDone') : t('icsNone')); } }, icon('download', 16), t('icsExport'))) : null,
       s.inventory.length > 0 ? h('div.chips', { role: 'group' },
         ['all', ...CAT_KEYS.filter(c => used.has(c))].map(c =>
           h('button.chip', { type: 'button', 'aria-pressed': String(filter === c), onclick: () => { filter = c; draw(); } }, c === 'all' ? t('filterAll') : catName(c)))) : null,

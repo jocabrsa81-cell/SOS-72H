@@ -352,7 +352,22 @@ export default {
   "printWallet": "Cartão para a carteira (recortar)",
   "kitAuto": "calculado a partir do inventário",
   "kitHave": "{have} / {need}",
-  "kitInInventory": "no inventário: {n}"
+  "kitInInventory": "no inventário: {n}",
+  "phoneTitle": "Prepara o teu telemóvel",
+  "phoneSub": "Funções de emergência do próprio telemóvel: funcionam com o ecrã bloqueado e a app fechada.",
+  "phoneProgress": "{done} de {total} feitos",
+  "phoneSearchTip": "Não encontras o menu? Abre as Definições e escreve «emergência» na pesquisa. Os nomes mudam de marca para marca.",
+  "phoneDone": "Feito",
+  "phoneShowIOS": "Ver passos para iPhone",
+  "phoneShowAndroid": "Ver passos para Android",
+  "phoneOtherHint": "Úteis para ajudar alguém da família com outro telemóvel.",
+  "icsExport": "Validades no calendário",
+  "icsHelp": "Cria lembretes no calendário do telemóvel 30 dias antes de cada validade. O telemóvel avisa-te mesmo com a app fechada.",
+  "icsAndroidNote": "No Android, abre o ficheiro com a app de calendário da marca (por ex. Calendário Samsung). O Google Calendar no telemóvel não importa ficheiros: nesse caso importa-o em calendar.google.com no computador.",
+  "icsNone": "Nenhum artigo do inventário tem data de validade.",
+  "icsSummary": "SOS 72H: validades a terminar",
+  "icsLine": "{name} — expira a {d}",
+  "icsDone": "Ficheiro do calendário criado"
  },
  "units": {
   "bottle": "garrafas",
@@ -1058,5 +1073,95 @@ export default {
   "gas": "Cartucho de gás de campismo",
   "tp": "Rolo de papel higiénico",
   "firstaid": "Estojo de primeiros socorros"
+ },
+ "phone": {
+  "medical": {
+   "t": "Informação médica no ecrã bloqueado",
+   "why": "Quem te socorrer vê o teu grupo sanguíneo, alergias e medicação sem desbloquear o telemóvel.",
+   "ios": [
+    "Abre a app Saúde, toca na tua foto (canto superior) e depois em Ficha Médica → Editar.",
+    "Preenche grupo sanguíneo, alergias e medicação.",
+    "Ativa «Mostrar quando bloqueado» e «Partilhar durante chamada de emergência»."
+   ],
+   "android": [
+    "Abre Definições → Segurança e emergência → Informação médica.",
+    "Preenche grupo sanguíneo, alergias e medicação.",
+    "Confirma: no ecrã bloqueado, toca em Emergência — a informação tem de aparecer."
+   ]
+  },
+  "contacts": {
+   "t": "Contactos de emergência",
+   "why": "Recebem uma mensagem com a tua localização quando usas o SOS, e aparecem no ecrã bloqueado.",
+   "ios": [
+    "Na app Saúde → Ficha Médica → Editar, desce até Contactos de emergência.",
+    "Adiciona pelo menos duas pessoas: uma perto e uma fora da região."
+   ],
+   "android": [
+    "Abre Definições → Segurança e emergência → Contactos de emergência.",
+    "Adiciona pelo menos duas pessoas: uma perto e uma fora da região."
+   ]
+  },
+  "sos": {
+   "t": "SOS no botão lateral",
+   "why": "Liga para o 112 e avisa os teus contactos só com o botão, sem desbloquear nem olhar para o ecrã.",
+   "ios": [
+    "Abre Definições → SOS de emergência.",
+    "Ativa «Ligar com 5 pressões» e/ou «Ligar ao manter premido e soltar».",
+    "Não testes: a chamada vai mesmo para o 112. Basta saber que está ativo."
+   ],
+   "android": [
+    "Abre Definições → Segurança e emergência → SOS de emergência.",
+    "Ativa «Premir o botão lateral 5 vezes» (o nome exato muda de marca para marca).",
+    "Não testes: a chamada vai mesmo para o 112. Basta saber que está ativo."
+   ]
+  },
+  "alerts": {
+   "t": "Alertas de emergência do governo",
+   "why": "É por aqui que chegam o LU-Alert, FR-Alert e ES-Alert — mesmo com a app fechada e sem Internet.",
+   "ios": [
+    "Abre Definições → Notificações e desce até ao fim.",
+    "Em Alertas governamentais, ativa todos os alertas de emergência."
+   ],
+   "android": [
+    "Abre Definições → Segurança e emergência → Alertas de emergência sem fios.",
+    "Ativa todos os tipos de alerta e o som de alerta."
+   ]
+  },
+  "location": {
+   "t": "Partilha da localização com a família",
+   "why": "Se a rede voltar por instantes, a família vê onde estás sem precisares de ligar.",
+   "ios": [
+    "Abre a app Encontrar → Pessoas → Partilhar a minha localização.",
+    "Escolhe as pessoas da família. Elas veem-te na app Encontrar."
+   ],
+   "android": [
+    "Abre o Google Maps → toca na tua foto → Partilha de localização.",
+    "Escolhe as pessoas da família e «Até desativares»."
+   ]
+  },
+  "battery": {
+   "t": "Poupança de bateria",
+   "why": "Sem eletricidade, a bateria é o que te liga ao mundo. Sabe já onde se ativa o modo mais forte.",
+   "ios": [
+    "Abre Definições → Bateria → Modo de baixo consumo.",
+    "Junta-o ao Centro de Controlo (Definições → Centro de Controlo) para o ligares com um toque."
+   ],
+   "android": [
+    "Abre Definições → Bateria.",
+    "Procura o modo mais forte (Poupança extrema, Ultra, Máxima — o nome muda por marca) e vê como se ativa."
+   ]
+  },
+  "maps": {
+   "t": "Mapas sem Internet",
+   "why": "Com o mapa da região descarregado, o GPS orienta-te mesmo sem rede.",
+   "ios": [
+    "Instala o Organic Maps (Ferramentas → Mapas offline).",
+    "Descarrega os mapas das tuas regiões enquanto tens Wi-Fi."
+   ],
+   "android": [
+    "Instala o Organic Maps (Ferramentas → Mapas offline).",
+    "Descarrega os mapas das tuas regiões enquanto tens Wi-Fi."
+   ]
+  }
  }
 };

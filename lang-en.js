@@ -352,7 +352,22 @@ export default {
   "printWallet": "Wallet card (cut out)",
   "kitAuto": "worked out from your inventory",
   "kitHave": "{have} / {need}",
-  "kitInInventory": "in inventory: {n}"
+  "kitInInventory": "in inventory: {n}",
+  "phoneTitle": "Prepare your phone",
+  "phoneSub": "Your phone’s own emergency features: they work with the screen locked and the app closed.",
+  "phoneProgress": "{done} of {total} done",
+  "phoneSearchTip": "Can’t find the menu? Open Settings and search for “emergency”. Names vary by brand.",
+  "phoneDone": "Done",
+  "phoneShowIOS": "Show iPhone steps",
+  "phoneShowAndroid": "Show Android steps",
+  "phoneOtherHint": "Handy for helping a family member with a different phone.",
+  "icsExport": "Expiry dates to calendar",
+  "icsHelp": "Creates reminders in your phone’s calendar 30 days before each expiry date. The phone reminds you even with the app closed.",
+  "icsAndroidNote": "On Android, open the file with your brand’s calendar app (e.g. Samsung Calendar). Google Calendar on the phone can’t import files: import it at calendar.google.com on a computer.",
+  "icsNone": "No inventory item has an expiry date.",
+  "icsSummary": "SOS 72H: items expiring soon",
+  "icsLine": "{name} — expires {d}",
+  "icsDone": "Calendar file created"
  },
  "units": {
   "bottle": "bottles",
@@ -1058,5 +1073,95 @@ export default {
   "gas": "Camping gas cartridge",
   "tp": "Toilet roll",
   "firstaid": "First aid kit"
+ },
+ "phone": {
+  "medical": {
+   "t": "Medical info on the lock screen",
+   "why": "Responders can see your blood type, allergies and medication without unlocking the phone.",
+   "ios": [
+    "Open the Health app, tap your photo, then Medical ID → Edit.",
+    "Fill in blood type, allergies and medication.",
+    "Turn on “Show When Locked” and “Share During Emergency Call”."
+   ],
+   "android": [
+    "Open Settings → Safety & emergency → Medical information.",
+    "Fill in blood type, allergies and medication.",
+    "Check: on the lock screen, tap Emergency — the info must show."
+   ]
+  },
+  "contacts": {
+   "t": "Emergency contacts",
+   "why": "They get a message with your location when you use SOS, and show on the lock screen.",
+   "ios": [
+    "In Health → Medical ID → Edit, scroll to Emergency Contacts.",
+    "Add at least two people: one nearby, one outside the region."
+   ],
+   "android": [
+    "Open Settings → Safety & emergency → Emergency contacts.",
+    "Add at least two people: one nearby, one outside the region."
+   ]
+  },
+  "sos": {
+   "t": "SOS with the side button",
+   "why": "Calls 112 and alerts your contacts with just the button, without unlocking or looking.",
+   "ios": [
+    "Open Settings → Emergency SOS.",
+    "Turn on “Call with 5 Button Presses” and/or “Call with Hold and Release”.",
+    "Don’t test it: the call really goes to 112."
+   ],
+   "android": [
+    "Open Settings → Safety & emergency → Emergency SOS.",
+    "Turn on “Press side button 5 times” (the exact name varies by brand).",
+    "Don’t test it: the call really goes to 112."
+   ]
+  },
+  "alerts": {
+   "t": "Government emergency alerts",
+   "why": "This is how LU-Alert, FR-Alert and ES-Alert reach you — even with no internet.",
+   "ios": [
+    "Open Settings → Notifications and scroll to the bottom.",
+    "Under Government Alerts, turn on all emergency alerts."
+   ],
+   "android": [
+    "Open Settings → Safety & emergency → Wireless emergency alerts.",
+    "Turn on every alert type and the alert sound."
+   ]
+  },
+  "location": {
+   "t": "Location sharing with family",
+   "why": "If the network comes back briefly, family can see where you are without a call.",
+   "ios": [
+    "Open the Find My app → People → Share My Location.",
+    "Pick your family members. They’ll see you in Find My."
+   ],
+   "android": [
+    "Open Google Maps → tap your photo → Location sharing.",
+    "Pick your family and “Until you turn this off”."
+   ]
+  },
+  "battery": {
+   "t": "Battery saving",
+   "why": "Without power, the battery is your link to the world. Know where the strongest mode is.",
+   "ios": [
+    "Open Settings → Battery → Low Power Mode.",
+    "Add it to Control Centre so you can turn it on with one tap."
+   ],
+   "android": [
+    "Open Settings → Battery.",
+    "Find the strongest mode (Extreme, Ultra, Maximum — the name varies by brand)."
+   ]
+  },
+  "maps": {
+   "t": "Offline maps",
+   "why": "With the region’s map downloaded, GPS guides you even without signal.",
+   "ios": [
+    "Install Organic Maps (Tools → Offline maps).",
+    "Download your regions’ maps while on Wi-Fi."
+   ],
+   "android": [
+    "Install Organic Maps (Tools → Offline maps).",
+    "Download your regions’ maps while on Wi-Fi."
+   ]
+  }
  }
 };

@@ -352,7 +352,22 @@ export default {
   "printWallet": "Karte für die Geldbörse (ausschneiden)",
   "kitAuto": "aus dem Inventar berechnet",
   "kitHave": "{have} / {need}",
-  "kitInInventory": "im Inventar: {n}"
+  "kitInInventory": "im Inventar: {n}",
+  "phoneTitle": "Bereite dein Handy vor",
+  "phoneSub": "Notfallfunktionen des Handys: funktionieren gesperrt und bei geschlossener App.",
+  "phoneProgress": "{done} von {total} erledigt",
+  "phoneSearchTip": "Menü nicht gefunden? Öffne die Einstellungen und suche „Notfall“. Die Namen sind je nach Marke anders.",
+  "phoneDone": "Erledigt",
+  "phoneShowIOS": "Schritte für iPhone",
+  "phoneShowAndroid": "Schritte für Android",
+  "phoneOtherHint": "Nützlich, um jemandem mit einem anderen Handy zu helfen.",
+  "icsExport": "Ablaufdaten in den Kalender",
+  "icsHelp": "Erstellt Kalender-Erinnerungen 30 Tage vor jedem Ablaufdatum — auch bei geschlossener App.",
+  "icsAndroidNote": "Auf Android mit dem Kalender des Herstellers öffnen. Google Kalender am Handy importiert keine Dateien: am Computer auf calendar.google.com importieren.",
+  "icsNone": "Kein Artikel hat ein Ablaufdatum.",
+  "icsSummary": "SOS 72H: Ablaufdaten bald erreicht",
+  "icsLine": "{name} — läuft ab am {d}",
+  "icsDone": "Kalenderdatei erstellt"
  },
  "units": {
   "bottle": "Flaschen",
@@ -1058,5 +1073,95 @@ export default {
   "gas": "Campinggas-Kartusche",
   "tp": "Rolle Toilettenpapier",
   "firstaid": "Erste-Hilfe-Set"
+ },
+ "phone": {
+  "medical": {
+   "t": "Medizinische Infos auf dem Sperrbildschirm",
+   "why": "Helfer sehen Blutgruppe, Allergien und Medikamente ohne Entsperren.",
+   "ios": [
+    "Öffne die App Health, tippe auf dein Foto, dann Notfallpass → Bearbeiten.",
+    "Trage Blutgruppe, Allergien und Medikamente ein.",
+    "Aktiviere „Im Sperrzustand anzeigen“ und „Bei Notruf teilen“."
+   ],
+   "android": [
+    "Öffne Einstellungen → Sicherheit und Notfall → Medizinische Informationen.",
+    "Trage Blutgruppe, Allergien und Medikamente ein.",
+    "Prüfe: Auf dem Sperrbildschirm „Notfall“ antippen — die Infos müssen erscheinen."
+   ]
+  },
+  "contacts": {
+   "t": "Notfallkontakte",
+   "why": "Sie bekommen beim SOS eine Nachricht mit deinem Standort.",
+   "ios": [
+    "In Health → Notfallpass → Bearbeiten nach unten zu Notfallkontakte.",
+    "Füge mindestens zwei Personen hinzu: eine nahe, eine außerhalb der Region."
+   ],
+   "android": [
+    "Öffne Einstellungen → Sicherheit und Notfall → Notfallkontakte.",
+    "Füge mindestens zwei Personen hinzu: eine nahe, eine außerhalb der Region."
+   ]
+  },
+  "sos": {
+   "t": "SOS über die Seitentaste",
+   "why": "Ruft 112 an und informiert deine Kontakte nur mit der Taste, ohne Entsperren.",
+   "ios": [
+    "Öffne Einstellungen → Notruf SOS.",
+    "Aktiviere „Mit 5-mal Drücken anrufen“ und/oder „Durch Halten und Loslassen anrufen“.",
+    "Nicht testen: Der Anruf geht wirklich an die 112."
+   ],
+   "android": [
+    "Öffne Einstellungen → Sicherheit und Notfall → Notfall-SOS.",
+    "Aktiviere „Seitentaste 5-mal drücken“ (Name je nach Marke verschieden).",
+    "Nicht testen: Der Anruf geht wirklich an die 112."
+   ]
+  },
+  "alerts": {
+   "t": "Behördliche Notfallwarnungen",
+   "why": "So kommen LU-Alert, FR-Alert und ES-Alert an — auch ohne Internet.",
+   "ios": [
+    "Öffne Einstellungen → Mitteilungen und scrolle ganz nach unten.",
+    "Unter Behördliche Mitteilungen alle Notfallwarnungen aktivieren."
+   ],
+   "android": [
+    "Öffne Einstellungen → Sicherheit und Notfall → Notfallbenachrichtigungen.",
+    "Alle Warnstufen und den Warnton aktivieren."
+   ]
+  },
+  "location": {
+   "t": "Standort mit der Familie teilen",
+   "why": "Kommt das Netz kurz zurück, sieht die Familie, wo du bist.",
+   "ios": [
+    "Öffne die App „Wo ist?“ → Personen → Meinen Standort teilen.",
+    "Wähle die Familienmitglieder aus."
+   ],
+   "android": [
+    "Öffne Google Maps → dein Foto → Standortfreigabe.",
+    "Familie auswählen und „Bis du dies deaktivierst“."
+   ]
+  },
+  "battery": {
+   "t": "Energiesparen",
+   "why": "Ohne Strom verbindet dich der Akku mit der Welt. Wisse, wo der stärkste Modus ist.",
+   "ios": [
+    "Öffne Einstellungen → Batterie → Stromsparmodus.",
+    "Füge ihn dem Kontrollzentrum hinzu, um ihn mit einem Tipp zu aktivieren."
+   ],
+   "android": [
+    "Öffne Einstellungen → Akku.",
+    "Suche den stärksten Modus (Extrem, Ultra … je nach Marke)."
+   ]
+  },
+  "maps": {
+   "t": "Offline-Karten",
+   "why": "Mit geladener Karte führt dich das GPS auch ohne Netz.",
+   "ios": [
+    "Installiere Organic Maps (Werkzeuge → Offline-Karten).",
+    "Lade deine Regionen im WLAN herunter."
+   ],
+   "android": [
+    "Installiere Organic Maps (Werkzeuge → Offline-Karten).",
+    "Lade deine Regionen im WLAN herunter."
+   ]
+  }
  }
 };
