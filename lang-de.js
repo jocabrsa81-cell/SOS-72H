@@ -367,7 +367,8 @@ export default {
   "icsNone": "Kein Artikel hat ein Ablaufdatum.",
   "icsSummary": "SOS 72H: Ablaufdaten bald erreicht",
   "icsLine": "{name} — läuft ab am {d}",
-  "icsDone": "Kalenderdatei erstellt"
+  "icsDone": "Kalenderdatei erstellt",
+  "reviewDone": "Im {d} von einer in Erster Hilfe ausgebildeten Person (HELP, Luxemburg) gelesen und bestätigt. Ersetzt keinen Erste-Hilfe-Kurs."
  },
  "units": {
   "bottle": "Flaschen",

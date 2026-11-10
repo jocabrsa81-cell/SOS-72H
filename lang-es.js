@@ -367,7 +367,8 @@ export default {
   "icsNone": "Ningún artículo tiene fecha de caducidad.",
   "icsSummary": "SOS 72H: caducidades próximas",
   "icsLine": "{name} — caduca el {d}",
-  "icsDone": "Archivo de calendario creado"
+  "icsDone": "Archivo de calendario creado",
+  "reviewDone": "Leído y confirmado en {d} por una persona con formación en primeros auxilios (HELP, Luxemburgo). No sustituye un curso de primeros auxilios."
  },
  "units": {
   "bottle": "botellas",

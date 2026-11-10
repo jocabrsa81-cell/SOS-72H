@@ -446,6 +446,12 @@ const PRESETS_BASE = [
 ];
 export let PRESETS = [];
 
+// Guias lidos e confirmados por alguém com formação (mês da revisão). Os outros mostram "ainda não revisto".
+const REVIEWED = {
+  bleeding: '2026-11', recovery: '2026-11', cpr: '2026-11', choking: '2026-11', burn: '2026-11',
+  hypothermia: '2026-11', heatstroke: '2026-11', fracture: '2026-11', stroke: '2026-11', poison: '2026-11',
+};
+
 export let NUMBERS = [], NEARBY = [], REGIONS = {}, KIT = [], DOC_CHECKLIST = [], GUIDES = [];
 
 // Um passo pode ser texto ou { r: 'pt', x: texto } quando só vale para uma região.
@@ -470,6 +476,6 @@ export function applyContent(d, pt) {
     // Se a tradução tiver um número de passos diferente, usa o português (evita passos trocados).
     if (!tx || tx.s.length !== ref.s.length || (tx.d || []).length !== (ref.d || []).length) tx = ref;
     const s = tx.s.map((x, i) => (b.sr && b.sr[i] ? { r: b.sr[i], x } : x));
-    return { ...b, t: tx.t, k: tx.k, i: tx.i, s, d: tx.d || [], src: (GUIDE_SRC[b.id] || []).map(k => SRC[k]) };
+    return { ...b, t: tx.t, k: tx.k, i: tx.i, s, d: tx.d || [], src: (GUIDE_SRC[b.id] || []).map(k => SRC[k]), reviewed: REVIEWED[b.id] || null };
   });
 }

@@ -225,6 +225,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .sources h2 { font-size: 15px; }
 .sources ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
 .sources a { color: var(--info); }
+.reviewed { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: start; color: var(--ok); font-weight: 600; }
+.reviewed .ico { margin-top: 2px; }
 
 .ics-box { padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); display: grid; gap: 8px; }
 .ics-box summary { cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }

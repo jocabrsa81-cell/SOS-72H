@@ -367,7 +367,8 @@ export default {
   "icsNone": "No inventory item has an expiry date.",
   "icsSummary": "SOS 72H: items expiring soon",
   "icsLine": "{name} — expires {d}",
-  "icsDone": "Calendar file created"
+  "icsDone": "Calendar file created",
+  "reviewDone": "Read and confirmed in {d} by a person trained in first aid (HELP, Luxembourg). Not a substitute for a first aid course."
  },
  "units": {
   "bottle": "bottles",

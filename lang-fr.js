@@ -367,7 +367,8 @@ export default {
   "icsNone": "Aucun article n’a de date de péremption.",
   "icsSummary": "SOS 72H : dates de péremption proches",
   "icsLine": "{name} — expire le {d}",
-  "icsDone": "Fichier d’agenda créé"
+  "icsDone": "Fichier d’agenda créé",
+  "reviewDone": "Relu et confirmé en {d} par une personne formée aux premiers secours (HELP, Luxembourg). Ne remplace pas une formation aux premiers secours."
  },
  "units": {
   "bottle": "bouteilles",

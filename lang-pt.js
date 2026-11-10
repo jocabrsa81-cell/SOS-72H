@@ -367,7 +367,8 @@ export default {
   "icsNone": "Nenhum artigo do inventário tem data de validade.",
   "icsSummary": "SOS 72H: validades a terminar",
   "icsLine": "{name} — expira a {d}",
-  "icsDone": "Ficheiro do calendário criado"
+  "icsDone": "Ficheiro do calendário criado",
+  "reviewDone": "Lido e confirmado em {d} por uma pessoa com formação em primeiros socorros (HELP, Luxemburgo). Não substitui um curso de primeiros socorros."
  },
  "units": {
   "bottle": "garrafas",

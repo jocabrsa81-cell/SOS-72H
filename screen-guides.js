@@ -1,4 +1,4 @@
-import { t, L } from './i18n.js';
+import { t, L, locale } from './i18n.js';
 import { h, icon, fill, add } from './ui.js';
 import { GUIDES, stepText, stepRegion } from './content.js';
 import { regions } from './store.js';
@@ -9,6 +9,7 @@ const visible = g => !g.r || regions().includes(g.r);
 const steps = g => g.s.filter(st => { const r = stepRegion(st); return !r || regions().includes(r); }).map(stepText);
 
 let query = '';
+const monthYear = ym => new Intl.DateTimeFormat(locale(), { month: 'long', year: 'numeric' }).format(new Date(ym + '-01T12:00:00'));
 
 export function title(params) {
   const g = params[0] && GUIDES.find(x => x.id === params[0]);
@@ -65,7 +66,8 @@ function detail(root, g) {
       g.src && g.src.length ? h('section.sources',
         h('h2', t('sourcesTitle')),
         h('ul', g.src.map(s => h('li', s.u ? h('a', { href: s.u, target: '_blank', rel: 'noopener' }, s.n) : s.n))),
-        h('p.muted', g.kind === 'aid' ? t('reviewAid') : t('reviewOther'))) : null));
+        g.reviewed ? h('p.reviewed', icon('check', 16), h('span', t('reviewDone', { d: monthYear(g.reviewed) })))
+          : h('p.muted', g.kind === 'aid' ? t('reviewAid') : t('reviewOther'))) : null));
   return () => { stopMetro && stopMetro(); };
 }
 

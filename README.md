@@ -45,7 +45,7 @@ npx http-server _site -p 8080
 
 ## Limitações conhecidas
 
-- **Textos de primeiros socorros e traduções não revistos** por profissionais nem por nativos.
+- **Primeiros socorros:** os 10 guias foram lidos e confirmados em novembro de 2026 por uma pessoa com formação em primeiros socorros (HELP, Luxemburgo). Os guias de situações, os guias práticos e as traduções ainda não foram revistos.
 - Lanterna não funciona no iPhone (o Safari não deixa).
 - Alertas só com a app aberta; dependem de um agendamento do GitHub que pode atrasar e que se desliga após 60 dias sem atividade no repositório.
 - "Escolher no mapa" precisa de Internet (OpenStreetMap).
