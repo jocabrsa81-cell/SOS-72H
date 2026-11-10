@@ -4,6 +4,10 @@
 // 3) filtra pelas regiões escolhidas e pela posição; guarda a última verificação para usar offline.
 import { store, regions } from './store.js';
 import { lang } from './i18n.js';
+import { inCapacitor } from './platform.js';
+
+// No APK a app corre dentro do telemóvel, por isso o ficheiro de alertas vem do site publicado.
+const ALERTS_URL = inCapacitor ? 'https://jocabrsa81-cell.github.io/SOS-72H/alerts.json' : './alerts.json';
 
 const CACHE = 'sos72h.alerts';
 const SEEN = 'sos72h.alertsSeen';
@@ -110,9 +114,9 @@ export function checkAlerts(here) {
   running = (async () => {
     const res = { checked: new Date().toISOString(), server: null, sources: {}, items: [], offline: !navigator.onLine };
     let all = [];
-    // 1) Ficheiro recolhido no GitHub (mesmo site — sem CORS)
+    // 1) Ficheiro recolhido no GitHub (mesmo site; no APK, o endereço completo)
     try {
-      const d = await getJSON('./alerts.json?t=' + Date.now());
+      const d = await getJSON(ALERTS_URL + '?t=' + Date.now());
       if (d && d.app === 'sos72h-alerts') {
         res.server = d.generated;
         for (const [k, s] of Object.entries(d.sources || {})) {
